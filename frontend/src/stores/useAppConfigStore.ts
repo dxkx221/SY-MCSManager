@@ -17,7 +17,13 @@ export const useAppConfigStore = createGlobalState(() => {
     token: {
       fontSizeLG: 14,
       fontSizeSM: 12,
-      fontSizeXL: 18
+      fontSizeXL: 18,
+      colorPrimary: "#C59724",
+      colorInfo: "#C59724",
+      colorLink: "#C59724",
+      colorLinkHover: "#A07810",
+      colorLinkActive: "#8B6914",
+      borderRadius: 8
     }
   });
   const appConfig = reactive({
