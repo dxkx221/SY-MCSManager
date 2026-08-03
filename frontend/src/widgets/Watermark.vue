@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { useAppStateStore } from "@/stores/useAppStateStore";
+import { useLayoutConfigStore } from "@/stores/useLayoutConfig";
 import { computed, onMounted, onUnmounted, ref } from "vue";
 
 const { state: appState } = useAppStateStore();
+const { getSettingsConfig } = useLayoutConfigStore();
 
 const now = ref(new Date());
 let timer: ReturnType<typeof setInterval> | null = null;
@@ -10,6 +12,8 @@ let timer: ReturnType<typeof setInterval> | null = null;
 const host = ref(window.location.host);
 
 const isLogged = computed(() => (appState?.userInfo?.permission ?? 0) > 0);
+
+const watermarkEnabled = ref(true);
 
 const username = computed(() => appState?.userInfo?.userName || "");
 
@@ -21,8 +25,8 @@ const timeStr = computed(() => {
 
 const lines = computed(() => [host.value, username.value, timeStr.value].filter(Boolean));
 
-const cols = 4;
-const rows = 4;
+const cols = 8;
+const rows = 6;
 const cells = computed(() => {
   const arr: { row: number; col: number }[] = [];
   for (let r = 0; r < rows; r++) {
@@ -33,10 +37,12 @@ const cells = computed(() => {
   return arr;
 });
 
-onMounted(() => {
-  // Refresh host on mount (just in case)
+onMounted(async () => {
   host.value = window.location.host;
-  // Update time every second
+  try {
+    const cfg = await getSettingsConfig();
+    watermarkEnabled.value = cfg?.theme?.watermarkEnabled !== false;
+  } catch { /* default on */ }
   timer = setInterval(() => { now.value = new Date(); }, 1000);
 });
 
@@ -46,7 +52,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div v-if="isLogged" class="watermark-overlay" aria-hidden="true">
+  <div v-if="isLogged && watermarkEnabled" class="watermark-overlay" aria-hidden="true">
     <div
       v-for="cell in cells"
       :key="`${cell.row}-${cell.col}`"

@@ -247,6 +247,7 @@ declare global {
       backgroundImage: string;
       /** Main app navigation: "left" = sidebar, "right" = top header only */
       sidebarPosition?: "left" | "right";
+      watermarkEnabled?: boolean;
     };
   }
 

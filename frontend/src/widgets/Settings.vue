@@ -64,6 +64,7 @@ interface MySettings extends Settings {
   faviconUrl?: string;
   bgUrl?: string;
   proLicenseKey?: string;
+  watermarkEnabled?: boolean;
 }
 
 /** Main app navigation layout: "left" = sidebar, "right" = top header only. Synced from theme config. */
@@ -368,6 +369,20 @@ const handleSaveSidebarPosition = async () => {
   cfg.theme.sidebarPosition = sidebarPosition.value;
   await setSettingsConfig(cfg);
   message.success(t("TXT_CODE_a7907771"));
+};
+
+/** Persist watermark toggle to layout config. */
+const onWatermarkToggle = (v: boolean) => {
+  (formData.value as MySettings).watermarkEnabled = v;
+  handleSaveWatermark(v);
+};
+
+const handleSaveWatermark = async (enabled: boolean) => {
+  const cfg = await getSettingsConfig();
+  if (!cfg) return;
+  if (!cfg.theme) cfg.theme = { pageTitle: "", logoImage: "", faviconImage: "", backgroundImage: "" };
+  cfg.theme.watermarkEnabled = enabled;
+  await setSettingsConfig(cfg);
 };
 
 const startDesignUI = async () => {
@@ -775,6 +790,7 @@ onMounted(async () => {
   if (cfg?.theme?.sidebarPosition === "left" || cfg?.theme?.sidebarPosition === "right") {
     sidebarPosition.value = cfg.theme.sidebarPosition;
   }
+  (formData.value as MySettings).watermarkEnabled = cfg?.theme?.watermarkEnabled !== false;
   setTimeout(() => {
     if (router.currentRoute.value.query.tab === "pro") {
       leftMenusPanelRef.value?.setActiveKey("pro");
@@ -943,6 +959,19 @@ onUnmounted(() => {
                     >
                       {{ t("TXT_CODE_abfe9512") }}
                     </a-button>
+                  </a-form-item>
+
+                  <a-form-item>
+                    <a-typography-title :level="5">安全水印</a-typography-title>
+                    <a-typography-paragraph type="secondary">
+                      登录后页面显示浮动水印（访问地址、用户名、时间），防止截图泄露。
+                    </a-typography-paragraph>
+                    <a-switch
+                      :checked="(formData as MySettings).watermarkEnabled !== false"
+                      @change="onWatermarkToggle"
+                      checked-children="开"
+                      un-checked-children="关"
+                    />
                   </a-form-item>
 
                   <a-form-item>
