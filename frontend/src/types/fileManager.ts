@@ -1,0 +1,69 @@
+export interface DataType {
+  name: string;
+  type: number;
+  size: number;
+  time: string;
+  mode: number;
+}
+
+export interface OperationForm {
+  name: string;
+  current: number;
+  pageSize: number;
+  total: number;
+}
+
+export interface Breadcrumb {
+  path: string;
+  name: string;
+  disabled: boolean;
+}
+
+export interface FileStatus {
+  instanceFileTask: number;
+  globalFileTask: number;
+  downloadFileFromURLTask: number;
+  downloadTasks?: {
+    taskId: string;
+    path: string;
+    total: number;
+    current: number;
+    status: number;
+    error?: string;
+  }[];
+  platform: string;
+  isGlobalInstance: boolean;
+  disks: string[];
+}
+
+export interface Permission {
+  data: {
+    owner: string[];
+    usergroup: string[];
+    everyone: string[];
+  };
+  deep: boolean;
+  loading: boolean;
+  item: {
+    key: string;
+    role: "owner" | "usergroup" | "everyone";
+  }[];
+}
+
+export interface DownloadFileConfigItem {
+  url: string;
+  fileName: string;
+}
+
+export interface BatchChmodResultItem {
+  target: string;
+  success: boolean;
+  error?: string;
+}
+
+export interface BatchChmodResult {
+  success: number;
+  failed: number;
+  total: number;
+  results: BatchChmodResultItem[];
+}

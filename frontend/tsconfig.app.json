@@ -1,0 +1,24 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [
+    "env.d.ts",
+    "src/**/*",
+    "src/**/*.vue",
+    "src/config/**/*",
+    "src/lang/**/*.json",
+    "ant.d.ts",
+    "components.d.ts",
+    "../common/global.d.ts"
+  ],
+  "exclude": ["src/**/__tests__/*"],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@languages": ["../languages/*"]
+    },
+    "moduleResolution": "node",
+    "types": ["node"]
+  }
+}

@@ -1,0 +1,48 @@
+name: Bug Report
+description: Create a report to help us improve
+title: "[Bug Report] "
+labels: "Bug Report"
+body:
+  - type: input
+    id: Platform
+    attributes:
+      label: Platform
+      description: Please enter the platform on which you encountered the bug.
+      placeholder: e.g. Windows 11, Ubuntu 14.04
+    validations:
+      required: true
+  - type: input
+    id: panel-version
+    attributes:
+      label: Panel Version
+      description: MCSManager Panel Version
+      placeholder: e.g. 10.1.0
+    validations:
+      required: true
+  - type: input
+    id: daemon-version
+    attributes:
+      label: Daemon Version (Optional)
+      description: MCSManager Daemon Version
+      placeholder: e.g. 4.3.0
+    validations:
+      required: false
+  - type: input
+    id: recurrence-probability
+    attributes:
+      label: Recurrence Probability
+      description: Recurrence Probability
+      placeholder: 1%~100%
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: Please describe the problem you met in as much detail as possible. Besides, please describe how to trigger this problem again.
+      placeholder: |
+        1. Click a button named ...
+        2. ...
+        3. ...
+    validations:
+      required: true

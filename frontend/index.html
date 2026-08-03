@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta name="renderer" content="webkit" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="theme-color" content="#000000" />
+
+    <link rel="icon" href="/favicon.ico" />
+    <title>MCSManager Panel</title>
+
+    <style>
+      #before-app-mounted {
+        --loading-bg-color: #f3efef;
+        --loading-color: #2a2828;
+        --loading-subtitle-color: #3b3939;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        #before-app-mounted {
+          --loading-bg-color: #242323;
+          --loading-color: #f3efef;
+          --loading-subtitle-color: #9d9999;
+        }
+      }
+
+      #before-app-mounted {
+        background: var(--loading-bg-color);
+        color: var(--loading-color);
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      #before-app-mounted .loading-box {
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #before-app-mounted .loading {
+        margin: 20px;
+        width: 48px;
+        height: 48px;
+        border: 4px solid rgba(36, 35, 35, 0.1);
+        border-top-color: var(--loading-color);
+        border-radius: 50%;
+        animation: spinner-rotate 1s linear infinite;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        #before-app-mounted .loading {
+          border-color: rgba(255, 255, 255, 0.1);
+          border-top-color: var(--loading-color);
+        }
+      }
+
+      @keyframes spinner-rotate {
+        0% {
+          transform: rotate(0deg) scale(1);
+        }
+        50% {
+          transform: rotate(180deg) scale(1.06);
+        }
+        100% {
+          transform: rotate(360deg) scale(1);
+        }
+      }
+
+      #before-app-mounted .loading-title {
+        margin-top: 0px;
+        margin-left: 2px;
+        font-size: 14px;
+        color: var(--loading-subtitle-color);
+      }
+
+      #before-app-mounted .loading-error {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        max-width: 400px;
+        padding: 20px;
+      }
+
+      #before-app-mounted .loading-error.show {
+        display: flex;
+      }
+
+      #before-app-mounted .error-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: var(--loading-color);
+      }
+
+      #before-app-mounted .error-message {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--loading-subtitle-color);
+        margin-bottom: 24px;
+        text-align: center;
+        word-break: break-word;
+      }
+
+      #before-app-mounted .error-button {
+        padding: 10px 24px;
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+        background-color: #3b82f6;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        outline: none;
+      }
+
+      #before-app-mounted .error-button:hover {
+        background-color: #2563eb;
+      }
+
+      #before-app-mounted .error-button:active {
+        background-color: #1d4ed8;
+      }
+    </style>
+
+    <script>
+      (function (window) {
+        window.closeLoadingContainer = function () {
+          document.getElementById("before-app-mounted").setAttribute("style", "display:none");
+        };
+
+        window.setLoadingTitle = function (title) {
+          document
+            .getElementById("before-app-mounted")
+            .querySelector(".loading-title").textContent = title;
+        };
+
+        window.setAppLoadingError = function (error) {
+          const container = document.getElementById("before-app-mounted");
+          const loadingBox = container.querySelector(".loading-box");
+          const errorBox = container.querySelector(".loading-error");
+          const errorMessage = errorBox.querySelector(".error-message");
+
+          // Hide loading spinner and title
+          const loading = loadingBox.querySelector(".loading");
+          const loadingTitle = loadingBox.querySelector(".loading-title");
+          if (loading) loading.style.display = "none";
+          if (loadingTitle) loadingTitle.style.display = "none";
+
+          // Show error box with message
+          errorMessage.textContent = error;
+          errorBox.classList.add("show");
+        };
+      })(window);
+    </script>
+  </head>
+  <body>
+    <div id="before-app-mounted">
+      <noscript>You need to enable JavaScript to run this Website.</noscript>
+      <div class="loading-box">
+        <div class="loading"></div>
+        <div class="loading-title">Loading...</div>
+        <div class="loading-error">
+          <div class="error-title">Error</div>
+          <div class="error-message"></div>
+          <button class="error-button" onclick="location.reload()">Reload</button>
+        </div>
+      </div>
+    </div>
+    <div id="app-mount-point" style="width: 100vw; overflow: auto"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

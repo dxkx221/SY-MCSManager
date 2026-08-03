@@ -1,0 +1,68 @@
+/* Commercial UI polish: restrained SaaS control panel style. */
+.app-light-theme {
+  --background-color: #f6f8fb;
+  --background-color-white: #ffffff;
+  --card-border-color: rgba(15, 23, 42, 0.08);
+  --card-shadow-color: rgba(15, 23, 42, 0.06);
+  --card-shadow-extend-color: rgba(15, 23, 42, 0.10);
+  --color-primary: #2563eb;
+}
+
+body.app-light-theme {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(37, 99, 235, 0.06), transparent 32%),
+    linear-gradient(180deg, #f8fafc 0%, #f3f6fb 100%);
+}
+
+.global-card-container-shadow,
+.content-box,
+.ant-card,
+.CardWrapper {
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06) !important;
+}
+
+.global-card-container-shadow:hover,
+.ant-card:hover {
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.09) !important;
+}
+
+.ant-btn {
+  border-radius: 8px !important;
+  font-weight: 500;
+  box-shadow: none !important;
+}
+
+.ant-btn-primary {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+}
+
+.ant-input,
+.ant-input-number,
+.ant-select-selector,
+.ant-input-affix-wrapper,
+.ant-picker {
+  border-radius: 8px !important;
+}
+
+.ant-table-wrapper .ant-table {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+.ant-table-thead > tr > th {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  font-weight: 600 !important;
+}
+
+.ant-modal-content,
+.ant-drawer-content {
+  border-radius: 16px !important;
+}
+
+.breadcrumbs {
+  color: #64748b;
+}

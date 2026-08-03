@@ -1,0 +1,22 @@
+name: Feature Request
+description: A new feature for MCSManager
+title: "[Feature] "
+labels: "Feature Request"
+body:
+  - type: markdown
+    attributes:
+      value: Please make sure that no duplicated issues has already been delivered.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Please describe in detail the new functionality you would like to add.
+    validations:
+      required: true
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason
+      description: Please describe why you want to add the feature into MCSManager.
+    validations:
+      required: true

@@ -1,0 +1,359 @@
+import { t } from "i18next";
+import os from "os";
+import path from "path";
+import { globalConfiguration, globalEnv } from "../entity/config";
+import Instance, { GLOBAL_INSTANCE_UUID_KEY } from "../entity/instance/instance";
+import { $t } from "../i18n";
+import downloadManager from "../service/download_manager";
+import { getFileManager, getWindowsDisks } from "../service/file_router_service";
+import logger from "../service/log";
+import * as protocol from "../service/protocol";
+import { routerApp } from "../service/router";
+import InstanceSubsystem from "../service/system_instance";
+import uploadManager from "../service/upload_manager";
+import { checkSafeUrl } from "../utils/url";
+
+// Some routers operate router authentication middleware
+routerApp.use((event, ctx, data, next) => {
+  if (event.startsWith("file/")) {
+    const instanceUuid = data.instanceUuid;
+    const instance = InstanceSubsystem.getInstance(instanceUuid);
+    if (!instance) {
+      return protocol.error(ctx, event, {
+        instanceUuid: instanceUuid,
+        err: $t("TXT_CODE_file_router.instanceNotExist", { instanceUuid: instanceUuid })
+      });
+    }
+
+    if (
+      [Instance.STATUS_BUSY, Instance.STATUS_STARTING].includes(instance.status()) &&
+      !["file/list", "file/status"].includes(event)
+    ) {
+      return protocol.error(ctx, event, {
+        instanceUuid: instanceUuid,
+        err: $t("TXT_CODE_bbedcf29")
+      });
+    }
+  }
+  next();
+});
+
+// List the files in the specified instance working directory
+routerApp.on("file/list", async (ctx, data) => {
+  try {
+    const fileManager = getFileManager(data.instanceUuid);
+    const { page, pageSize, target, fileName } = data;
+    fileManager.cd(target);
+    const overview = await fileManager.list(page, pageSize, fileName);
+    protocol.response(ctx, overview);
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// File chmod (only Linux)
+routerApp.on("file/chmod", async (ctx, data) => {
+  try {
+    const fileManager = getFileManager(data.instanceUuid);
+    const { chmod, target, deep } = data;
+    await fileManager.chmod(target, chmod, deep);
+    protocol.response(ctx, true);
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+routerApp.on("file/chmod_batch", async (ctx, data) => {
+  try {
+    const fileManager = getFileManager(data.instanceUuid);
+    const {
+      chmod,
+      targets,
+      deep: rawDeep
+    } = data as {
+      chmod: number;
+      deep?: boolean;
+      targets: string[];
+    };
+    const deep = Boolean(rawDeep);
+    const results: { target: string; success: boolean; error?: string }[] = [];
+    let success = 0;
+    let failed = 0;
+
+    for (const target of targets || []) {
+      const currentTarget = String(target);
+      try {
+        await fileManager.chmod(currentTarget, chmod, deep);
+        success += 1;
+        results.push({
+          target: currentTarget,
+          success: true
+        });
+      } catch (error: any) {
+        failed += 1;
+        results.push({
+          target: currentTarget,
+          success: false,
+          error: error?.message || String(error)
+        });
+      }
+    }
+
+    protocol.response(ctx, {
+      success,
+      failed,
+      total: results.length,
+      results
+    });
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// Query the status of the file management system
+routerApp.on("file/status", async (ctx, data) => {
+  try {
+    const instance = InstanceSubsystem.getInstance(data.instanceUuid);
+    if (!instance) throw new Error($t("TXT_CODE_3bfb9e04"));
+
+    const fileManager = getFileManager(data.instanceUuid);
+
+    const downloadTasks = downloadManager.tasks
+      .filter((t) => fileManager.checkPath(t.path))
+      .map((t) => {
+        let relativePath = path.relative(fileManager.toAbsolutePath(), t.path);
+        relativePath = relativePath.replace(/\\/g, "/");
+        if (!relativePath.startsWith("/")) relativePath = "/" + relativePath;
+
+        return {
+          taskId: t.id,
+          path: relativePath,
+          total: t.total,
+          current: t.current,
+          status: t.status,
+          error: t.error
+        };
+      });
+
+    protocol.response(ctx, {
+      instanceFileTask: instance.info.fileLock ?? 0,
+      globalFileTask: globalEnv.fileTaskCount ?? 0,
+      downloadFileFromURLTask: downloadManager.downloadingCount,
+      downloadTasks,
+      platform: os.platform(),
+      isGlobalInstance: data.instanceUuid === GLOBAL_INSTANCE_UUID_KEY,
+      disks: getWindowsDisks()
+    });
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// Create a new file
+routerApp.on("file/touch", async (ctx, data) => {
+  try {
+    const target = data.target;
+    const fileManager = getFileManager(data.instanceUuid);
+    await fileManager.newFile(target);
+    protocol.response(ctx, true);
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// Create a directory
+routerApp.on("file/mkdir", async (ctx, data) => {
+  try {
+    const target = data.target;
+    const fileManager = getFileManager(data.instanceUuid);
+    await fileManager.mkdir(target);
+    protocol.response(ctx, true);
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// download a file from url
+routerApp.on("file/download_from_url", async (ctx, data) => {
+  try {
+    const url = data.url;
+    const fileName = data.fileName;
+
+    if (!checkSafeUrl(url)) {
+      protocol.responseError(ctx, t("TXT_CODE_3fe1b194"), {
+        disablePrint: true
+      });
+      return;
+    }
+
+    const fileManager = getFileManager(data.instanceUuid);
+    fileManager.checkPath(fileName);
+    const targetPath = fileManager.toAbsolutePath(fileName);
+
+    // Start download in background
+    const fallbackUrl = data.fallbackUrl;
+
+    const maxDownloadFromUrlFileCount = globalConfiguration.config.maxDownloadFromUrlFileCount;
+    if (
+      maxDownloadFromUrlFileCount > 0 &&
+      downloadManager.downloadingCount >= maxDownloadFromUrlFileCount
+    ) {
+      protocol.responseError(ctx, t("TXT_CODE_821a742e", { count: maxDownloadFromUrlFileCount }), {
+        disablePrint: true
+      });
+      return;
+    }
+
+    downloadManager.downloadFromUrl(url, targetPath, fallbackUrl).catch((err) => {
+      if (err.name === "CanceledError") return;
+      logger.error(`Download failed: ${url} -> ${targetPath}`, err);
+    });
+
+    protocol.response(ctx, {});
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// stop download from url
+routerApp.on("file/download_from_url_stop", (ctx, data) => {
+  try {
+    if (data.taskId) {
+      const result = downloadManager.stopById(data.taskId);
+      protocol.response(ctx, result);
+    } else if (data.instanceUuid) {
+      const fileManager = getFileManager(data.instanceUuid);
+      fileManager.checkPath(data.fileName);
+      const targetPath = fileManager.toAbsolutePath(data.fileName);
+
+      const result = downloadManager.stop(targetPath);
+      protocol.response(ctx, result);
+    } else {
+      protocol.responseError(ctx, "taskId or fileName is required");
+    }
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// copy the file
+routerApp.on("file/copy", async (ctx, data) => {
+  try {
+    // [["a.txt","b.txt"],["cxz","zzz"]]
+    const targets = data.targets;
+    const fileManager = getFileManager(data.instanceUuid);
+    for (const target of targets) {
+      fileManager.copy(target[0], target[1]);
+    }
+    protocol.response(ctx, true);
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// move the file
+routerApp.on("file/move", async (ctx, data) => {
+  try {
+    // [["a.txt","b.txt"],["cxz","zzz"]]
+    const targets = data.targets;
+    const fileManager = getFileManager(data.instanceUuid);
+    for (const target of targets) {
+      await fileManager.move(target[0], target[1]);
+    }
+    protocol.response(ctx, true);
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// Delete Files
+routerApp.on("file/delete", async (ctx, data) => {
+  try {
+    const targets = data.targets;
+    const fileManager = getFileManager(data.instanceUuid);
+    for (const target of targets) {
+      const path = fileManager.toAbsolutePath(target);
+      const uploadTask = uploadManager.getByPath(path);
+      const downloadTask = downloadManager.tasks.find((t) => t.path === path);
+      if (uploadTask != undefined) {
+        uploadManager.delete(uploadTask.id);
+        uploadTask.writer.stop();
+      } else if (downloadTask != undefined) {
+        downloadManager.stop(path);
+      } else {
+        // async delete
+        fileManager.delete(target);
+      }
+    }
+    protocol.response(ctx, true);
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// edit file
+routerApp.on("file/edit", async (ctx, data) => {
+  try {
+    const target = data.target;
+    const text = data.text;
+    const fileManager = getFileManager(data.instanceUuid);
+    const result = await fileManager.edit(target, text);
+    protocol.response(ctx, result ? result : true);
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
+
+// compress/decompress the file
+routerApp.on("file/compress", async (ctx, data) => {
+  const maxFileTask = globalConfiguration.config.maxFileTask;
+  try {
+    const source = data.source;
+    const targets = data.targets;
+    const type = data.type;
+    const code = data.code;
+    const fileManager = getFileManager(data.instanceUuid);
+    const instance = InstanceSubsystem.getInstance(data.instanceUuid);
+    if (!instance) throw new Error($t("TXT_CODE_3bfb9e04"));
+    if (instance.info.fileLock >= maxFileTask) {
+      throw new Error(
+        $t("TXT_CODE_file_router.unzipLimit", {
+          maxFileTask: maxFileTask,
+          fileLock: instance.info.fileLock
+        })
+      );
+    }
+
+    // Statistics of the number of tasks in a single instance file and the number of tasks in the entire daemon process
+    function fileTaskStart() {
+      if (instance) {
+        instance.info.fileLock++;
+        globalEnv.fileTaskCount++;
+      }
+    }
+
+    function fileTaskEnd() {
+      if (instance) {
+        instance.info.fileLock--;
+        globalEnv.fileTaskCount--;
+      }
+    }
+
+    // start decompressing or compressing the file
+    fileTaskStart();
+    try {
+      if (type === 1) {
+        await fileManager.zip(source, targets, code);
+      } else {
+        await fileManager.unzip(source, targets, code);
+      }
+      protocol.response(ctx, true);
+    } catch (error: any) {
+      throw error;
+    } finally {
+      fileTaskEnd();
+    }
+  } catch (error: any) {
+    protocol.responseError(ctx, error);
+  }
+});
