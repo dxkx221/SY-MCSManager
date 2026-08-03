@@ -26,14 +26,12 @@ const route = useRoute();
 const { sidebarItems, handleToPage } = useHeaderMenus();
 const { logoImage } = useAppConfigStore();
 
-/** Whether route menu item is active (current path equals or is child of this path) */
 const isRouteActive = (path: string): boolean => {
   if (route.path === path) return true;
   if (path === "/") return false;
   return route.path.startsWith(path + "/");
 };
 
-/** Sidebar icon for each route path */
 const routePathIcons: Record<string, Component> = {
   "/instances": AppstoreOutlined,
   "/market": ShopOutlined,
@@ -69,10 +67,7 @@ const onAppDropdownClick = (item: SidebarAppDropdownEntry, info: { key: Key }) =
     </a>
     <nav class="sidebar-menu">
       <template v-for="(entry, index) in sidebarItems" :key="getItemKey(entry, index)">
-        <!-- Divider -->
         <div v-if="entry.type === 'divider'" class="sidebar-divider" />
-
-        <!-- Route link -->
         <a
           v-else-if="entry.type === 'route'"
           class="sidebar-item"
@@ -82,8 +77,6 @@ const onAppDropdownClick = (item: SidebarAppDropdownEntry, info: { key: Key }) =
           <component :is="getRouteIcon(entry.path)" class="sidebar-item-icon" />
           <span class="sidebar-item-text">{{ entry.name }}</span>
         </a>
-
-        <!-- App menu (dropdown) -->
         <a-dropdown v-else-if="entry.type === 'app-dropdown'" trigger="click" placement="topRight">
           <a class="sidebar-item" @click.prevent>
             <component :is="entry.icon" v-if="entry.icon" class="sidebar-item-icon" />
@@ -97,8 +90,6 @@ const onAppDropdownClick = (item: SidebarAppDropdownEntry, info: { key: Key }) =
             </a-menu>
           </template>
         </a-dropdown>
-
-        <!-- App menu (single click) -->
         <a
           v-else-if="entry.type === 'app'"
           class="sidebar-item"
@@ -113,77 +104,94 @@ const onAppDropdownClick = (item: SidebarAppDropdownEntry, info: { key: Key }) =
   </aside>
 </template>
 
-<style lang="scss" scoped>
-.logo {
+<style lang="scss">
+/* ═══════════════════════════════════════════
+   SIDEBAR — Dark Tech (unscoped to override)
+   ═══════════════════════════════════════════ */
+.left-sidebar {
+  --sidebar-bg: #060B14;
+  --sidebar-text: #6B7280;
+  --sidebar-hover-bg: rgba(255,255,255,0.04);
+  --sidebar-hover-text: #D1D5DB;
+  --sidebar-active-bg: rgba(37,99,235,0.12);
+  --sidebar-active-text: #FFFFFF;
+  --sidebar-active-line: #3B82F6;
+  --sidebar-divider: rgba(255,255,255,0.05);
+
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 0 0 220px !important;
+  width: 220px !important;
+  text-align: left !important;
+  background: var(--sidebar-bg) !important;
+  border-right: 1px solid rgba(255,255,255,0.04) !important;
+  padding: 20px 10px !important;
+  transition: width 0.22s ease !important;
+  overflow: hidden !important;
+
+  &:hover {
+    width: 236px !important;
+  }
+}
+
+.left-sidebar .logo {
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  height: 48px;
-  padding: 6px 16px 20px;
+  height: 44px;
+  padding: 0 10px 22px;
+  flex-shrink: 0;
+
   img {
-    max-width: 154px;
-    max-height: 34px;
+    max-width: 144px;
+    max-height: 30px;
     object-fit: contain;
   }
 }
 
-.left-sidebar {
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 224px;
-  width: 224px;
-  text-align: left;
-  border-right: 1px solid rgba(255,255,255,0.04);
-  background: linear-gradient(180deg, #10182B 0%, #0C1222 100%);
-  padding: 18px 10px;
-  transition: width 0.24s ease;
-}
-
-.left-sidebar:hover {
-  width: 240px;
-}
-
-.sidebar-menu {
+.left-sidebar .sidebar-menu {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 6px 4px;
+  padding: 4px 4px;
   flex: 1;
-  gap: 3px;
+  gap: 2px;
   width: 100%;
   overflow-y: auto;
-  color: #7C8BA0;
+  color: var(--sidebar-text);
+  font-size: 13.5px;
 }
 
-.sidebar-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 9px 13px;
-  color: #7C8BA0;
-  text-decoration: none;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.18s ease;
-  width: 100%;
-  font-weight: 500;
-  font-size: 13.5px;
+.left-sidebar .sidebar-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 9px 12px !important;
+  color: var(--sidebar-text) !important;
+  text-decoration: none !important;
+  cursor: pointer !important;
+  border-radius: 8px !important;
+  transition: all 0.16s ease !important;
+  width: 100% !important;
+  font-weight: 450 !important;
+  font-size: 13.5px !important;
+  white-space: nowrap !important;
 
   &:hover {
-    color: #E2E8F0;
-    background-color: rgba(255,255,255,0.05);
+    color: var(--sidebar-hover-text) !important;
+    background: var(--sidebar-hover-bg) !important;
   }
 
   &.sidebar-item-active {
-    color: #FFFFFF;
-    background: rgba(37,99,235,0.18);
-    box-shadow: inset 3px 0 0 #3B82F6;
+    color: var(--sidebar-active-text) !important;
+    background: var(--sidebar-active-bg) !important;
+    box-shadow: inset 3px 0 0 var(--sidebar-active-line) !important;
   }
 
   .sidebar-item-icon {
     font-size: 16px;
     flex-shrink: 0;
-    color: inherit;
+    color: inherit !important;
   }
 
   .sidebar-item-text {
@@ -193,23 +201,11 @@ const onAppDropdownClick = (item: SidebarAppDropdownEntry, info: { key: Key }) =
   }
 }
 
-.sidebar-divider {
+.left-sidebar .sidebar-divider {
   height: 1px;
-  background-color: rgba(255,255,255,0.06);
-  margin: 8px 0;
+  background: var(--sidebar-divider);
+  margin: 6px 0;
   flex-shrink: 0;
   width: 100%;
-}
-
-:deep(.nav-button-warning:hover) {
-  background-color: rgba(245,158,11,0.15) !important;
-}
-
-:deep(.nav-button-success:hover) {
-  background-color: rgba(16,185,129,0.15) !important;
-}
-
-:deep(.nav-button-danger:hover) {
-  background-color: rgba(239,68,68,0.15) !important;
 }
 </style>
