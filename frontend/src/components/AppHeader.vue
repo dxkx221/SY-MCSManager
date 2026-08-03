@@ -253,8 +253,8 @@ const openPhoneMenu = (b = false) => {
   }
 
   .nav-button-active {
-    color: #2563EB !important;
-    background: rgba(37, 99, 235, 0.08) !important;
+    color: #B8860B !important;
+    background: rgba(197, 151, 36, 0.08) !important;
     font-weight: 600;
   }
 
