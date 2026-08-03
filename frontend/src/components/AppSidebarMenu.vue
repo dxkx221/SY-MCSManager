@@ -63,7 +63,7 @@ const onAppDropdownClick = (item: SidebarAppDropdownEntry, info: { key: Key }) =
 <template>
   <aside class="left-sidebar">
     <a href="." class="logo">
-      <img :src="logoImage" />
+      <img :src="logoImage" style="max-width:150px; max-height:34px; object-fit:contain" />
     </a>
     <nav class="sidebar-menu">
       <template v-for="(entry, index) in sidebarItems" :key="getItemKey(entry, index)">

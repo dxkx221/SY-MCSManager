@@ -48,7 +48,7 @@ const openPhoneMenu = (b = false) => {
       <nav class="btns">
         <a href="." style="margin-right: 12px">
           <div class="logo">
-            <img :src="logoImage" style="height: 18px" />
+            <img :src="logoImage" style="height:20px; max-width:180px; object-fit:contain" />
           </div>
         </a>
 
