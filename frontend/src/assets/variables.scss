@@ -1,31 +1,31 @@
 .app-light-theme {
   @extend .app-light-base-color;
 
-  --background-color: #F6F9FD;
+  --background-color: #FCFAF5;
   --background-color-white: #FFFFFF;
-  --drag-background-color: #D8E3F2;
-  --new-card-list-background-color: rgba(238,244,252,0.8);
+  --drag-background-color: #E8E0D0;
+  --new-card-list-background-color: rgba(247,242,232,0.8);
   --new-card-list-background-color-menu: rgba(255,255,255,0.9);
-  --float-box-bg-color: rgba(238,244,252,0.5);
+  --float-box-bg-color: rgba(247,242,232,0.5);
   --gray-border-color: var(--color-gray-10);
   --bottom-nav-background-color: #FFFFFF;
-  --bottom-nav-background-color-hover: rgba(37,99,235,0.06);
+  --bottom-nav-background-color-hover: rgba(197,151,36,0.06);
 
   --login-panel-bg: #FFFFFF;
 
   --app-header-bg: #FFFFFF;
   --app-header-bg-extend: #FFFFFF;
-  --app-header-text-color: #111827;
+  --app-header-text-color: #292524;
 
-  --text-color: #111827;
+  --text-color: #292524;
 
-  --card-border-color: #D8E3F2;
-  --card-shadow-color: rgba(15,23,42,0.04);
-  --card-shadow-extend-color: rgba(15,23,42,0.06);
+  --card-border-color: #E8E0D0;
+  --card-shadow-color: rgba(30,20,10,0.04);
+  --card-shadow-extend-color: rgba(30,20,10,0.06);
 
-  --card-bottom-background-color: rgba(15,23,42,0.5);
+  --card-bottom-background-color: rgba(30,20,10,0.5);
 
-  --inner-card-hover-bg: linear-gradient(135deg, #EEF4FC 0%, #E6EFF9 100%);
+  --inner-card-hover-bg: linear-gradient(135deg, #F7F2E8 0%, #F2EDE4 100%);
 }
 
 .app-light-base-color {
@@ -165,7 +165,7 @@
   --color-gray-12: #141414;
   --color-gray-13: #000000;
 
-  --color-primary: var(--color-blue-5);
+  --color-primary: #C59724;
   --color-danger: var(--color-red-5);
   --color-warning: var(--color-orange-6);
   --color-success: var(--color-green-5);
