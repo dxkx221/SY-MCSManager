@@ -1097,9 +1097,13 @@ onUnmounted(() => {
 
                   <!-- 品牌基础信息 -->
                   <a-divider />
-                  <a-typography-title :level="5">品牌信息</a-typography-title>
+                  <a-typography-title :level="5">
+                    品牌信息
+                    <a-tag color="blue" style="margin-left:8px;vertical-align:middle">神之翼</a-tag>
+                  </a-typography-title>
                   <a-typography-paragraph type="secondary">
-                    设置后在登录页、注册页、页面顶部等处显示品牌名称和联系方式。
+                    自定义面板品牌标识。默认使用「神之翼工作室」，可按需修改为您的品牌。
+                    修改后登录页、注册页、页面标题等处将自动更新。
                   </a-typography-paragraph>
 
                   <a-form-item label="品牌名称">

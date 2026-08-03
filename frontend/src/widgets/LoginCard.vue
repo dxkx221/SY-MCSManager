@@ -182,7 +182,7 @@ onMounted(async () => {
             </div>
           </a-typography-title>
           <a-typography-paragraph class="mb-20">
-            {{ pageInfoResult?.brandName ? `欢迎使用 ${pageInfoResult.brandName}` : t("TXT_CODE_5b60ad00") }}
+            {{ pageInfoResult?.brandName ? `欢迎使用 ${pageInfoResult.brandName}` : '欢迎使用 神之翼工作室 面板' }}
           </a-typography-paragraph>
           <div class="account-input-container">
             <div v-if="ssoInfo?.enabled && ssoInfo?.onlyMode" class="sso-only-container">

@@ -129,7 +129,7 @@ onMounted(async () => {
     <div class="register-card-wrapper">
       <div class="register-card">
         <h1 class="register-title">注册账号</h1>
-        <p class="register-sub">{{ pageInfoResult?.brandName ? `创建您的 ${pageInfoResult.brandName} 账号` : '创建您的 MCSManager 账号' }}</p>
+        <p class="register-sub">{{ pageInfoResult?.brandName ? `创建您的 ${pageInfoResult.brandName} 账号` : '创建您的 神之翼工作室 账号' }}</p>
 
         <div class="register-field mt-24">
           <label class="register-label">邮箱地址</label>

@@ -107,8 +107,8 @@ export default class SystemConfig {
   publicRegister = false;
 
   // Brand / basic info
-  brandName = "";
-  brandOwner = "";
+  brandName = "神之翼工作室";
+  brandOwner = "神之翼工作室";
   brandEmail = "";
   brandGithub = "";
   brandWebsite = "";

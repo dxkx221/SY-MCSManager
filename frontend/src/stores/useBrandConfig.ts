@@ -41,7 +41,7 @@ export function useBrandConfig() {
     }
   };
 
-  const panelTitle = computed(() => brandConfig.value.brandName || "MCSManager");
+  const panelTitle = computed(() => brandConfig.value.brandName || "神之翼工作室");
 
   return { brand, loadBrandConfig, panelTitle };
 }
