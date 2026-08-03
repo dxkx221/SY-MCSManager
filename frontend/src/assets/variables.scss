@@ -1,31 +1,31 @@
 .app-light-theme {
   @extend .app-light-base-color;
 
-  --background-color: rgb(245, 245, 245);
-  --background-color-white: var(--color-gray-1);
-  --drag-background-color: rgb(212, 212, 212);
-  --new-card-list-background-color: rgba(201, 200, 200, 0.2);
-  --new-card-list-background-color-menu: rgba(255, 255, 255, 0.8);
-  --float-box-bg-color: rgba(235, 235, 235, 0.2);
+  --background-color: #F6F9FD;
+  --background-color-white: #FFFFFF;
+  --drag-background-color: #D8E3F2;
+  --new-card-list-background-color: rgba(238,244,252,0.8);
+  --new-card-list-background-color-menu: rgba(255,255,255,0.9);
+  --float-box-bg-color: rgba(238,244,252,0.5);
   --gray-border-color: var(--color-gray-10);
-  --bottom-nav-background-color: rgb(255, 255, 255);
-  --bottom-nav-background-color-hover: rgba(167, 162, 162, 0.26);
+  --bottom-nav-background-color: #FFFFFF;
+  --bottom-nav-background-color-hover: rgba(37,99,235,0.06);
 
-  --login-panel-bg: rgb(255, 255, 255, 1);
+  --login-panel-bg: #FFFFFF;
 
-  --app-header-bg: rgba(12, 12, 12, 0.8);
-  --app-header-bg-extend: rgba(12, 12, 12, 0.8);
-  --app-header-text-color: var(--color-gray-5);
+  --app-header-bg: #FFFFFF;
+  --app-header-bg-extend: #FFFFFF;
+  --app-header-text-color: #111827;
 
-  --text-color: var(--color-gray-10);
+  --text-color: #111827;
 
-  --card-border-color: rgba(0, 0, 0, 0);
-  --card-shadow-color: rgba(0, 0, 0, 0.16);
-  --card-shadow-extend-color: rgba(0, 0, 0, 0.16);
+  --card-border-color: #D8E3F2;
+  --card-shadow-color: rgba(15,23,42,0.04);
+  --card-shadow-extend-color: rgba(15,23,42,0.06);
 
-  --card-bottom-background-color: rgba(12, 12, 12, 0.6);
+  --card-bottom-background-color: rgba(15,23,42,0.5);
 
-  --inner-card-hover-bg: linear-gradient(135deg, #e8e8e8 0%, #d4d4d4 100%);
+  --inner-card-hover-bg: linear-gradient(135deg, #EEF4FC 0%, #E6EFF9 100%);
 }
 
 .app-light-base-color {

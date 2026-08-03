@@ -9,90 +9,76 @@
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta name="theme-color" content="#000000" />
+    <meta name="theme-color" content="#F6F9FD" />
 
     <link rel="icon" href="/favicon.ico" />
     <title>MCSManager Panel</title>
 
     <style>
-      #before-app-mounted {
-        --loading-bg-color: #f3efef;
-        --loading-color: #2a2828;
-        --loading-subtitle-color: #3b3939;
-      }
-
-      @media (prefers-color-scheme: dark) {
-        #before-app-mounted {
-          --loading-bg-color: #242323;
-          --loading-color: #f3efef;
-          --loading-subtitle-color: #9d9999;
-        }
+      :root {
+        --loading-bg: #F6F9FD;
+        --loading-accent: #2563EB;
       }
 
       #before-app-mounted {
-        background: var(--loading-bg-color);
-        color: var(--loading-color);
+        background: radial-gradient(circle at 50% 40%, rgba(37,99,235,0.04) 0%, rgba(37,99,235,0.01) 40%, #F6F9FD 100%);
+        color: #111827;
         position: fixed;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
+        inset: 0;
         z-index: 9999;
         display: flex;
         justify-content: center;
         align-items: center;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif;
       }
 
       #before-app-mounted .loading-box {
         text-align: center;
         display: flex;
-        justify-content: center;
         flex-direction: column;
         align-items: center;
       }
 
-      #before-app-mounted .loading {
-        margin: 20px;
-        width: 48px;
-        height: 48px;
-        border: 4px solid rgba(36, 35, 35, 0.1);
-        border-top-color: var(--loading-color);
+      #before-app-mounted .loading-ring {
+        width: 56px;
+        height: 56px;
         border-radius: 50%;
-        animation: spinner-rotate 1s linear infinite;
+        background: conic-gradient(from 0deg, #2563EB 0deg, #0EA5E9 120deg, transparent 240deg, #2563EB 360deg);
+        animation: ring-spin 1.4s cubic-bezier(0.4,0,0.2,1) infinite;
+        -webkit-mask: radial-gradient(circle, transparent 55%, #000 56%);
+        mask: radial-gradient(circle, transparent 55%, #000 56%);
       }
 
-      @media (prefers-color-scheme: dark) {
-        #before-app-mounted .loading {
-          border-color: rgba(255, 255, 255, 0.1);
-          border-top-color: var(--loading-color);
-        }
+      @keyframes ring-spin {
+        0%   { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
       }
 
-      @keyframes spinner-rotate {
-        0% {
-          transform: rotate(0deg) scale(1);
-        }
-        50% {
-          transform: rotate(180deg) scale(1.06);
-        }
-        100% {
-          transform: rotate(360deg) scale(1);
-        }
+      #before-app-mounted .loading-label {
+        margin-top: 22px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #475569;
+        letter-spacing: 0.5px;
+        animation: label-pulse 2s ease-in-out infinite;
       }
 
-      #before-app-mounted .loading-title {
-        margin-top: 0px;
-        margin-left: 2px;
-        font-size: 14px;
-        color: var(--loading-subtitle-color);
+      @keyframes label-pulse {
+        0%, 100% { opacity: 0.6; }
+        50%      { opacity: 1; }
       }
 
       #before-app-mounted .loading-error {
         display: none;
         flex-direction: column;
         align-items: center;
-        max-width: 400px;
-        padding: 20px;
+        max-width: 420px;
+        padding: 28px 32px;
+        background: #EEF4FC;
+        border: 1px solid #D8E3F2;
+        border-radius: 14px;
+        background: #FFFFFF;
+        box-shadow: 0 8px 32px rgba(15,23,42,0.06);
       }
 
       #before-app-mounted .loading-error.show {
@@ -103,37 +89,34 @@
         font-size: 20px;
         font-weight: 600;
         margin-bottom: 12px;
-        color: var(--loading-color);
+        color: #111827;
       }
 
       #before-app-mounted .error-message {
         font-size: 14px;
         line-height: 1.6;
-        color: var(--loading-subtitle-color);
+        color: #64748B;
         margin-bottom: 24px;
         text-align: center;
         word-break: break-word;
       }
 
       #before-app-mounted .error-button {
-        padding: 10px 24px;
+        padding: 10px 28px;
         font-size: 14px;
-        font-weight: 500;
+        font-weight: 600;
         color: #fff;
-        background-color: #3b82f6;
+        background: #2563EB;
         border: none;
-        border-radius: 6px;
+        border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.2s;
+        transition: all 0.2s;
         outline: none;
       }
 
       #before-app-mounted .error-button:hover {
-        background-color: #2563eb;
-      }
-
-      #before-app-mounted .error-button:active {
-        background-color: #1d4ed8;
+        background: #1d4ed8;
+        box-shadow: 0 4px 14px rgba(37,99,235,0.3);
       }
     </style>
 
@@ -146,22 +129,18 @@
         window.setLoadingTitle = function (title) {
           document
             .getElementById("before-app-mounted")
-            .querySelector(".loading-title").textContent = title;
+            .querySelector(".loading-label").textContent = title;
         };
 
         window.setAppLoadingError = function (error) {
-          const container = document.getElementById("before-app-mounted");
-          const loadingBox = container.querySelector(".loading-box");
-          const errorBox = container.querySelector(".loading-error");
-          const errorMessage = errorBox.querySelector(".error-message");
-
-          // Hide loading spinner and title
-          const loading = loadingBox.querySelector(".loading");
-          const loadingTitle = loadingBox.querySelector(".loading-title");
-          if (loading) loading.style.display = "none";
-          if (loadingTitle) loadingTitle.style.display = "none";
-
-          // Show error box with message
+          var container = document.getElementById("before-app-mounted");
+          var loadingBox = container.querySelector(".loading-box");
+          var errorBox = container.querySelector(".loading-error");
+          var errorMessage = errorBox.querySelector(".error-message");
+          var ring = loadingBox.querySelector(".loading-ring");
+          var label = loadingBox.querySelector(".loading-label");
+          if (ring) ring.style.display = "none";
+          if (label) label.style.display = "none";
           errorMessage.textContent = error;
           errorBox.classList.add("show");
         };
@@ -172,8 +151,8 @@
     <div id="before-app-mounted">
       <noscript>You need to enable JavaScript to run this Website.</noscript>
       <div class="loading-box">
-        <div class="loading"></div>
-        <div class="loading-title">Loading...</div>
+        <div class="loading-ring"></div>
+        <div class="loading-label">Loading...</div>
         <div class="loading-error">
           <div class="error-title">Error</div>
           <div class="error-message"></div>
