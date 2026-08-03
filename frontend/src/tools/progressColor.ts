@@ -2,7 +2,7 @@
  * Returns gradient stroke color for progress bar by percent (Ant Design Progress strokeColor).
  * - > 80%: red gradient
  * - > 50%: yellow gradient
- * - otherwise: blue gradient
+ * - otherwise: gold gradient
  */
 export function getProgressStrokeColor(percent: number): { "0%": string; "100%": string } {
   if (percent > 80) {

@@ -345,8 +345,8 @@ const toOverview = () => {
 }
 
 .language-card-active {
-  border-color: #1890ff !important;
-  background: linear-gradient(135deg, rgba(24, 144, 255, 0.15) 0%, rgba(24, 144, 255, 0.08) 100%);
+  border-color: #C59724 !important;
+  background: linear-gradient(135deg, rgba(197,151,36,0.12) 0%, rgba(197,151,36,0.06) 100%);
 
   &::before {
     opacity: 1 !important;

@@ -541,7 +541,7 @@ onMounted(async () => {
                       />
                       <loading-outlined
                         v-if="loading || loadingExtra"
-                        style="font-size: 12px; color: #1890ff"
+                        style="font-size: 12px; color: #C59724"
                       />
                     </Flex>
                   </template>
@@ -580,7 +580,7 @@ onMounted(async () => {
                       />
                       <loading-outlined
                         v-if="loading || loadingExtra"
-                        style="font-size: 12px; color: #1890ff"
+                        style="font-size: 12px; color: #C59724"
                       />
                     </Flex>
                   </template>

@@ -294,7 +294,7 @@ onMounted(async () => {
 }
 
 .register-link {
-  color: #1677ff;
+  color: #C59724;
   cursor: pointer;
   margin-left: 4px;
 

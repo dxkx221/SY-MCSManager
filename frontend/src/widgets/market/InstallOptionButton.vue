@@ -39,7 +39,7 @@ const handleClick = (e: Event, action: (e: Event) => void) => {
 .install-option-button {
   --ai-gradient-from: #8b5cf6;
   --ai-gradient-via: #06b6d4;
-  --ai-gradient-to: #3b82f6;
+  --ai-gradient-to: #C59724;
   cursor: pointer;
   border-radius: 12px;
   padding: 1px;

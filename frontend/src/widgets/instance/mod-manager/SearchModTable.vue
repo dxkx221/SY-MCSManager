@@ -98,7 +98,7 @@ const formatDate = (date: string) => {
               style="min-width: 0"
             >
               <div
-                class="font-bold text-xs text-blue-600 dark:text-blue-400 truncate w-full font-mono whitespace-nowrap"
+                class="font-bold text-xs text-amber-600 dark:text-amber-400 truncate w-full font-mono whitespace-nowrap"
                 :title="record.version_number"
               >
                 {{ record.version_number || t("TXT_CODE_UNKNOWN_VERSION") }}

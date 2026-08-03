@@ -179,7 +179,7 @@ const openPhoneMenu = (b = false) => {
 .nav-button-warning:hover { background-color: rgba(245,158,11,0.12) !important; color: #D97706 !important; }
 .nav-button-success:hover { background-color: rgba(16,185,129,0.1) !important; color: #059669 !important; }
 .nav-button-danger:hover  { background-color: rgba(239,68,68,0.1) !important; color: #DC2626 !important; }
-.nav-button-primary:hover { background-color: rgba(59,130,246,0.1) !important; color: #2563EB !important; }
+.nav-button-primary:hover { background-color: rgba(197,151,36,0.1) !important; color: #C59724 !important; }
 
 .phone-menu {
   .phone-menu-btn {

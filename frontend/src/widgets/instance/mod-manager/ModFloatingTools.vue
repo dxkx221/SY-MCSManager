@@ -184,7 +184,7 @@ const onStopTransfer = async (task: any) => {
                         ? '#22c55e'
                         : task.type === 'upload'
                           ? '#f97316'
-                          : '#3b82f6'
+                          : '#C59724'
                   "
                   class="task-progress"
                 />
@@ -319,7 +319,7 @@ const onStopTransfer = async (task: any) => {
 }
 
 .url-task-icon-inner {
-  color: #3b82f6;
+  color: #C59724;
   font-size: 1.125rem;
 }
 
@@ -396,7 +396,7 @@ const onStopTransfer = async (task: any) => {
 
 .task-icon-download {
   background-color: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
+  color: #C59724;
 }
 
 .app-dark-theme .task-icon-download {
@@ -498,7 +498,7 @@ const onStopTransfer = async (task: any) => {
 }
 
 .task-percent-download {
-  color: #3b82f6;
+  color: #C59724;
 }
 
 .task-stop-button {
