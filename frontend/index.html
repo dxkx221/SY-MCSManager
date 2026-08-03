@@ -119,99 +119,51 @@
         box-shadow: 0 4px 14px rgba(37,99,235,0.3);
       }
 
-      /* ═══ Guaranteed Sidebar Styles (inline to bypass Vite CSS chunking) ═══ */
-      .left-sidebar {
-        display: flex !important;
-        flex-direction: column !important;
-        flex: 0 0 220px !important;
-        width: 220px !important;
-        text-align: left !important;
-        background: #060B14 !important;
-        border-right: 1px solid rgba(255,255,255,0.04) !important;
-        padding: 20px 10px !important;
-        transition: width 0.22s ease !important;
-        overflow: hidden !important;
+      /* ═══ Global Modern Overrides ═══ */
+      body {
+        background: radial-gradient(circle at 0% 0%, rgba(37,99,235,0.03), transparent 55%),
+                    radial-gradient(circle at 100% 80%, rgba(14,165,233,0.02), transparent 45%),
+                    #F8FAFC !important;
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", sans-serif !important;
+        -webkit-font-smoothing: antialiased;
       }
 
-      .left-sidebar:hover {
-        width: 236px !important;
+      .main-content {
+        background-image: radial-gradient(circle, rgba(148,163,184,0.12) 0.5px, transparent 0.5px);
+        background-size: 20px 20px;
       }
 
-      .left-sidebar .logo {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        height: 44px;
-        padding: 0 10px 22px;
-        flex-shrink: 0;
+      .CardWrapper, .content-box, .global-card-container-shadow, .ant-card {
+        background: #FFFFFF !important;
+        border: 1px solid rgba(0,0,0,0.05) !important;
+        border-radius: 14px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02) !important;
       }
 
-      .left-sidebar .logo img {
-        max-width: 144px;
-        max-height: 30px;
-        object-fit: contain;
+      .ant-btn { border-radius: 8px !important; font-weight: 500 !important; }
+      .ant-btn-primary {
+        background: #2563EB !important; border-color: #2563EB !important;
+        box-shadow: 0 1px 3px rgba(37,99,235,0.15) !important;
+      }
+      .ant-btn-primary:hover { background: #1D4ED8 !important; }
+
+      .ant-input, .ant-input-number, .ant-select-selector, .ant-picker {
+        border-radius: 8px !important; border-color: #E2E8F0 !important;
+      }
+      .ant-input:focus, .ant-select-focused .ant-select-selector {
+        border-color: #2563EB !important;
+        box-shadow: 0 0 0 2px rgba(37,99,235,0.08) !important;
       }
 
-      .left-sidebar .sidebar-menu {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 4px 4px;
-        flex: 1;
-        gap: 2px;
-        width: 100%;
-        overflow-y: auto;
-        color: #8895A7;
-        font-size: 13.5px;
+      .ant-table-wrapper .ant-table {
+        border-radius: 12px !important; overflow: hidden;
+        border: 1px solid #E2E8F0 !important;
       }
-
-      .left-sidebar .sidebar-item {
-        display: flex !important;
-        align-items: center !important;
-        gap: 10px !important;
-        padding: 9px 12px !important;
-        color: #8895A7 !important;
-        text-decoration: none !important;
-        cursor: pointer !important;
-        border-radius: 8px !important;
-        transition: all 0.16s ease !important;
-        width: 100% !important;
-        font-weight: 450 !important;
-        font-size: 13.5px !important;
-        white-space: nowrap !important;
-        background: transparent !important;
+      .ant-table-thead > tr > th {
+        background: #F8FAFC !important; color: #64748B !important;
+        font-weight: 600 !important; font-size: 12.5px !important;
       }
-
-      .left-sidebar .sidebar-item:hover {
-        color: #D1D5DB !important;
-        background: rgba(255,255,255,0.04) !important;
-      }
-
-      .left-sidebar .sidebar-item.sidebar-item-active {
-        color: #FFFFFF !important;
-        background: rgba(37,99,235,0.12) !important;
-        box-shadow: inset 3px 0 0 #3B82F6 !important;
-      }
-
-      .left-sidebar .sidebar-item-icon {
-        font-size: 16px;
-        flex-shrink: 0;
-        color: inherit !important;
-      }
-
-      .left-sidebar .sidebar-item-text {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .left-sidebar .sidebar-divider {
-        height: 1px;
-        background: rgba(255,255,255,0.05);
-        margin: 6px 0;
-        flex-shrink: 0;
-        width: 100%;
-      }
+      .ant-table-tbody > tr:hover > td { background: #F8FAFC !important; }
     </style>
 
     <script>

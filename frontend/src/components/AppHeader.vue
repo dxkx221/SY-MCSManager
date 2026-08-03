@@ -175,25 +175,11 @@ const openPhoneMenu = (b = false) => {
 <style lang="scss" scoped>
 @import "@/assets/global.scss";
 
-.nav-button-warning:hover {
-  background-color: rgba(255, 193, 7, 0.34) !important;
-}
-
-.nav-button-success:hover {
-  background-color: rgba(64, 156, 216, 0.12) !important;
-}
-
-.nav-button-danger:hover {
-  background-color: #ff19116f !important;
-}
-
-.nav-button-primary:hover {
-  background-color: rgba(255, 255, 255, 0.25) !important;
-}
-
-.nav-button-success:hover {
-  background-color: #48e6635a !important;
-}
+/* Semantic button highlights */
+.nav-button-warning:hover { background-color: rgba(245,158,11,0.12) !important; color: #D97706 !important; }
+.nav-button-success:hover { background-color: rgba(16,185,129,0.1) !important; color: #059669 !important; }
+.nav-button-danger:hover  { background-color: rgba(239,68,68,0.1) !important; color: #DC2626 !important; }
+.nav-button-primary:hover { background-color: rgba(59,130,246,0.1) !important; color: #2563EB !important; }
 
 .phone-menu {
   .phone-menu-btn {
@@ -201,7 +187,6 @@ const openPhoneMenu = (b = false) => {
     border-bottom: 1px solid var(--color-gray-4);
     color: var(--color-gray-12);
   }
-
   .phone-menu-btn-active {
     background-color: rgba(64, 156, 216, 0.12);
   }
@@ -210,97 +195,82 @@ const openPhoneMenu = (b = false) => {
 .app-header-content-for-phone {
   height: 60px;
   width: 100%;
-
-  // display: flex;
-  // justify-content: space-between;
-  // align-items: center;
-  // margin: 0px;
   .card-panel {
     background-color: var(--app-header-bg);
     margin-top: 8px;
-
-    button {
-      color: var(--color-always-white) !important;
-    }
+    button { color: var(--color-always-white) !important; }
   }
-
-  .phone-nav-button,
-  .phone-nav-button * {
-    margin: 0px 6px;
-  }
+  .phone-nav-button, .phone-nav-button * { margin: 0px 6px; }
 }
 
 .app-header-wrapper {
-  box-shadow: 0 2px 4px 0 var(--card-shadow-color);
-  background-image: url("@/assets/side.png");
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--app-header-bg);
-  backdrop-filter: saturate(180%) blur(20px);
-  color: var(--app-header-text-color);
-
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: saturate(180%) blur(24px);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  color: #475569;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-
   z-index: 20;
-
-  // Smooth height transition
-  transition: height 0.3s ease-in-out;
+  transition: height 0.3s ease;
 
   .app-header-content {
     @extend .global-app-container;
-
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
     height: var(--header-height);
+    transition: height 0.3s ease;
 
-    // Smooth height transition
-    transition: height 0.3s ease-in-out;
-
-    .btns {
-      display: flex;
-      align-items: center;
-    }
+    .btns { display: flex; align-items: center; }
   }
 
   .nav-button {
-    margin: 0 4px;
-    font-size: 14px;
-    transition: all 0.4s;
-    color: var(--app-header-text-color) !important;
-    text-align: center;
-    padding: 8px 12px;
-    min-width: 40px;
-    cursor: pointer;
-    border-radius: 6px;
-    user-select: none;
-  }
-
-  .right-nav-button {
     margin: 0 2px;
-    font-size: 14px;
-    padding: 8px 8px;
-  }
+    font-size: 13.5px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    color: #475569 !important;
+    text-align: center;
+    padding: 6px 14px;
+    min-width: 36px;
+    cursor: pointer;
+    border-radius: 8px;
+    user-select: none;
+    letter-spacing: 0.2px;
 
-  .icon-button {
-    font-size: 16px !important;
-  }
-  .nav-button:hover {
-    background-color: rgba(215, 215, 215, 0.261);
+    &:hover {
+      color: #1E293B !important;
+      background: rgba(0, 0, 0, 0.04);
+    }
   }
 
   .nav-button-active {
-    background-color: rgba(215, 215, 215, 0.35);
+    color: #2563EB !important;
+    background: rgba(37, 99, 235, 0.08) !important;
+    font-weight: 600;
   }
+
+  .right-nav-button {
+    margin: 0 1px;
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+
+  .icon-button { font-size: 16px !important; }
 
   .logo {
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    img { border-radius: 4px; }
   }
 
   .pro-mode-order-container {
@@ -308,18 +278,11 @@ const openPhoneMenu = (b = false) => {
     @extend .nav-button-success;
   }
 
-  // Sync margin
   @media (max-width: 1470px) {
-    .app-header-content,
-    .app-header-content-for-phone {
-      margin: 0px 25px;
-    }
+    .app-header-content, .app-header-content-for-phone { margin: 0px 25px; }
   }
-
   @media (max-width: 992px) {
-    .app-header-content {
-      margin: 0px 8px;
-    }
+    .app-header-content { margin: 0px 8px; }
   }
 }
 </style>
