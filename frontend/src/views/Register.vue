@@ -299,7 +299,7 @@ onMounted(async () => {
   margin-left: 4px;
 
   &:hover {
-    color: #4096ff;
+    color: #A07810;
   }
 }
 </style>

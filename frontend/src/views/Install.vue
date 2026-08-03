@@ -353,8 +353,8 @@ const toOverview = () => {
   }
 
   .language-check {
-    background: #1890ff;
-    border-color: #1890ff;
+    background: #C59724;
+    border-color: #C59724;
   }
 
   .check-icon {
@@ -364,7 +364,7 @@ const toOverview = () => {
 
   .language-label {
     text-align: center;
-    color: #1890ff;
+    color: #C59724;
   }
 }
 
