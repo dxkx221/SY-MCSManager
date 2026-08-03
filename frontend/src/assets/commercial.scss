@@ -20,14 +20,33 @@
 /* ═══ Body ═══ */
 body.app-light-theme {
   background:
-    radial-gradient(circle at 0% 0%, rgba(37,99,235,0.03), transparent 50%),
-    radial-gradient(circle at 100% 100%, rgba(14,165,233,0.02), transparent 40%),
+    radial-gradient(circle at 0% 0%, rgba(37,99,235,0.04), transparent 55%),
+    radial-gradient(circle at 100% 100%, rgba(14,165,233,0.03), transparent 45%),
     #F6F9FD !important;
   font-family:
     "Inter", -apple-system, BlinkMacSystemFont,
     "Segoe UI", "Microsoft YaHei", "PingFang SC",
     "Noto Sans SC", sans-serif;
   -webkit-font-smoothing: antialiased;
+}
+
+/* Modern dot-grid tech background for main content */
+.main-content {
+  background-image:
+    radial-gradient(circle, rgba(37,99,235,0.03) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Sidebar — dark tech */
+.left-sidebar {
+  background: linear-gradient(180deg, #10182B 0%, #0C1222 100%) !important;
+}
+
+/* Breadcrumb subtle */
+.breadcrumbs {
+  color: #8B9CB5;
+  font-size: 12.5px;
+  letter-spacing: 0.3px;
 }
 
 /* ═══ Cards ═══ */

@@ -130,62 +130,63 @@ const onAppDropdownClick = (item: SidebarAppDropdownEntry, info: { key: Key }) =
 .left-sidebar {
   display: flex;
   flex-direction: column;
-  flex: 0 0 232px;
-  width: 232px;
+  flex: 0 0 224px;
+  width: 224px;
   text-align: left;
-  border-right: 1px solid #D8E3F2;
-  background: linear-gradient(180deg, #FFFFFF 0%, #F6F9FD 100%);
-  padding: 18px 12px;
+  border-right: 1px solid rgba(255,255,255,0.04);
+  background: linear-gradient(180deg, #10182B 0%, #0C1222 100%);
+  padding: 18px 10px;
   transition: width 0.24s ease;
 }
 
 .left-sidebar:hover {
-  width: 246px;
+  width: 240px;
 }
 
 .sidebar-menu {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 8px 4px;
+  padding: 6px 4px;
   flex: 1;
-  gap: 4px;
+  gap: 3px;
   width: 100%;
   overflow-y: auto;
-  color: #475569;
+  color: #7C8BA0;
 }
 
 .sidebar-item {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
-  color: #475569;
+  padding: 9px 13px;
+  color: #7C8BA0;
   text-decoration: none;
   cursor: pointer;
-  border-radius: 10px;
+  border-radius: 8px;
   transition: all 0.18s ease;
   width: 100%;
   font-weight: 500;
+  font-size: 13.5px;
 
   &:hover {
-    color: #2563EB;
-    background-color: rgba(37,99,235,0.06);
+    color: #E2E8F0;
+    background-color: rgba(255,255,255,0.05);
   }
 
   &.sidebar-item-active {
-    color: #2563EB;
-    background: rgba(37,99,235,0.08);
-    box-shadow: inset 3px 0 0 #2563EB;
+    color: #FFFFFF;
+    background: rgba(37,99,235,0.18);
+    box-shadow: inset 3px 0 0 #3B82F6;
   }
 
   .sidebar-item-icon {
     font-size: 16px;
     flex-shrink: 0;
+    color: inherit;
   }
 
   .sidebar-item-text {
-    font-size: 14px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -194,21 +195,21 @@ const onAppDropdownClick = (item: SidebarAppDropdownEntry, info: { key: Key }) =
 
 .sidebar-divider {
   height: 1px;
-  background-color: #D8E3F2;
-  margin: 10px 0;
+  background-color: rgba(255,255,255,0.06);
+  margin: 8px 0;
   flex-shrink: 0;
   width: 100%;
 }
 
 :deep(.nav-button-warning:hover) {
-  background-color: rgba(245,158,11,0.1) !important;
+  background-color: rgba(245,158,11,0.15) !important;
 }
 
 :deep(.nav-button-success:hover) {
-  background-color: rgba(16,185,129,0.1) !important;
+  background-color: rgba(16,185,129,0.15) !important;
 }
 
 :deep(.nav-button-danger:hover) {
-  background-color: rgba(239,68,68,0.1) !important;
+  background-color: rgba(239,68,68,0.15) !important;
 }
 </style>
