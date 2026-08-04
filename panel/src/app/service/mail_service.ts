@@ -81,34 +81,39 @@ class MailService {
     // Use nodemailer if available, otherwise try direct SMTP
     try {
       const nodemailer = require("nodemailer");
+      const port = smtpPort || 587;
+      // Auto-detect secure: port 465 = SSL, others = STARTTLS
+      const isSecure = smtpSecure ?? (port === 465);
+
       const transporter = nodemailer.createTransport({
         host: smtpHost,
-        port: smtpPort || 587,
-        secure: smtpSecure ?? false,
+        port,
+        secure: isSecure,
+        requireTLS: !isSecure,
         auth: {
           user: smtpUser,
           pass: smtpPass
         },
-        // Timeout
-        connectionTimeout: 10000,
-        greetingTimeout: 10000
+        connectionTimeout: 15000,
+        greetingTimeout: 15000,
+        socketTimeout: 15000
       });
 
       const from = smtpFrom || smtpUser;
       const info = await transporter.sendMail({
         from,
         to: toEmail,
-        subject: `MCSManager Verification Code: ${code}`,
-        text: `Your MCSManager registration verification code is: ${code}\n\nThis code will expire in 5 minutes.\n\nIf you did not request this code, please ignore this email.`,
-        html: `<div style="font-family: Arial, sans-serif; padding: 20px;">
-          <h2>MCSManager</h2>
-          <p>Your verification code for registration is:</p>
-          <div style="font-size: 32px; font-weight: bold; letter-spacing: 8px; padding: 20px; background: #f5f5f5; text-align: center; border-radius: 8px; margin: 20px 0;">
+        subject: `[SY MCSManager] 验证码: ${code}`,
+        text: `您在 SY MCSManager 面板的注册验证码是: ${code}\n\n验证码 5 分钟内有效。\n\n如非本人操作，请忽略此邮件。`,
+        html: `<div style="font-family: 'Microsoft YaHei', Arial, sans-serif; padding: 24px; max-width: 480px;">
+          <h2 style="color: #C59724; margin-bottom: 8px;">SY MCSManager</h2>
+          <p style="color: #555;">您的注册验证码：</p>
+          <div style="font-size: 36px; font-weight: bold; letter-spacing: 10px; padding: 24px; background: #FCFAF5; text-align: center; border-radius: 10px; border: 1px solid #E8E0D0; margin: 16px 0; color: #292524;">
             ${code}
           </div>
-          <p style="color: #888;">This code will expire in 5 minutes.</p>
-          <p style="color: #888;">If you did not request this code, please ignore this email.</p>
-        </div>`
+          <p style="color: #999; font-size: 13px;">验证码 5 分钟内有效，请勿泄露。</p>
+          <p style="color: #bbb; font-size: 12px;">如非本人操作，请忽略此邮件。</p>
+        </div>``
       });
 
       logger.info(`[Mail] Verification code sent to ${toEmail}, messageId: ${info.messageId}`);
