@@ -293,10 +293,10 @@ router.post(
         }
       }
 
-      // Ensure Docker containers auto-start after creation
+      // Ensure Docker containers are properly configured
       if (payload.type === "docker" || (payload as any)?.docker) {
+        payload.processType = "docker";
         if (!payload.eventTask) payload.eventTask = { autoStart: true, autoRestart: false, autoRestartMaxTimes: 0, ignore: false };
-        // Required daemon fields for docker instances
         payload.cwd = payload.cwd || "/";
         payload.ie = payload.ie || "utf-8";
         payload.oe = payload.oe || "utf-8";

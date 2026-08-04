@@ -65,7 +65,8 @@ export function planToInstanceConfig(plan: RedeemPlan): Partial<IGlobalInstanceC
   if (plan.stopCmd) config.stopCommand = plan.stopCmd;
   if (plan.cwd) config.cwd = plan.cwd;
   config.type = "docker";
-  // Defaults required by daemon for docker instances
+  config.processType = "docker";
+  // Required daemon fields
   config.cwd = config.cwd || "/";
   config.ie = "utf-8";
   config.oe = "utf-8";
@@ -102,8 +103,10 @@ class RedeemPlanService {
   }
 
   private save() {
+    const fs = require("fs");
+    const path = require("path");
     const dir = `${STORAGE_CATEGORY}`;
-    require("fs").mkdirSync(StorageSystem.DATA_PATH + "/" + dir, { recursive: true });
+    fs.mkdirSync(path.join(process.cwd(), "data", dir), { recursive: true });
     StorageSystem.writeFile(
       `${dir}/${STORAGE_KEY}.json`,
       JSON.stringify(this._plans, null, 2)

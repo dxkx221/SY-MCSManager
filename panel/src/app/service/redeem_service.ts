@@ -31,8 +31,10 @@ class RedeemService {
   }
 
   private save() {
+    const fs = require("fs");
+    const path = require("path");
     const dir = `${STORAGE_CATEGORY}`;
-    require("fs").mkdirSync(StorageSystem.DATA_PATH + "/" + dir, { recursive: true });
+    fs.mkdirSync(path.join(process.cwd(), "data", dir), { recursive: true });
     StorageSystem.writeFile(
       `${dir}/${STORAGE_KEY}.json`,
       JSON.stringify(this._codes, null, 2)
