@@ -96,8 +96,10 @@ class RedeemPlanService {
   }
 
   private save() {
+    const dir = `${STORAGE_CATEGORY}`;
+    require("fs").mkdirSync(StorageSystem.DATA_PATH + "/" + dir, { recursive: true });
     StorageSystem.writeFile(
-      `${STORAGE_CATEGORY}/${STORAGE_KEY}.json`,
+      `${dir}/${STORAGE_KEY}.json`,
       JSON.stringify(this._plans, null, 2)
     );
   }
