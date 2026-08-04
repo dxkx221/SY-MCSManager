@@ -65,6 +65,12 @@ export function planToInstanceConfig(plan: RedeemPlan): Partial<IGlobalInstanceC
   if (plan.stopCmd) config.stopCommand = plan.stopCmd;
   if (plan.cwd) config.cwd = plan.cwd;
   config.type = "docker";
+  // Defaults required by daemon for docker instances
+  config.cwd = config.cwd || "/";
+  config.ie = "utf-8";
+  config.oe = "utf-8";
+  config.startCommand = config.startCommand || "";
+  config.stopCommand = config.stopCommand || "";
   config.eventTask = {
     autoStart: true,
     autoRestart: false,

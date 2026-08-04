@@ -296,6 +296,12 @@ router.post(
       // Ensure Docker containers auto-start after creation
       if (payload.type === "docker" || (payload as any)?.docker) {
         if (!payload.eventTask) payload.eventTask = { autoStart: true, autoRestart: false, autoRestartMaxTimes: 0, ignore: false };
+        // Required daemon fields for docker instances
+        payload.cwd = payload.cwd || "/";
+        payload.ie = payload.ie || "utf-8";
+        payload.oe = payload.oe || "utf-8";
+        payload.startCommand = payload.startCommand || "";
+        payload.stopCommand = payload.stopCommand || "";
       }
 
       if (!productId) throw new Error("Redeem code missing productId/category id");
