@@ -68,7 +68,7 @@ const cardCategoryList = [
     value: NEW_CARD_TYPE.OTHER
   },
   {
-    label: "管理",
+    label: "管理型",
     value: NEW_CARD_TYPE.MANAGE
   }
 ];

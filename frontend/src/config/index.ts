@@ -353,11 +353,11 @@ export function getLayoutCardPool() {
       permission: ROLE.USER,
       meta: {},
       type: "RedeemCard",
-      title: "Redeem Code",
+      title: "兑换实例",
       width: 4,
-      description: "Redeem a code to open a server instance",
+      description: "输入兑换码开通游戏服务器实例",
       height: LayoutCardHeight.SMALL,
-      category: NEW_CARD_TYPE.INSTANCE
+      category: NEW_CARD_TYPE.COMMON
     },
     {
       id: getRandomId(),
