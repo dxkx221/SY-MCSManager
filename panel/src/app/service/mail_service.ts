@@ -113,7 +113,7 @@ class MailService {
           </div>
           <p style="color: #999; font-size: 13px;">验证码 5 分钟内有效，请勿泄露。</p>
           <p style="color: #bbb; font-size: 12px;">如非本人操作，请忽略此邮件。</p>
-        </div>``
+        </div>`
       });
 
       logger.info(`[Mail] Verification code sent to ${toEmail}, messageId: ${info.messageId}`);
