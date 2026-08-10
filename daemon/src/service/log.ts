@@ -12,11 +12,19 @@ const timeString =
   `_${time.getHours()}-${time.getMinutes()}-${time.getSeconds()}`;
 
 if (fs.existsSync(LOG_FILE_PATH)) {
-  fs.renameSync(LOG_FILE_PATH, `logs/${timeString}.log`);
+  try {
+    fs.renameSync(LOG_FILE_PATH, `logs/${timeString}.log`);
+  } catch (err) {
+    console.warn(`[Log] Failed to rotate ${LOG_FILE_PATH}, continue startup:`, err);
+  }
 }
 
 if (fs.existsSync(LOG_SYS_INFO_FILE_PATH)) {
-  fs.renameSync(LOG_SYS_INFO_FILE_PATH, `logs/sysinfo_${timeString}.log`);
+  try {
+    fs.renameSync(LOG_SYS_INFO_FILE_PATH, `logs/sysinfo_${timeString}.log`);
+  } catch (err) {
+    console.warn(`[Log] Failed to rotate ${LOG_SYS_INFO_FILE_PATH}, continue startup:`, err);
+  }
 }
 
 log4js.configure({

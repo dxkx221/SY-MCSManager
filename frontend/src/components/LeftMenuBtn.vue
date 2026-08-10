@@ -20,8 +20,9 @@ defineProps<{
 
 <style lang="scss" scoped>
 .isActive {
-  background-color: rgba(168, 168, 168, 0.143);
-  color: var(--color-blue-5) !important;
+  background: var(--accent-soft, rgba(103, 184, 194, .12));
+  color: var(--accent-primary, var(--color-primary)) !important;
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-primary) 20%, transparent);
 }
 .btn {
   display: flex;
@@ -32,8 +33,8 @@ defineProps<{
   padding: 0px 12px;
   min-width: 40px;
   cursor: pointer;
-  border-radius: 6px;
-  transition: all 0.6s;
+  border-radius: 10px;
+  transition: color .16s ease, background-color .16s ease, box-shadow .16s ease, transform .16s ease;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -42,12 +43,14 @@ defineProps<{
   .text {
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--color-gray-9);
+    color: var(--text-secondary, var(--text-color));
   }
 
   &:hover {
-    // background-color: var(--color-gray-5);
-    background-color: rgba(168, 168, 168, 0.208);
+    background: var(--surface-hover, rgba(103, 184, 194, .08));
+    color: var(--accent-primary, var(--color-primary));
   }
+
+  &:active { transform: scale(.985); }
 }
 </style>

@@ -1,31 +1,31 @@
 .app-light-theme {
   @extend .app-light-base-color;
 
-  --background-color: #FCFAF5;
-  --background-color-white: #FFFFFF;
-  --drag-background-color: #E8E0D0;
-  --new-card-list-background-color: rgba(247,242,232,0.8);
-  --new-card-list-background-color-menu: rgba(255,255,255,0.9);
-  --float-box-bg-color: rgba(247,242,232,0.5);
+  --background-color: #FDF2F8;
+  --background-color-white: rgba(255, 250, 253, 0.14);
+  --drag-background-color: rgba(255, 238, 247, 0.18);
+  --new-card-list-background-color: rgba(255, 250, 253, 0.16);
+  --new-card-list-background-color-menu: rgba(255,255,255,0.18);
+  --float-box-bg-color: rgba(255, 250, 253, 0.18);
   --gray-border-color: var(--color-gray-10);
-  --bottom-nav-background-color: #FFFFFF;
-  --bottom-nav-background-color-hover: rgba(197,151,36,0.06);
+  --bottom-nav-background-color: rgba(255, 250, 253, 0.16);
+  --bottom-nav-background-color-hover: rgba(236,72,153,0.08);
 
-  --login-panel-bg: #FFFFFF;
+  --login-panel-bg: rgba(255, 250, 253, 0.18);
 
-  --app-header-bg: #FFFFFF;
-  --app-header-bg-extend: #FFFFFF;
-  --app-header-text-color: #292524;
+  --app-header-bg: rgba(255, 250, 253, 0.14);
+  --app-header-bg-extend: rgba(255, 250, 253, 0.16);
+  --app-header-text-color: #4A2040;
 
-  --text-color: #292524;
+  --text-color: #2D1B2E;
 
-  --card-border-color: #E8E0D0;
-  --card-shadow-color: rgba(30,20,10,0.04);
-  --card-shadow-extend-color: rgba(30,20,10,0.06);
+  --card-border-color: rgba(236, 72, 153, 0.12);
+  --card-shadow-color: rgba(168, 85, 247, 0.07);
+  --card-shadow-extend-color: rgba(168, 85, 247, 0.11);
 
-  --card-bottom-background-color: rgba(30,20,10,0.5);
+  --card-bottom-background-color: rgba(80,20,60,0.18);
 
-  --inner-card-hover-bg: linear-gradient(135deg, #F7F2E8 0%, #F2EDE4 100%);
+  --inner-card-hover-bg: rgba(255, 250, 253, 0.20);
 }
 
 .app-light-base-color {
@@ -110,16 +110,16 @@
   --color-cyan-8: #006d75;
   --color-cyan-9: #00474f;
   --color-cyan-10: #002329;
-  --color-blue-1: #FFFDF7;
-  --color-blue-2: #FDF5E0;
-  --color-blue-3: #FAE8C0;
-  --color-blue-4: #F0D08A;
-  --color-blue-5: #C59724;
-  --color-blue-6: #A07810;
-  --color-blue-7: #8B6914;
-  --color-blue-8: #755810;
-  --color-blue-9: #5F470D;
-  --color-blue-10: #3D2E08;
+  --color-blue-1: #F0FBFC;
+  --color-blue-2: #D9F3F5;
+  --color-blue-3: #BCE7EA;
+  --color-blue-4: #96D4D9;
+  --color-blue-5: #67B8C2;
+  --color-blue-6: #4FA6B0;
+  --color-blue-7: #3B8993;
+  --color-blue-8: #2F6E76;
+  --color-blue-9: #285961;
+  --color-blue-10: #203F45;
   --color-geekblue-1: #f0f5ff;
   --color-geekblue-2: #d6e4ff;
   --color-geekblue-3: #adc6ff;
@@ -165,7 +165,7 @@
   --color-gray-12: #141414;
   --color-gray-13: #000000;
 
-  --color-primary: #C59724;
+  --color-primary: #EC4899;
   --color-danger: var(--color-red-5);
   --color-warning: var(--color-orange-6);
   --color-success: var(--color-green-5);

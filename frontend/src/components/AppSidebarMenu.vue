@@ -105,5 +105,40 @@ const onAppDropdownClick = (item: SidebarAppDropdownEntry, info: { key: Key }) =
 </template>
 
 <style lang="scss">
-/* Sidebar styles are in index.html for guaranteed delivery */
+.left-sidebar {
+  display: flex;
+  flex: 0 0 224px;
+  width: 224px;
+  flex-direction: column;
+  padding: 22px 12px;
+  overflow: hidden;
+  backdrop-filter: saturate(150%) blur(20px);
+  -webkit-backdrop-filter: saturate(150%) blur(20px);
+  border-right: 1px solid var(--card-border-color);
+  transition: width .22s ease, background-color .25s ease, border-color .25s ease;
+
+  &:hover { width: 238px; }
+  .logo { display: flex; align-items: center; height: 44px; padding: 0 10px 24px; flex-shrink: 0; }
+  .sidebar-menu { display: flex; flex: 1; flex-direction: column; gap: 2px; padding: 0 2px; overflow-y: auto; }
+  .sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 14px;
+    border-radius: 10px;
+    color: var(--text-color);
+    font-size: 13.5px;
+    font-weight: 480;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color .16s ease, background-color .16s ease, transform .16s ease, box-shadow .2s ease;
+
+    &:active { transform: scale(.985); }
+  }
+  .sidebar-item-active { font-weight: 600; }
+  .sidebar-item-icon { flex-shrink: 0; color: inherit; font-size: 16px; }
+  .sidebar-divider { width: 100%; height: 1px; margin: 6px 0; background: var(--card-border-color); }
+}
 </style>

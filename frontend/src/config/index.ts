@@ -49,6 +49,7 @@ import UserAccessSettings from "@/widgets/user/AccessSettings.vue";
 import UserInstanceList from "@/widgets/UserInstanceList.vue";
 import UserList from "@/widgets/UserList.vue";
 import UserStatusBlock from "@/widgets/UserStatusBlock.vue";
+import AnnouncementCenter from "@/widgets/announcementcenter.vue";
 
 import { NEW_CARD_TYPE } from "../types/index";
 import { LayoutCardHeight } from "./originLayoutConfig";
@@ -103,7 +104,8 @@ export const LAYOUT_CARD_TYPES: { [key: string]: any } = {
   ShelvesCard,
   OperationLogCard,
   Market,
-  MarketEditor
+  MarketEditor,
+  AnnouncementCenter
 };
 
 export interface NewCardItem extends LayoutCard {
@@ -113,6 +115,17 @@ export interface NewCardItem extends LayoutCard {
 
 export function getLayoutCardPool() {
   const LAYOUT_CARD_POOL: NewCardItem[] = [
+    {
+      id: getRandomId(),
+      permission: ROLE.USER,
+      meta: {},
+      type: "AnnouncementCenter",
+      title: "公告中心",
+      width: 12,
+      description: "查看平台公告与服务动态",
+      height: LayoutCardHeight.AUTO,
+      category: NEW_CARD_TYPE.COMMON
+    },
     {
       id: getRandomId(),
       permission: ROLE.GUEST,

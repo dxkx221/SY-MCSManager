@@ -28,6 +28,7 @@ export interface IUser {
   open2FA?: boolean;
   ssoSub?: string;
   ssoBound?: boolean;
+  readAnnouncementIds?: string[];
 }
 
 export interface ICompleteUser {

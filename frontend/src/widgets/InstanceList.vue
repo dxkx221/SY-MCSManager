@@ -15,7 +15,8 @@ import {
   PlayCircleOutlined,
   RedoOutlined,
   SearchOutlined,
-  WarningOutlined
+  WarningOutlined,
+  FieldTimeOutlined
 } from "@ant-design/icons-vue";
 import { computed, h, onMounted, ref } from "vue";
 
@@ -26,6 +27,7 @@ import { useScreen } from "@/hooks/useScreen";
 import { remoteInstances, remoteInstancesGlobal, remoteNodeList } from "@/services/apis";
 import {
   batchDelete,
+  batchExtendExpire,
   batchKill,
   batchRestart,
   batchStart,
@@ -422,6 +424,11 @@ const instanceOperations = [
     click: () => batchDeleteInstance(false)
   },
   {
+    title: "延长到期时长",
+    icon: FieldTimeOutlined,
+    click: () => batchExtendExpireInstance()
+  },
+  {
     title: t("TXT_CODE_9ef27367"),
     icon: WarningOutlined,
     click: () => batchDeleteInstance(true)
@@ -460,6 +467,70 @@ const batchOperation = async (actName: "start" | "stop" | "kill" | "restart") =>
   };
 
   operationMap[actName]();
+};
+
+const batchExtendExpireInstance = async () => {
+  if (selectedInstance.value.length === 0) return reportErrorMsg(t("TXT_CODE_a0a77be5"));
+  const daysInput = ref<number>(30);
+  const confirmExtendModal = Modal.confirm({
+    title: "批量延长到期时长",
+    icon: h(FieldTimeOutlined),
+    content: () =>
+      h("div", {}, [
+        h("p", {}, `将为已选 ${selectedInstance.value.length} 个实例延长到期时间。`),
+        h("p", { style: "margin: 8px 0 6px; color: #666;" }, "请输入要延长的天数："),
+        h("input", {
+          type: "number",
+          min: 1,
+          step: 1,
+          value: daysInput.value,
+          style:
+            "width: 100%; height: 34px; padding: 4px 11px; border: 1px solid #d9d9d9; border-radius: 6px; outline: none;",
+          onInput: (event: Event) => {
+            daysInput.value = Number((event.target as HTMLInputElement).value);
+          }
+        }),
+        h(
+          "p",
+          { style: "margin-top: 8px; color: #888; font-size: 12px;" },
+          "说明：未设置到期时间或已过期的实例，将从当前时间开始计算。"
+        )
+      ]),
+    okText: "确认延长",
+    async onOk() {
+      const days = Number(daysInput.value);
+      if (!Number.isFinite(days) || days <= 0) {
+        reportErrorMsg("请输入大于 0 的天数");
+        return Promise.reject(new Error("invalid days"));
+      }
+      try {
+        const { execute, state } = batchExtendExpire();
+        await execute({
+          data: {
+            days: Math.floor(days),
+            instances: selectedInstance.value.map((item) => ({
+              instanceUuid: item.instanceUuid,
+              daemonId: currentRemoteNode.value?.uuid ?? ""
+            }))
+          }
+        });
+        if (state.value) {
+          confirmExtendModal.destroy();
+          notification.success({
+            message: "到期时长已延长",
+            description: `已为 ${selectedInstance.value.length} 个实例延长 ${Math.floor(days)} 天`
+          });
+          exitMultipleMode();
+          await initInstancesData();
+        }
+      } catch (err: any) {
+        console.error(err);
+        reportErrorMsg(err.message);
+        return Promise.reject(err);
+      }
+    },
+    onCancel() {}
+  });
 };
 
 const batchDeleteInstance = async (deleteFile: boolean) => {

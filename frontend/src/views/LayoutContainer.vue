@@ -10,11 +10,12 @@ import { useScreen } from "@/hooks/useScreen";
 import { useLayoutConfigStore } from "@/stores/useLayoutConfig";
 import { useLayoutContainerStore } from "@/stores/useLayoutContainerStore";
 import { useRouterParams } from "../hooks/useRouterParams";
+import { computed } from "vue";
 
 const { containerState } = useLayoutContainerStore();
 const { currentRoutePath } = useRouterParams();
 const { getPageLayoutConfig } = useLayoutConfigStore();
-const currentLayoutConfig = getPageLayoutConfig(currentRoutePath.value);
+const currentLayoutConfig = computed(() => getPageLayoutConfig(currentRoutePath.value));
 const { computedLayout } = useCardLayoutComputed(currentLayoutConfig);
 const { isPhone } = useScreen();
 
@@ -141,21 +142,9 @@ const showCardOperator = (card: ILayoutCard) => {
 }
 .main-layout-container {
   position: relative;
-  animation: scaleAnimation 0.6s ease-in-out;
   min-height: 100%;
   margin: auto;
   padding-bottom: 20px;
-}
-
-@keyframes scaleAnimation {
-  0% {
-    opacity: 0.02;
-    transform: scale(0.98);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
+  opacity: 1;
 }
 </style>

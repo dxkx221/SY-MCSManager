@@ -345,16 +345,16 @@ const toOverview = () => {
 }
 
 .language-card-active {
-  border-color: #C59724 !important;
-  background: linear-gradient(135deg, rgba(197,151,36,0.12) 0%, rgba(197,151,36,0.06) 100%);
+  border-color: var(--accent-primary, var(--color-primary)) !important;
+  background: linear-gradient(135deg, rgba(251,113,133,0.14) 0%, rgba(125,211,252,0.08) 100%);
 
   &::before {
     opacity: 1 !important;
   }
 
   .language-check {
-    background: #C59724;
-    border-color: #C59724;
+    background: var(--accent-primary, var(--color-primary));
+    border-color: var(--accent-primary, var(--color-primary));
   }
 
   .check-icon {
@@ -364,7 +364,7 @@ const toOverview = () => {
 
   .language-label {
     text-align: center;
-    color: #C59724;
+    color: var(--accent-primary, var(--color-primary));
   }
 }
 

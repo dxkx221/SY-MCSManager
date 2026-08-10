@@ -18,15 +18,20 @@ export function getFrontendLayoutConfig(): string {
     layoutConfig = storage.readFile(LAYOUT_CONFIG_NAME);
   }
   if (layoutConfig) {
-    if (GlobalVariable.get("versionChange")) {
-      const latestLayoutConfig = getDefaultFrontendLayoutConfig();
-      const currentLayoutConfig = JSON.parse(layoutConfig) as IPageLayoutConfig[];
-      for (const page of latestLayoutConfig) {
-        if (!currentLayoutConfig.find((item) => item.page === page.page)) {
-          currentLayoutConfig.push(page);
-        }
+    const latestLayoutConfig = getDefaultFrontendLayoutConfig();
+    const currentLayoutConfig = JSON.parse(layoutConfig) as IPageLayoutConfig[];
+    let changed = false;
+    for (const page of latestLayoutConfig) {
+      if (!currentLayoutConfig.find((item) => item.page === page.page)) {
+        currentLayoutConfig.push(page);
+        changed = true;
       }
+    }
+    if (GlobalVariable.get("versionChange")) {
       GlobalVariable.set("versionChange", null);
+      changed = true;
+    }
+    if (changed) {
       setFrontendLayoutConfig(currentLayoutConfig);
       return JSON.stringify(currentLayoutConfig);
     }

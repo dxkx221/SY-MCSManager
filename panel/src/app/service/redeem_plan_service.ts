@@ -4,8 +4,15 @@ import StorageSystem from "../common/system_storage";
 
 const STORAGE_CATEGORY = "RedeemPlans";
 const STORAGE_KEY = "plans";
+const SAFE_DOCKER_CWD = "/workspace";
 
 const randomLower = customAlphabet("abcdefghijklmnopqrstuvwxyz", 6);
+
+function normalizeDockerCwd(cwd?: string): string {
+  const value = typeof cwd === "string" ? cwd.trim() : "";
+  if (!value || value === "/") return SAFE_DOCKER_CWD;
+  return value;
+}
 
 /**
  * Generate instance nickname from a plan's naming config + user context.
@@ -66,8 +73,10 @@ export function planToInstanceConfig(plan: RedeemPlan): Partial<IGlobalInstanceC
   if (plan.cwd) config.cwd = plan.cwd;
   config.type = "docker";
   config.processType = "docker";
-  // Required daemon fields
-  config.cwd = config.cwd || "/";
+  // Required daemon fields. Never default Docker cwd to host root (/), otherwise
+  // container creation may expose the server root directory as the instance workspace.
+  config.cwd = normalizeDockerCwd(config.cwd);
+  if (!docker.workingDir || docker.workingDir.trim() === "/") docker.workingDir = config.cwd;
   config.ie = "utf-8";
   config.oe = "utf-8";
   config.startCommand = config.startCommand || "";

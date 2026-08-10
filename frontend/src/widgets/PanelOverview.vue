@@ -254,7 +254,7 @@ const overviewList = computed(() => {
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--color-gary-4);
+    color: color-mix(in srgb, var(--text-color) 68%, transparent);
     font-size: var(--font-body);
     margin-bottom: 8px;
 
@@ -270,7 +270,7 @@ const overviewList = computed(() => {
     align-items: baseline;
     gap: 8px;
     margin-top: 8px;
-    color: var(--color-gary-6);
+    color: var(--text-color);
     font-size: var(--font-h5);
 
     .overview-item__percent {
@@ -308,7 +308,7 @@ const overviewList = computed(() => {
       }
 
       .loadavg-sep {
-        color: var(--color-gary-4);
+        color: color-mix(in srgb, var(--text-color) 62%, transparent);
         font-size: 12px;
         margin: 0 2px;
       }

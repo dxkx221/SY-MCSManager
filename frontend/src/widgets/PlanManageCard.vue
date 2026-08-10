@@ -68,14 +68,22 @@ const formatDuration = (p: RedeemPlanItem) => {
 const loadData = async () => {
   plansLoading.value = true;
   try {
-    const [planRes, nodeRes] = await Promise.all([
-      listRedeemPlans().execute(),
-      remoteNodeList().execute()
-    ]);
+    const planRes = await listRedeemPlans().execute();
     plans.value = planRes.value ?? [];
+  } catch (err: any) {
+    plans.value = [];
+    reportErrorMsg(err);
+  } finally {
+    plansLoading.value = false;
+  }
+
+  try {
+    const nodeRes = await remoteNodeList().execute();
     planNodes.value = nodeRes.value ?? [];
-  } catch (err: any) { reportErrorMsg(err); }
-  finally { plansLoading.value = false; }
+  } catch {
+    // 节点列表只影响套餐编辑时选择节点，不应拖空服务器上的全局套餐列表。
+    planNodes.value = [];
+  }
 };
 
 const openNewPlan = () => {

@@ -18,12 +18,12 @@ export const useAppConfigStore = createGlobalState(() => {
       fontSizeLG: 14,
       fontSizeSM: 12,
       fontSizeXL: 18,
-      colorPrimary: "#C59724",
-      colorInfo: "#C59724",
-      colorLink: "#C59724",
-      colorLinkHover: "#A07810",
-      colorLinkActive: "#8B6914",
-      borderRadius: 8
+      colorPrimary: "#EC4899",
+      colorInfo: "#EC4899",
+      colorLink: "#DB2777",
+      colorLinkHover: "#BE185D",
+      colorLinkActive: "#9D174D",
+      borderRadius: 10
     }
   });
   const appConfig = reactive({
@@ -74,12 +74,28 @@ export const useAppConfigStore = createGlobalState(() => {
 
   const setLight = () => {
     theme.algorithm = antTheme.defaultAlgorithm;
+    theme.token = {
+      ...theme.token,
+      colorPrimary: "#EC4899",
+      colorInfo: "#EC4899",
+      colorLink: "#DB2777",
+      colorLinkHover: "#BE185D",
+      colorLinkActive: "#9D174D"
+    };
     document.body.classList.add("app-light-theme");
     document.body.classList.remove("app-dark-theme");
   };
 
   const setDark = () => {
     theme.algorithm = antTheme.darkAlgorithm;
+    theme.token = {
+      ...theme.token,
+      colorPrimary: "#A996D6",
+      colorInfo: "#AEB6D0",
+      colorLink: "#B8A7E1",
+      colorLinkHover: "#C9BAEC",
+      colorLinkActive: "#8E7BBE"
+    };
     document.body.classList.add("app-dark-theme");
     document.body.classList.remove("app-light-theme");
   };

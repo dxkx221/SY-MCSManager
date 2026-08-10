@@ -52,15 +52,18 @@ const { containerState } = useLayoutContainerStore();
 }
 
 .card-panel {
-  border: 1px solid var(--card-border-color);
-  background-color: var(--background-color-white);
+  border: 1px solid var(--border-subtle, var(--card-border-color));
+  background: var(--surface-card, var(--background-color-white));
+  backdrop-filter: saturate(145%) blur(16px);
+  -webkit-backdrop-filter: saturate(145%) blur(16px);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.08), 0 10px 30px var(--card-shadow-color);
   display: flex;
   flex-direction: column;
   position: relative;
 
   .card-panel-title {
     font-weight: 600;
-    color: var(--text-color);
+    color: var(--text-primary, var(--text-color));
 
     display: flex;
     justify-content: space-between;
@@ -70,7 +73,7 @@ const { containerState } = useLayoutContainerStore();
   }
   .card-panel-content {
     flex-grow: 1;
-    color: var(--text-color);
+    color: var(--text-primary, var(--text-color));
     position: relative;
   }
 }

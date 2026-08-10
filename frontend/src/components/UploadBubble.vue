@@ -39,13 +39,13 @@ const uploadProgress = computed(() => {
 
 <style scoped lang="scss">
 :deep(.ant-float-button-body) {
-  background-color: rgba(255, 255, 255, 0.6) !important;
+  background-color: rgba(255,250,253,.16) !important;
   backdrop-filter: blur(12px) saturate(180%);
   -webkit-backdrop-filter: blur(12px) saturate(180%);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 :deep(.ant-float-button-body:hover) {
-  background-color: rgba(255, 255, 255, 0.8) !important;
+  background-color: rgba(255,250,253,.20) !important;
 }
 </style>

@@ -48,7 +48,7 @@ export async function downloadSteam(url: string): Promise<string> {
       const writeStream = fs.createWriteStream(path.normalize(tmpPath));
 
       // Use pipeline to handle streams
-      pipeline(response.data, writeStream, async (err) => {
+      pipeline(response.data, writeStream, async (err: NodeJS.ErrnoException | null) => {
         if (err) {
           fs.remove(tmpPath, () => {});
           reject(err);

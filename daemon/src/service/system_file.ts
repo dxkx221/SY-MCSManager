@@ -128,10 +128,10 @@ export default class FileManager {
     let filteredItems = await Promise.all(
       dirents
         .filter(
-          (dirent) =>
+          (dirent: any) =>
             !searchFileName || dirent.name.toLowerCase().includes(searchFileName.toLowerCase())
         )
-        .map(async (dirent) => {
+        .map(async (dirent: any) => {
           let type = dirent.isFile() ? 1 : 0;
           if (type === 0 && !dirent.isDirectory()) {
             // Symbolic links may return false for both isFile() and isDirectory()
@@ -244,7 +244,7 @@ export default class FileManager {
     if (!this.check(target)) throw new Error(ERROR_MSG_01);
     const targetPath = this.toAbsolutePath(target);
     return new Promise((r, j) => {
-      fs.remove(targetPath, (err) => {
+      fs.remove(targetPath, (err: unknown) => {
         if (!err) r(true);
         else j(err);
       });

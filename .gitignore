@@ -12,6 +12,16 @@ dist/
 out/
 lib/
 production/
+
+# Release/runtime artifacts
+panel/app.js
+panel/app.js.map
+daemon/app.js
+daemon/app.js.map
+panel/public.pre*/
+*.zip
+*.tar
+*.tar.gz
 .DS_Store
 production-code/
 test.js

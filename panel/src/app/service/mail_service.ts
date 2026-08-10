@@ -64,8 +64,11 @@ class MailService {
     this.codeStore.delete(email);
   }
 
-  // Send verification email via SMTP
-  async sendVerificationCode(toEmail: string, code: string): Promise<boolean> {
+  async sendCodeEmail(
+    toEmail: string,
+    code: string,
+    scene: "register" | "reset" = "register"
+  ): Promise<boolean> {
     const cfg = systemConfig;
     if (!cfg?.smtpEnabled) {
       logger.warn("[Mail] SMTP not enabled, cannot send verification code");
@@ -78,11 +81,13 @@ class MailService {
       return false;
     }
 
-    // Use nodemailer if available, otherwise try direct SMTP
+    const isReset = scene === "reset";
+    const title = isReset ? "重置密码验证码" : "注册验证码";
+    const actionText = isReset ? "重置密码" : "注册";
+
     try {
       const nodemailer = require("nodemailer");
       const port = smtpPort || 587;
-      // Auto-detect secure: port 465 = SSL, others = STARTTLS
       const isSecure = smtpSecure ?? (port === 465);
 
       const transporter = nodemailer.createTransport({
@@ -103,11 +108,11 @@ class MailService {
       const info = await transporter.sendMail({
         from,
         to: toEmail,
-        subject: `[SY MCSManager] 验证码: ${code}`,
-        text: `您在 SY MCSManager 面板的注册验证码是: ${code}\n\n验证码 5 分钟内有效。\n\n如非本人操作，请忽略此邮件。`,
+        subject: `[SY MCSManager] ${title}: ${code}`,
+        text: `您在 SY MCSManager 面板的${actionText}验证码是: ${code}\n\n验证码 5 分钟内有效。\n\n如非本人操作，请忽略此邮件。`,
         html: `<div style="font-family: 'Microsoft YaHei', Arial, sans-serif; padding: 24px; max-width: 480px;">
           <h2 style="color: #C59724; margin-bottom: 8px;">SY MCSManager</h2>
-          <p style="color: #555;">您的注册验证码：</p>
+          <p style="color: #555;">您的${title}：</p>
           <div style="font-size: 36px; font-weight: bold; letter-spacing: 10px; padding: 24px; background: #FCFAF5; text-align: center; border-radius: 10px; border: 1px solid #E8E0D0; margin: 16px 0; color: #292524;">
             ${code}
           </div>
@@ -116,14 +121,22 @@ class MailService {
         </div>`
       });
 
-      logger.info(`[Mail] Verification code sent to ${toEmail}, messageId: ${info.messageId}`);
+      logger.info(`[Mail] ${title} sent to ${toEmail}, messageId: ${info.messageId}`);
       return true;
     } catch (err: any) {
       logger.error(`[Mail] Failed to send email: ${err.message}`);
-      // Fallback: log the code to console so it can be used during testing
-      logger.info(`[Mail] === VERIFICATION CODE for ${toEmail}: ${code} ===`);
+      logger.info(`[Mail] === ${title} for ${toEmail}: ${code} ===`);
       return false;
     }
+  }
+
+  // Send verification email via SMTP
+  async sendVerificationCode(toEmail: string, code: string): Promise<boolean> {
+    return this.sendCodeEmail(toEmail, code, "register");
+  }
+
+  async sendPasswordResetCode(toEmail: string, code: string): Promise<boolean> {
+    return this.sendCodeEmail(toEmail, code, "reset");
   }
 }
 

@@ -52,19 +52,21 @@ const props = defineProps<{
 .inner-card-wrapper {
   position: relative;
   overflow: hidden;
-  border: 1px solid var(--color-gray-3);
-  background-color: var(--color-gray-2);
+  border: 1px solid var(--card-border-color);
+  background-color: var(--background-color-white);
+  backdrop-filter: saturate(140%) blur(14px);
+  -webkit-backdrop-filter: saturate(140%) blur(14px);
   padding: 12px;
   cursor: pointer;
   transition:
     background 0.35s ease,
     border-color 0.35s ease,
     box-shadow 0.35s ease;
-  border-radius: 6px;
+  border-radius: 12px;
 }
 
 .inner-card-wrapper:hover {
-  border-color: var(--color-gray-8);
+  border-color: color-mix(in srgb, var(--color-primary) 26%, transparent);
   background: var(--inner-card-hover-bg);
   box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.12);
 }

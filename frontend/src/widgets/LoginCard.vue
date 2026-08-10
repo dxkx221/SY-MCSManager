@@ -37,14 +37,14 @@ const formData = reactive({
   code: ""
 });
 
-const can注册 = ref(false);
+const canRegister = ref(false);
 
 // Check if register is enabled
 const check注册Status = async () => {
   try {
     const res = await registerStatus().execute();
     if (res.value?.publicRegister) {
-      can注册.value = true;
+      canRegister.value = true;
     }
   } catch {
     // ignore
@@ -53,6 +53,10 @@ const check注册Status = async () => {
 
 const goRegister = () => {
   router.push({ path: "/register" });
+};
+
+const goForgotPassword = () => {
+  router.push({ path: "/forgot-password" });
 };
 
 const { execute: login } = loginUser();
@@ -305,14 +309,15 @@ onMounted(async () => {
                 </a-button>
               </div>
 
-              <div
-                v-if="can注册"
-                class="mt-24"
-                style="text-align: center;"
-              >
-                <span style="color: #999; font-size: 13px;">还没有账号？</span>
-                <a-button type="link" style="font-size: 13px; padding: 0 4px;" @click="goRegister">
-                  注册新账号
+              <div class="mt-24 login-help-links">
+                <template v-if="canRegister">
+                  <span>还没有账号？</span>
+                  <a-button type="link" class="login-help-btn" @click="goRegister">
+                    注册新账号
+                  </a-button>
+                </template>
+                <a-button type="link" class="login-help-btn" @click="goForgotPassword">
+                  找回密码
                 </a-button>
               </div>
             </template>
@@ -369,11 +374,28 @@ onMounted(async () => {
   width: 100%;
   // backdrop-filter: saturate(120%) blur(12px);
   background-color: var(--login-panel-bg);
+  color: var(--text-color);
 
   .login-panel-body {
     padding: 28px 24px;
     min-height: 322px;
   }
+}
+
+.login-help-links {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  color: var(--color-gray-7);
+  font-size: 13px;
+}
+
+.login-help-btn {
+  font-size: 13px;
+  padding: 0 4px;
+  height: auto;
 }
 
 .mcsmanager-link {
@@ -550,4 +572,3 @@ onMounted(async () => {
   }
 }
 </style>
-

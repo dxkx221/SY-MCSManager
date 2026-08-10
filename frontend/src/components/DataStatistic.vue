@@ -27,7 +27,7 @@ defineProps<{
     display: flex;
     align-items: center;
     gap: 8px;
-    color: var(--color-gary-4);
+    color: var(--text-secondary, var(--color-gray-8));
     font-size: var(--font-body);
     margin-bottom: 8px;
 
@@ -37,7 +37,7 @@ defineProps<{
     }
   }
   .content {
-    color: var(--color-gary-6);
+    color: var(--text-primary, var(--color-gray-10));
     font-size: var(--font-h5);
   }
 }

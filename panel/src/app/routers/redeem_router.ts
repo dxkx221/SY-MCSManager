@@ -85,6 +85,63 @@ router.post(
   }
 );
 
+// Batch create redeem codes
+router.post(
+  "/codes/batch",
+  permission({ level: ROLE.ADMIN }),
+  validator({
+    body: {
+      count: Number,
+      hours: Number,
+      maxUses: Number,
+      config: String
+    }
+  }),
+  async (ctx: Koa.ParameterizedContext) => {
+    const count = toNumber(ctx.request.body.count) ?? 0;
+    let hours = toNumber(ctx.request.body.hours) ?? 0;
+    const maxUses = toNumber(ctx.request.body.maxUses) ?? 1;
+    let config = toText(ctx.request.body.config) ?? "{}";
+    let note = toText(ctx.request.body.note) ?? "";
+    const createdBy = ctx.session?.userName ?? "admin";
+
+    if (count < 1 || count > 500) throw new Error("count must be between 1 and 500");
+    if (maxUses < 1) throw new Error("maxUses must be at least 1");
+
+    const planId = toText(ctx.request.body.planId) ?? "";
+    if (planId) {
+      const plan = redeemPlanService.getPlan(planId);
+      if (!plan) throw new Error("Plan not found");
+      if (!ctx.request.body.hours) hours = planDurationToHours(plan);
+      const planConfig = planToInstanceConfig(plan);
+      let userConfig: any = {};
+      try {
+        userConfig = JSON.parse(config);
+      } catch {
+        userConfig = {};
+      }
+      config = JSON.stringify({
+        config: { ...planConfig, ...(userConfig.config ?? userConfig) },
+        productId: plan.productId,
+        daemonId: plan.daemonId,
+        planId: plan.id,
+        namePrefix: plan.namePrefix,
+        nameSuffixType: plan.nameSuffixType
+      });
+      if (!ctx.request.body.note && plan.note) note = plan.note;
+    }
+
+    if (hours <= 0) throw new Error("hours must be positive");
+
+    const codes: string[] = [];
+    for (let i = 0; i < count; i++) {
+      codes.push(redeemService.createCode(hours, maxUses, config, createdBy, note));
+    }
+    logger.info(`[REDEEM] Admin ${createdBy} batch created ${codes.length} codes (${hours}h, ${maxUses} uses)`);
+    ctx.body = { codes, count: codes.length };
+  }
+);
+
 // Delete one or more redeem codes
 router.delete(
   "/codes",
@@ -139,7 +196,7 @@ router.get(
 // List all plans
 router.get(
   "/plans",
-  permission({ level: ROLE.ADMIN }),
+  permission({ level: ROLE.USER }),
   async (ctx: Koa.ParameterizedContext) => {
     ctx.body = redeemPlanService.listPlans();
   }
@@ -261,7 +318,11 @@ router.post(
       // Validate the redeem code first; consume it only after instance operation succeeds.
       const redeemInfo = redeemService.checkCode(code);
       if (!redeemInfo) {
-        throw new Error("Invalid or expired redeem code");
+        const diag = redeemService.getCodeDiagnostics(code);
+        logger.warn(
+          `[REDEEM] Invalid code input by ${username}: normalized=${diag.normalized || "<empty>"}, total=${diag.total}, matched=${diag.matched}, exhausted=${diag.exhausted}, samples=${diag.samples.join(",")}`
+        );
+        throw new Error(diag.exhausted ? "Redeem code has already been used" : "Invalid or expired redeem code");
       }
 
       const hours = redeemInfo.hours;
@@ -293,11 +354,16 @@ router.post(
         }
       }
 
-      // Ensure Docker containers are properly configured
+      // Ensure Docker containers are properly configured.
+      // Do not default cwd to host root (/): empty/root cwd can make newly created
+      // Docker instances expose the server root as the instance workspace.
       if (payload.type === "docker" || (payload as any)?.docker) {
         payload.processType = "docker";
         if (!payload.eventTask) payload.eventTask = { autoStart: true, autoRestart: false, autoRestartMaxTimes: 0, ignore: false };
-        payload.cwd = payload.cwd || "/";
+        const safeDockerCwd = !payload.cwd || String(payload.cwd).trim() === "/" ? "/workspace" : String(payload.cwd).trim();
+        payload.cwd = safeDockerCwd;
+        if (!(payload as any).docker) (payload as any).docker = {};
+        if (!(payload as any).docker.workingDir || String((payload as any).docker.workingDir).trim() === "/") (payload as any).docker.workingDir = safeDockerCwd;
         payload.ie = payload.ie || "utf-8";
         payload.oe = payload.oe || "utf-8";
         payload.startCommand = payload.startCommand || "";

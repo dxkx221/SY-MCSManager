@@ -6,6 +6,7 @@ import "@/assets/variables-dark.scss";
 import "@/assets/global.scss";
 import "@/assets/bg-extend-theme.scss";
 import "@/assets/commercial.scss";
+import "@/assets/semantic-theme.scss";
 
 import "./initLib";
 

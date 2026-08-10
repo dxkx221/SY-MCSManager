@@ -15,7 +15,7 @@ import {
   UserOutlined
 } from "@ant-design/icons-vue";
 import type { Component } from "vue";
-import { ref } from "vue";
+import { onBeforeUnmount, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -51,11 +51,21 @@ const handleMenuItemClick = (path: string) => {
   handleToPage(path);
   isExpanded.value = false;
 };
+
+const closeMenu = () => {
+  isExpanded.value = false;
+};
+
+watch(() => route.fullPath, closeMenu);
+watch(isExpanded, (expanded) => {
+  document.documentElement.classList.toggle("mobile-nav-open", expanded);
+});
+onBeforeUnmount(() => document.documentElement.classList.remove("mobile-nav-open"));
 </script>
 
 <template>
   <Transition name="fab-backdrop">
-    <div v-if="isExpanded" class="fab-backdrop" @click="isExpanded = false" />
+    <div v-if="isExpanded" class="fab-backdrop" @click="closeMenu" />
   </Transition>
 
   <div class="fab-container">
@@ -71,6 +81,7 @@ const handleMenuItemClick = (path: string) => {
           <span class="fab-menu-icon-wrap">
             <component :is="getRouteIcon(item.path)" class="fab-menu-icon" />
           </span>
+          <span class="fab-menu-label">{{ item.name }}</span>
         </button>
       </div>
     </Transition>
@@ -100,8 +111,8 @@ const handleMenuItemClick = (path: string) => {
 
 .fab-container {
   position: fixed;
-  bottom: 30%;
-  right: -30px;
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  right: max(12px, env(safe-area-inset-right));
   z-index: 1002;
   display: flex;
   align-items: center;
@@ -117,16 +128,19 @@ const handleMenuItemClick = (path: string) => {
 
 .fab-menu-panel {
   display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: start;
-  // align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   gap: 6px;
   padding: 10px;
-  max-width: 196px;
+  width: min(250px, calc(100vw - 92px));
+  max-width: calc(100vw - 92px);
+  max-height: min(68dvh, 520px);
+  overflow-y: auto;
   border-radius: 18px;
-  background: var(--bottom-nav-background-color);
-  backdrop-filter: blur(12px);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: saturate(150%) blur(18px);
+  -webkit-backdrop-filter: saturate(150%) blur(18px);
   box-shadow:
     0 8px 32px var(--card-shadow-extend-color),
     0 2px 8px var(--card-shadow-color);
@@ -136,10 +150,15 @@ const handleMenuItemClick = (path: string) => {
 .fab-menu-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  background: none;
-  border: none;
-  padding: 0;
+  justify-content: flex-start;
+  gap: 10px;
+  width: 100%;
+  min-height: 46px;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 5px 10px;
+  color: var(--text-primary);
   cursor: pointer;
   outline: none;
   -webkit-tap-highlight-color: transparent;
@@ -149,25 +168,41 @@ const handleMenuItemClick = (path: string) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 16px;
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
   transition: all 0.2s ease;
 
   .fab-menu-icon {
     font-size: 20px;
-    color: var(--color-gray-7);
+    color: var(--text-secondary);
     transition: all 0.2s ease;
   }
 }
 
+.fab-menu-item--active {
+  color: var(--accent-primary);
+  background: var(--accent-soft);
+  border-color: var(--border-default);
+}
+
 .fab-menu-item--active .fab-menu-icon-wrap {
-  background: var(--bottom-nav-background-color-hover);
+  background: var(--accent-soft);
 
   .fab-menu-icon {
     font-size: 22px;
-    color: var(--color-gray-13);
+    color: var(--accent-primary);
   }
+}
+
+.fab-menu-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .fab-menu-item:not(.fab-menu-item--active):hover .fab-menu-icon-wrap {
@@ -182,17 +217,19 @@ const handleMenuItemClick = (path: string) => {
 // ---- Floating Ball ----
 
 .fab-ball {
-  width: 56px;
-  height: 70px;
-  border-radius: 8px;
-  border: none;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid var(--border-default);
   cursor: pointer;
   outline: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bottom-nav-background-color);
-  backdrop-filter: blur(12px);
+  color: var(--accent-primary);
+  background: var(--surface-elevated);
+  backdrop-filter: saturate(150%) blur(18px);
+  -webkit-backdrop-filter: saturate(150%) blur(18px);
   box-shadow:
     0 8px 24px var(--card-shadow-extend-color),
     0 2px 8px var(--card-shadow-color);
@@ -221,7 +258,13 @@ const handleMenuItemClick = (path: string) => {
 
 .fab-ball-icon {
   font-size: 20px;
-  color: var(--color-gray-10);
+  color: var(--accent-primary);
+}
+
+@media (max-width: 360px) {
+  .fab-container { right: max(8px, env(safe-area-inset-right)); }
+  .fab-menu-panel { width: min(228px, calc(100vw - 82px)); max-width: calc(100vw - 82px); }
+  .fab-menu-item { min-height: 44px; padding: 4px 8px; }
 }
 
 // ---- Transitions ----

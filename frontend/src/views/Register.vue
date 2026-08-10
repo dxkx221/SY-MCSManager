@@ -234,8 +234,8 @@ onMounted(async () => {
 }
 
 .register-card {
-  background: #ffffff;
-  border: 1px solid #e8e8e8;
+  background: rgba(255,250,253,.16);
+  border: 1px solid rgba(255,255,255,.24);
   border-radius: 12px;
   padding: 40px 36px 32px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
@@ -294,12 +294,12 @@ onMounted(async () => {
 }
 
 .register-link {
-  color: #C59724;
+  color: var(--accent-primary, var(--color-primary));
   cursor: pointer;
   margin-left: 4px;
 
   &:hover {
-    color: #A07810;
+    color: var(--accent-primary-hover, var(--color-primary));
   }
 }
 </style>

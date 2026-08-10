@@ -11,7 +11,6 @@ import type { DefaultEventsMap } from "@socket.io/component-emitter";
 import { CanvasAddon } from "@xterm/addon-canvas";
 import { FitAddon } from "@xterm/addon-fit";
 import { Unicode11Addon } from "@xterm/addon-unicode11";
-import { WebglAddon } from "@xterm/addon-webgl";
 import { Terminal } from "@xterm/xterm";
 import EventEmitter from "eventemitter3";
 import type { Socket } from "socket.io-client";
@@ -240,7 +239,9 @@ export function useTerminal() {
     element.addEventListener("touchend", touchHandler, true);
     element.addEventListener("touchcancel", touchHandler, true);
 
-    const background = hasBgImage.value ? "#00000000" : "#1e1e1e";
+    // Keep the runtime console readable under business/light themes.
+    // The previous transparent background inherited the page's pale background,
+    // making terminal output look like a white screen.
     const term = new Terminal({
       convertEol: true,
       disableStdin: false,
@@ -248,10 +249,13 @@ export function useTerminal() {
       cursorBlink: true,
       fontSize: 14,
       theme: {
-        background
+        background: "#000000",
+        foreground: "#f2f2f2",
+        cursor: "#f2f2f2",
+        selectionBackground: "#4a4a4a"
       },
       allowProposedApi: true,
-      allowTransparency: true
+      allowTransparency: false
     });
     const fitAddon = new FitAddon();
     term.loadAddon(fitAddon);
@@ -262,21 +266,15 @@ export function useTerminal() {
 
     terminal.value = term;
 
-    const gl = document.createElement("canvas").getContext("webgl2");
-    if (gl) {
-      // If WebGL2 is supported, use the WebGlAddon
-      const webglAddon = new WebglAddon();
-      webglAddon.onContextLoss((_) => {
-        webglAddon.dispose();
-      });
-      term.loadAddon(webglAddon);
-    } else {
-      // If WebGL2 is not supported, use the CanvasAddon
-      const canvasAddon = new CanvasAddon();
-      term.loadAddon(canvasAddon);
-    }
-
+    // Open the terminal before activating a renderer. Canvas is intentionally
+    // preferred over WebGL here: it is more reliable across remote browsers,
+    // GPU blacklists and restored tabs, while still preserving ANSI colors.
     term.open(element);
+    try {
+      term.loadAddon(new CanvasAddon());
+    } catch (error) {
+      console.warn("Canvas terminal renderer unavailable; using xterm default renderer.", error);
+    }
 
     // If text is selected, copy it. Otherwise, fallback to default behavior.
     term.attachCustomKeyEventHandler((arg) => {
@@ -295,6 +293,7 @@ export function useTerminal() {
 
     // Auto resize pty win size
     fitAddon.fit();
+    term.refresh(0, Math.max(0, term.rows - 1));
     refreshWindowSize(term.cols - 1, term.rows - 1);
     fitAddonTask = setInterval(() => {
       fitAddon.fit();

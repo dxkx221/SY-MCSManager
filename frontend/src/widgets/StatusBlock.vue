@@ -128,7 +128,7 @@ const breakInNeed = (a: number, b: number = 0) => {
     <template #title>{{ card.title }}</template>
     <template #body>
       <div class="status-header">
-        <a-typography-text class="status-header__title color-info">
+        <a-typography-text class="status-header__title">
           {{ realStatus?.title }}
         </a-typography-text>
       </div>
@@ -136,7 +136,7 @@ const breakInNeed = (a: number, b: number = 0) => {
       <!-- Nodes: progress bar + two tags -->
       <template v-if="realStatus?.type === 'node'">
         <div class="status-text">
-          <span class="status-text__highlight" :style="breakInNeed(realStatus.total)">
+          <span class="status-text__highlight status-text__highlight--accent" :style="breakInNeed(realStatus.total)">
             {{ realStatus.available }}
           </span>
           / {{ realStatus.total }}
@@ -148,7 +148,7 @@ const breakInNeed = (a: number, b: number = 0) => {
       <!-- Instances: progress bar + two tags -->
       <template v-else-if="realStatus?.type === 'instance'">
         <div class="status-text mb-10">
-          <span class="status-text__highlight" :style="breakInNeed(realStatus.total)">{{
+          <span class="status-text__highlight status-text__highlight--accent" :style="breakInNeed(realStatus.total)">{{
             realStatus.running
           }}</span>
           / {{ realStatus.total }}
@@ -215,13 +215,17 @@ const breakInNeed = (a: number, b: number = 0) => {
   font-size: 2rem;
   font-weight: 500;
   letter-spacing: -0.1em;
-  color: #606060;
+  color: var(--text-primary, var(--text-color)) !important;
   font-family: auto;
 
   &__highlight {
     font-size: 3rem;
     font-weight: 600;
-    color: var(--color-primary);
+    color: var(--text-primary, var(--text-color)) !important;
+
+    &--accent {
+      color: var(--accent-primary) !important;
+    }
   }
 }
 
@@ -233,7 +237,7 @@ const breakInNeed = (a: number, b: number = 0) => {
   opacity: 0.1;
   transition: transform 0.25s ease-out;
   svg {
-    fill: #fff;
+    fill: currentColor;
   }
 }
 
@@ -250,7 +254,14 @@ const breakInNeed = (a: number, b: number = 0) => {
 
   &__title {
     font-size: var(--font-body);
+    color: var(--text-secondary, var(--text-color)) !important;
   }
+}
+
+:deep(.StatusBlock .ant-typography),
+:deep(.StatusBlock .status-text),
+:deep(.StatusBlock .status-text__detail) {
+  color: var(--text-primary, var(--text-color)) !important;
 }
 
 .status-bars {
@@ -276,7 +287,7 @@ const breakInNeed = (a: number, b: number = 0) => {
 
     &__detail {
       font-size: 12px;
-      color: #909090;
+      color: color-mix(in srgb, var(--text-color) 62%, transparent);
     }
   }
 }

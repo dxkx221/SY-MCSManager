@@ -5,10 +5,10 @@ import { useScreen } from "@/hooks/useScreen";
 import { useAppConfigStore } from "@/stores/useAppConfigStore";
 import { useLayoutContainerStore } from "@/stores/useLayoutContainerStore";
 import { MenuUnfoldOutlined } from "@ant-design/icons-vue";
-import { useScroll } from "@vueuse/core";
 import { computed, h } from "vue";
 import { useRoute } from "vue-router";
 import CardPanel from "./CardPanel.vue";
+import GlobalSearch from "./GlobalSearch.vue";
 
 const route = useRoute();
 const { containerState } = useLayoutContainerStore();
@@ -23,15 +23,9 @@ const isRouteActive = (path: string): boolean => {
   return route.path.startsWith(path + "/");
 };
 
-const { y } = useScroll(document.body);
-
-const isScroll = computed(() => {
-  return y.value > 10;
-});
-
 const headerStyle = computed(() => {
   return {
-    "--header-height": isScroll.value ? "60px" : "64px"
+    "--header-height": "64px"
   };
 });
 
@@ -63,6 +57,7 @@ const openPhoneMenu = (b = false) => {
         </div>
       </nav>
       <div class="btns">
+        <GlobalSearch />
         <div v-for="(item, index) in appMenus as any" :key="index">
           <a-dropdown v-if="item.menus && item.conditions" placement="bottom">
             <div
@@ -106,8 +101,8 @@ const openPhoneMenu = (b = false) => {
   <header v-if="isPhone" class="app-header-content-for-phone">
     <CardPanel class="card-panel">
       <template #body>
-        <div style="display: flex; justify-content: space-between; align-items: center">
-          <div style="width: 100px" class="flex">
+        <div class="phone-header-row">
+          <div class="phone-header-actions phone-header-actions--left">
             <a-button
               type="text"
               :icon="h(MenuUnfoldOutlined)"
@@ -131,10 +126,11 @@ const openPhoneMenu = (b = false) => {
               </a-dropdown>
             </div>
           </div>
-          <div>
-            <img :src="logo" style="height: 18px" />
+          <div class="phone-header-logo">
+            <img :src="logoImage || logo" alt="MCSManager" />
           </div>
-          <div style="width: 100px" class="justify-end">
+          <div class="phone-header-actions phone-header-actions--right">
+            <GlobalSearch />
             <div v-for="(item, index) in appMenus" :key="index">
               <a-button
                 v-if="item.conditions && !item.onlyPC && !item.menus"
@@ -152,8 +148,9 @@ const openPhoneMenu = (b = false) => {
   </header>
 
   <a-drawer
-    :width="500"
-    title="MENU"
+    class="phone-menu-drawer"
+    :height="isPhone ? 'min(76dvh, 620px)' : 500"
+    title="导航菜单"
     placement="top"
     :open="containerState.showPhoneMenu"
     @close="() => (containerState.showPhoneMenu = false)"
@@ -179,46 +176,127 @@ const openPhoneMenu = (b = false) => {
 .nav-button-warning:hover { background-color: rgba(245,158,11,0.12) !important; color: #D97706 !important; }
 .nav-button-success:hover { background-color: rgba(16,185,129,0.1) !important; color: #059669 !important; }
 .nav-button-danger:hover  { background-color: rgba(239,68,68,0.1) !important; color: #DC2626 !important; }
-.nav-button-primary:hover { background-color: rgba(197,151,36,0.1) !important; color: #C59724 !important; }
+.nav-button-primary:hover { background-color: color-mix(in srgb, var(--color-primary) 11%, transparent) !important; color: var(--color-primary) !important; }
 
 .phone-menu {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+
   .phone-menu-btn {
-    padding: 16px 8px;
-    border-bottom: 1px solid var(--color-gray-4);
-    color: var(--color-gray-12);
+    min-width: 0;
+    padding: 13px 12px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    background: var(--surface-inner);
+    color: var(--text-primary);
+    text-align: center;
+    overflow-wrap: anywhere;
   }
   .phone-menu-btn-active {
-    background-color: rgba(64, 156, 216, 0.12);
+    background-color: var(--accent-soft);
+    color: var(--accent-primary) !important;
   }
+}
+
+@media (max-width: 360px) {
+  .app-header-content-for-phone .card-panel .ant-card-body { padding-left: 6px !important; padding-right: 6px !important; }
+  .app-header-content-for-phone .phone-header-logo img { max-width: 78px; }
+  .app-header-content-for-phone .phone-header-row { gap: 2px; }
+  .app-header-content-for-phone .ant-btn { padding-left: 3px; padding-right: 3px; }
+  .phone-menu { grid-template-columns: 1fr; }
 }
 
 .app-header-content-for-phone {
-  height: 60px;
+  position: relative;
+  z-index: 30;
+  min-height: calc(60px + env(safe-area-inset-top));
   width: 100%;
+  padding-top: env(safe-area-inset-top);
+  box-sizing: border-box;
+
   .card-panel {
     background-color: var(--app-header-bg);
     margin-top: 8px;
-    button { color: var(--color-always-white) !important; }
+    button { color: var(--app-header-text-color) !important; }
   }
-  .phone-nav-button, .phone-nav-button * { margin: 0px 6px; }
+
+  .phone-header-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .phone-header-actions {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .phone-header-actions--left { justify-content: flex-start; }
+  .phone-header-actions--right { justify-content: flex-end; }
+  .phone-header-actions > div { display: flex; flex: 0 0 auto; }
+
+  .phone-header-logo {
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+    pointer-events: none;
+  }
+
+  .phone-header-logo img {
+    display: block;
+    width: auto;
+    height: 18px;
+    max-width: min(112px, 30vw);
+    object-fit: contain;
+  }
+
+  .phone-nav-button, .phone-nav-button * { margin: 0 1px; }
 }
+
+@media (max-width: 480px) {
+  .app-header-content-for-phone {
+    min-height: calc(56px + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) 8px 0;
+    box-sizing: border-box;
+
+    .card-panel {
+      margin-top: 4px;
+      border-radius: 12px;
+    }
+
+    .card-panel > * { min-width: 0; }
+    .card-panel .ant-card-body { padding: 8px 10px !important; }
+    .phone-header-logo img { max-width: min(96px, 28vw); height: 16px !important; }
+    .phone-nav-button { margin: 0 !important; }
+    :deep(.ant-btn) { min-width: 32px; min-height: 32px; padding: 4px 5px; }
+  }
+}
+
 
 .app-header-wrapper {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(255, 255, 255, 0.72);
-  backdrop-filter: saturate(180%) blur(24px);
-  -webkit-backdrop-filter: saturate(180%) blur(24px);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  color: #475569;
+  background:
+    linear-gradient(135deg, rgba(255, 248, 252, 0.28), rgba(248, 240, 248, 0.20));
+  backdrop-filter: saturate(150%) blur(22px);
+  -webkit-backdrop-filter: saturate(150%) blur(22px);
+  border-bottom: 1px solid rgba(236, 72, 153, 0.10);
+  box-shadow: 0 10px 30px rgba(100, 70, 110, 0.06);
+  color: var(--app-header-text-color);
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 20;
-  transition: height 0.3s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
 
   .app-header-content {
     @extend .global-app-container;
@@ -227,7 +305,6 @@ const openPhoneMenu = (b = false) => {
     justify-content: space-between;
     width: 100%;
     height: var(--header-height);
-    transition: height 0.3s ease;
 
     .btns { display: flex; align-items: center; }
   }
@@ -237,7 +314,7 @@ const openPhoneMenu = (b = false) => {
     font-size: 13.5px;
     font-weight: 500;
     transition: all 0.2s ease;
-    color: #475569 !important;
+    color: var(--app-header-text-color) !important;
     text-align: center;
     padding: 6px 14px;
     min-width: 36px;
@@ -247,14 +324,17 @@ const openPhoneMenu = (b = false) => {
     letter-spacing: 0.2px;
 
     &:hover {
-      color: #1E293B !important;
-      background: rgba(0, 0, 0, 0.04);
+      color: #DB2777 !important;
+      background: rgba(255, 255, 255, 0.56);
+      box-shadow: inset 0 0 0 1px rgba(236, 72, 153, 0.10), 0 6px 16px rgba(100, 70, 110, 0.07);
+      transform: translateY(-1px);
     }
   }
 
   .nav-button-active {
-    color: #B8860B !important;
-    background: rgba(197, 151, 36, 0.08) !important;
+    color: #EC4899 !important;
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.14), rgba(255, 255, 255, 0.12)) !important;
+    box-shadow: inset 0 0 0 1px rgba(236, 72, 153, 0.18), 0 8px 20px rgba(236, 72, 153, 0.10);
     font-weight: 600;
   }
 
@@ -283,6 +363,10 @@ const openPhoneMenu = (b = false) => {
   }
   @media (max-width: 992px) {
     .app-header-content { margin: 0px 8px; }
+  }
+
+  @media (max-width: 480px) {
+    .app-header-content-for-phone { margin: 0; }
   }
 }
 </style>

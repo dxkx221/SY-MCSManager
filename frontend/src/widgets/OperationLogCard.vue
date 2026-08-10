@@ -52,15 +52,19 @@ onMounted(() => {
 
 .log-item {
   margin-bottom: 12px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  background: var(--color-gray-2);
-  border: 1px solid var(--color-gray-4);
-  transition: all 0.2s ease;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--surface-inner, rgba(255, 255, 255, 0.08));
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.16));
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.08);
+  backdrop-filter: saturate(135%) blur(12px);
+  -webkit-backdrop-filter: saturate(135%) blur(12px);
+  transition: transform 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
 
   &:hover {
-    background: var(--color-gray-3);
-    border: 1px solid var(--color-gray-5);
+    background: var(--surface-hover, rgba(255, 255, 255, 0.13));
+    border-color: color-mix(in srgb, var(--accent-primary) 24%, transparent);
+    transform: translateY(-1px);
   }
 
   &:last-child {
@@ -71,16 +75,15 @@ onMounted(() => {
 .log-content {
   font-size: 14px;
   line-height: 1.5;
-  color: var(--color-gray-10);
+  color: var(--text-primary, var(--text-color));
   margin-bottom: 4px;
   word-break: break-word;
 }
 
 .log-time {
   font-size: 12px;
-  color: var(--color-gray-7);
+  color: var(--text-muted, var(--text-color));
   font-family: "Consolas", "Monaco", monospace;
-  opacity: 0.8;
 }
 
 .empty-state {
@@ -95,14 +98,14 @@ onMounted(() => {
 
 .empty-text {
   font-size: 16px;
-  color: var(--color-gray-8);
+  color: var(--text-secondary, var(--text-color));
   margin-bottom: 8px;
   font-weight: 500;
 }
 
 .empty-description {
   font-size: 14px;
-  color: var(--color-gray-7);
+  color: var(--text-muted, var(--text-color));
   line-height: 1.4;
 }
 </style>

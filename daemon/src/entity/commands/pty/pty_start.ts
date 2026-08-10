@@ -56,7 +56,7 @@ export class GoPtyProcessAdapter extends EventEmitter implements IInstanceProces
       const writePipe = fs.createWriteStream("", { fd });
       writePipe.on("close", () => {});
       writePipe.on("end", () => {});
-      writePipe.on("error", (err) => {
+      writePipe.on("error", (err: unknown) => {
         logger.error("Pipe error:", this.pipeName, err);
       });
       this.pipeClient = writePipe;
@@ -110,7 +110,7 @@ export class GoPtyProcessAdapter extends EventEmitter implements IInstanceProces
       this.process.kill("SIGTERM");
       this.process.kill("SIGKILL");
     }
-    fs.remove(this.pipeName, (err) => {});
+    fs.remove(this.pipeName, (_err: unknown) => {});
   }
 }
 

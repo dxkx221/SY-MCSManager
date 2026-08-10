@@ -18,7 +18,7 @@ export function downloadFileToLocalFile(url: string, localFilePath: string): Pro
         maxRedirects: 10
       });
       const writeStream = fs.createWriteStream(path.normalize(localFilePath));
-      pipeline(response.data, writeStream, (err) => {
+      pipeline(response.data, writeStream, (err: NodeJS.ErrnoException | null) => {
         if (err) {
           fs.remove(localFilePath, () => {});
           reject(err);

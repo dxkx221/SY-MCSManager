@@ -184,7 +184,7 @@ const onStopTransfer = async (task: any) => {
                         ? '#22c55e'
                         : task.type === 'upload'
                           ? '#f97316'
-                          : '#C59724'
+                          : 'var(--accent-primary, var(--color-primary))'
                   "
                   class="task-progress"
                 />
@@ -319,7 +319,7 @@ const onStopTransfer = async (task: any) => {
 }
 
 .url-task-icon-inner {
-  color: #C59724;
+  color: var(--accent-primary, var(--color-primary));
   font-size: 1.125rem;
 }
 
@@ -396,7 +396,7 @@ const onStopTransfer = async (task: any) => {
 
 .task-icon-download {
   background-color: rgba(59, 130, 246, 0.1);
-  color: #C59724;
+  color: var(--accent-primary, var(--color-primary));
 }
 
 .app-dark-theme .task-icon-download {
@@ -498,7 +498,7 @@ const onStopTransfer = async (task: any) => {
 }
 
 .task-percent-download {
-  color: #C59724;
+  color: var(--accent-primary, var(--color-primary));
 }
 
 .task-stop-button {
@@ -557,7 +557,7 @@ const onStopTransfer = async (task: any) => {
 
 <style>
 .frosted-popover .ant-popover-inner {
-  background-color: rgba(255, 255, 255, 0.75) !important;
+  background-color: rgba(255,250,253,.16) !important;
   backdrop-filter: blur(30px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(30px) saturate(200%) !important;
   border: 1px solid rgba(255, 255, 255, 0.5) !important;
@@ -579,7 +579,7 @@ const onStopTransfer = async (task: any) => {
 }
 
 .frosted-float-button .ant-float-button-body {
-  background-color: rgba(255, 255, 255, 0.75) !important;
+  background-color: rgba(255,250,253,.16) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
   border: 1px solid rgba(255, 255, 255, 0.4) !important;
@@ -596,7 +596,7 @@ const onStopTransfer = async (task: any) => {
 }
 
 .frosted-float-button .ant-float-button-body:hover {
-  background-color: rgba(255, 255, 255, 0.8) !important;
+  background-color: rgba(255,250,253,.20) !important;
   transform: translateY(-2px);
   box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.2) !important;
 }

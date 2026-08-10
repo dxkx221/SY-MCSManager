@@ -9,7 +9,11 @@ if (fs.existsSync(LOG_FILE_PATH)) {
   const timeString = `${time.getFullYear()}-${
     time.getMonth() + 1
   }-${time.getDate()}_${time.getHours()}-${time.getMinutes()}-${time.getSeconds()}`;
-  fs.renameSync(LOG_FILE_PATH, `logs/${timeString}.log`);
+  try {
+    fs.renameSync(LOG_FILE_PATH, `logs/${timeString}.log`);
+  } catch (err) {
+    console.warn(`[Log] Failed to rotate ${LOG_FILE_PATH}, continue startup:`, err);
+  }
 }
 
 log4js.configure({

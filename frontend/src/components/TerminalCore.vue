@@ -143,7 +143,7 @@ onMounted(async () => {
         </li>
       </ul>
     </div>
-    <div class="terminal-wrapper global-card-container-shadow position-relative">
+    <div class="terminal-wrapper position-relative">
       <div class="terminal-container">
         <div
           v-if="!containerState.isDesignMode"

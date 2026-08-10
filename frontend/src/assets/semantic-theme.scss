@@ -1,0 +1,302 @@
+/* Semantic dual-theme contract.
+   This is the final component-material layer; palette variables remain compatibility-only. */
+.app-light-theme,
+.app-light-extend-theme {
+  --text-primary: #302630;
+  --text-secondary: rgba(48, 38, 48, .80);
+  --text-muted: rgba(48, 38, 48, .64);
+  --text-disabled: rgba(48, 38, 48, .42);
+  --accent-primary: #d85791;
+  --accent-primary-hover: #bd467b;
+  --accent-soft: rgba(216, 87, 145, .12);
+  --surface-card: rgba(255, 250, 253, .19);
+  --surface-inner: rgba(255, 255, 255, .15);
+  --surface-control: rgba(255, 255, 255, .22);
+  --surface-hover: rgba(216, 87, 145, .10);
+  --surface-elevated: rgba(255, 250, 253, .26);
+  --border-subtle: rgba(255, 255, 255, .24);
+  --border-default: rgba(110, 72, 98, .16);
+  --table-header-bg: rgba(255, 255, 255, .18);
+  --table-row-hover-bg: rgba(216, 87, 145, .10);
+  --status-success: #b35f82;
+  --status-success-soft: rgba(179, 95, 130, .11);
+  --status-warning: #a66b19;
+  --status-warning-soft: rgba(166, 107, 25, .10);
+  --status-danger: #c43838;
+  --status-danger-soft: rgba(196, 56, 56, .09);
+  --status-info: #806f9d;
+  --status-info-soft: rgba(128, 111, 157, .10);
+  --status-neutral: #665761;
+  --status-neutral-soft: rgba(102, 87, 97, .09);
+}
+
+.app-dark-theme,
+.app-dark-extend-theme {
+  --text-primary: rgba(224, 232, 234, .86);
+  --text-secondary: rgba(204, 216, 219, .68);
+  --text-muted: rgba(188, 203, 206, .50);
+  --text-disabled: rgba(188, 203, 206, .32);
+  --accent-primary: #a996d6;
+  --accent-primary-hover: #c0afe8;
+  --accent-soft: rgba(169, 150, 214, .14);
+  --surface-card: rgba(12, 14, 28, .23);
+  --surface-inner: rgba(12, 16, 30, .16);
+  --surface-control: rgba(8, 10, 22, .27);
+  --surface-hover: rgba(169, 150, 214, .10);
+  --surface-elevated: rgba(10, 12, 25, .30);
+  --border-subtle: rgba(255, 255, 255, .13);
+  --border-default: rgba(184, 215, 219, .18);
+  --table-header-bg: rgba(12, 16, 30, .22);
+  --table-row-hover-bg: rgba(169, 150, 214, .10);
+  --status-success: #c58aa4;
+  --status-success-soft: rgba(197, 138, 164, .13);
+  --status-warning: #f0c879;
+  --status-warning-soft: rgba(230, 174, 73, .12);
+  --status-danger: #ff9b9b;
+  --status-danger-soft: rgba(239, 68, 68, .12);
+  --status-info: #aeb6d0;
+  --status-info-soft: rgba(174, 182, 208, .12);
+  --status-neutral: #c2ced0;
+  --status-neutral-soft: rgba(194, 206, 208, .09);
+}
+
+/* Text hierarchy */
+body:is(.app-light-theme,.app-light-extend-theme,.app-dark-theme,.app-dark-extend-theme) {
+  color: var(--text-primary);
+
+  :is(.ant-typography,.ant-card,.card-panel,.content-box,.inner-card-wrapper,.log-content,.status-text,.overview-item__value) {
+    color: var(--text-primary) !important;
+  }
+  :is(.ant-card-head-title,.card-panel-title,.ant-modal-title,.ant-drawer-title,.ant-form-item-label>label,.ant-table-thead>tr>th) {
+    color: var(--text-primary) !important;
+    font-weight: 600;
+  }
+  :is(.ant-typography-secondary,.log-time,.empty-description,.overview-item__title,.status-header__title,.ant-form-item-extra,.ant-form-item-explain) {
+    color: var(--text-secondary) !important;
+  }
+  :is(.ant-input::placeholder,.ant-select-selection-placeholder,.ant-picker-input>input::placeholder) {
+    color: var(--text-muted) !important;
+    opacity: 1;
+  }
+  :is(.ant-typography-disabled,.ant-btn:disabled,.ant-input:disabled,.ant-select-disabled) {
+    color: var(--text-disabled) !important;
+  }
+  a:not(.ant-btn) { color: var(--accent-primary); }
+  a:not(.ant-btn):hover { color: var(--accent-primary-hover); }
+}
+
+/* Canonical glass surfaces */
+body:is(.app-light-theme,.app-light-extend-theme,.app-dark-theme,.app-dark-extend-theme)
+:is(.card-panel,.ant-card,.content-box,.inner-card-wrapper,.new-card-list,.left-menu,.action-btn-item) {
+  background: var(--surface-card) !important;
+  border-color: var(--border-subtle) !important;
+  backdrop-filter: saturate(145%) blur(16px) !important;
+  -webkit-backdrop-filter: saturate(145%) blur(16px) !important;
+}
+
+/* Tables: cover normal, fixed, expanded, summary and empty states. */
+body:is(.app-light-theme,.app-light-extend-theme,.app-dark-theme,.app-dark-extend-theme) {
+  .ant-table,
+  .ant-table-container,
+  .ant-table-content,
+  .ant-table-body,
+  .ant-table-cell-fix-left,
+  .ant-table-cell-fix-right,
+  .ant-table-expanded-row > td,
+  .ant-table-placeholder > td,
+  .ant-table-summary > tr > td {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-subtle) !important;
+  }
+  .ant-table-thead > tr > th {
+    background: var(--table-header-bg) !important;
+    color: var(--text-secondary) !important;
+    border-color: var(--border-subtle) !important;
+  }
+  .ant-table-tbody > tr > td {
+    background: var(--surface-inner) !important;
+    color: var(--text-primary) !important;
+  }
+  .ant-table-tbody > tr:hover > td,
+  .ant-table-row-selected > td { background: var(--table-row-hover-bg) !important; }
+  .ant-table-column-sorter,
+  .ant-table-filter-trigger,
+  .ant-empty-description { color: var(--text-muted) !important; }
+  .ant-table-cell-fix-left-first::after,
+  .ant-table-cell-fix-right-first::after { box-shadow: none !important; }
+
+  .ant-pagination-item,
+  .ant-pagination-prev .ant-pagination-item-link,
+  .ant-pagination-next .ant-pagination-item-link {
+    background: var(--surface-control) !important;
+    border-color: var(--border-subtle) !important;
+  }
+  .ant-pagination-item a { color: var(--text-secondary) !important; }
+  .ant-pagination-item-active {
+    background: var(--accent-soft) !important;
+    border-color: color-mix(in srgb, var(--accent-primary) 48%, transparent) !important;
+  }
+  .ant-pagination-item-active a { color: var(--accent-primary) !important; }
+  .ant-pagination-disabled { opacity: .52; }
+}
+
+/* Controls and buttons */
+body:is(.app-light-theme,.app-light-extend-theme,.app-dark-theme,.app-dark-extend-theme) {
+  :is(.ant-input,.ant-input-affix-wrapper,.ant-input-number,.ant-select-selector,.ant-picker,.ant-btn-default) {
+    background: var(--surface-control) !important;
+    color: var(--text-primary) !important;
+    border-color: var(--border-default) !important;
+    box-shadow: inset 0 1px rgba(255,255,255,.06) !important;
+    backdrop-filter: saturate(140%) blur(12px) !important;
+    -webkit-backdrop-filter: saturate(140%) blur(12px) !important;
+  }
+  :is(.ant-input,.ant-input-affix-wrapper,.ant-input-number,.ant-select-selector,.ant-picker,.ant-btn-default):hover {
+    border-color: color-mix(in srgb, var(--accent-primary) 42%, transparent) !important;
+  }
+  .ant-btn-dangerous {
+    background: var(--status-danger-soft) !important;
+    border-color: color-mix(in srgb, var(--status-danger) 38%, transparent) !important;
+    color: var(--status-danger) !important;
+  }
+}
+
+/* Status semantics: brand accent never replaces success/warning/danger. */
+body:is(.app-light-theme,.app-light-extend-theme,.app-dark-theme,.app-dark-extend-theme) {
+  .color-success { color: var(--status-success) !important; }
+  .color-warning { color: var(--status-warning) !important; }
+  .color-danger, .ant-typography-danger { color: var(--status-danger) !important; }
+  .color-info { color: var(--status-info) !important; }
+
+  .ant-tag-green { color: var(--status-success) !important; background: var(--status-success-soft) !important; border-color: color-mix(in srgb,var(--status-success) 28%,transparent) !important; }
+  :is(.ant-tag-gold,.ant-tag-orange,.ant-tag-volcano) { color: var(--status-warning) !important; background: var(--status-warning-soft) !important; border-color: color-mix(in srgb,var(--status-warning) 28%,transparent) !important; }
+  .ant-tag-red { color: var(--status-danger) !important; background: var(--status-danger-soft) !important; border-color: color-mix(in srgb,var(--status-danger) 28%,transparent) !important; }
+  :is(.ant-tag-blue,.ant-tag-cyan,.ant-tag-purple,.ant-tag-geekblue) { color: var(--status-info) !important; background: var(--status-info-soft) !important; border-color: color-mix(in srgb,var(--status-info) 28%,transparent) !important; }
+  .ant-tag:not([class*="ant-tag-"]) { color: var(--status-neutral) !important; background: var(--status-neutral-soft) !important; border-color: var(--border-default) !important; }
+}
+
+/* Brand interaction states. These intentionally override legacy purple/blue blocks. */
+body:is(.app-light-theme,.app-light-extend-theme,.app-dark-theme,.app-dark-extend-theme) {
+  .ant-switch-checked,
+  .ant-checkbox-checked .ant-checkbox-inner,
+  .ant-radio-checked .ant-radio-inner::after,
+  .ant-tabs-ink-bar,
+  .ant-progress-bg,
+  .ant-spin-dot-item { background: var(--accent-primary) !important; }
+
+  .ant-checkbox-checked .ant-checkbox-inner,
+  .ant-radio-checked .ant-radio-inner,
+  :is(.ant-input-affix-wrapper-focused,.ant-picker-focused,.ant-select-focused .ant-select-selector) {
+    border-color: var(--accent-primary) !important;
+  }
+  :is(.ant-input-affix-wrapper-focused,.ant-picker-focused,.ant-select-focused .ant-select-selector) {
+    box-shadow: 0 0 0 3px var(--accent-soft) !important;
+  }
+  :is(.ant-tabs-tab-active .ant-tabs-tab-btn,.ant-menu-item-selected) { color: var(--accent-primary) !important; }
+
+  .ant-btn-primary {
+    background: linear-gradient(135deg, var(--accent-primary), color-mix(in srgb,var(--accent-primary) 76%,#18232a)) !important;
+    border-color: transparent !important;
+    color: #fff !important;
+  }
+
+  /* Current top-level page follows the theme accent; no gold navigation state. */
+  .app-header-wrapper .nav-button-active {
+    color: var(--accent-primary) !important;
+    background: var(--accent-soft) !important;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent-primary) 24%, transparent), 0 6px 18px rgba(0,0,0,.08) !important;
+  }
+  .app-header-wrapper .nav-button:not(.nav-button-active):hover {
+    color: var(--accent-primary) !important;
+    background: var(--surface-hover) !important;
+  }
+}
+
+/* Mobile surfaces: preserve the glass silhouette and rounded corners on narrow screens. */
+@media (max-width: 992px) {
+  body:is(.app-light-theme,.app-light-extend-theme,.app-dark-theme,.app-dark-extend-theme) {
+    .card-panel,
+    .CardWrapper,
+    .CardWrapper.card-panel,
+    .mobile-menu-body,
+    .mobile-menu-body :is(.ant-tabs-content-holder,.ant-tabs-tabpane) {
+      border-radius: 16px !important;
+    }
+
+    .CardWrapper.card-panel {
+      overflow: hidden !important;
+      border: 1px solid var(--border-subtle) !important;
+    }
+
+    .CardWrapper .card-panel-content {
+      overflow: visible !important;
+    }
+
+    .CardWrapper .mobile-menu-body {
+      margin-left: 12px !important;
+      margin-right: 12px !important;
+      padding: 4px !important;
+      background: var(--surface-inner) !important;
+      border: 1px solid var(--border-subtle) !important;
+    }
+
+    :is(.ant-input,.ant-input-affix-wrapper,.ant-input-number,.ant-select-selector,.ant-picker,.ant-btn,.ant-card,.ant-modal-content,.ant-drawer-content) {
+      border-radius: 10px !important;
+    }
+
+    .ant-tabs-nav::before { border-color: var(--border-subtle) !important; }
+  }
+}
+
+@media (max-width: 360px) {
+  body:is(.app-light-theme,.app-light-extend-theme,.app-dark-theme,.app-dark-extend-theme) {
+    .card-panel,
+    .CardWrapper,
+    .CardWrapper.card-panel { border-radius: 13px !important; }
+    .CardWrapper .mobile-menu-body { margin-left: 8px !important; margin-right: 8px !important; }
+  }
+}
+
+/* Personal profile dialog: remove the legacy white API-key slab. */
+body:is(.app-light-theme,.app-light-extend-theme,.app-dark-theme,.app-dark-extend-theme) {
+  .myself-info-dialog {
+    .ant-modal-header,
+    .ant-modal-body { background: transparent !important; }
+    .ant-modal-close { color: var(--text-secondary) !important; }
+    .ant-tag {
+      color: var(--text-primary) !important;
+      background: var(--surface-inner) !important;
+      border-color: var(--border-subtle) !important;
+    }
+    .profile-code-block {
+      margin: 0;
+      padding: 10px 12px;
+      color: var(--text-primary) !important;
+      background: var(--surface-control) !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      backdrop-filter: saturate(140%) blur(12px);
+      -webkit-backdrop-filter: saturate(140%) blur(12px);
+    }
+  }
+}
+
+/* Elevated overlays */
+body:is(.app-light-theme,.app-light-extend-theme,.app-dark-theme,.app-dark-extend-theme)
+:is(.ant-modal-content,.ant-drawer-content,.ant-dropdown-menu,.ant-popover-inner,.ant-select-dropdown,.ant-picker-panel-container,.ant-notification-notice) {
+  background: var(--surface-elevated) !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-subtle) !important;
+  backdrop-filter: saturate(150%) blur(18px) !important;
+  -webkit-backdrop-filter: saturate(150%) blur(18px) !important;
+}
+
+/* Keep theme surfaces out of xterm internals; only the terminal shell is opaque. */
+.terminal-wrapper {
+  background-color: #000 !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}

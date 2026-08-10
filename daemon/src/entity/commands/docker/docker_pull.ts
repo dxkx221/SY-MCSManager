@@ -86,11 +86,17 @@ export default class DockerPullCommand extends InstanceCommand {
 
     const cachedStartCount = instance.startCount;
 
-    // If the image exists, there is no need to pull again.
+    // Always re-pull to ensure latest image; remove existing image first to force fresh pull
     if (await checkImage(imageName)) {
-      logger.info(`Image ${imageName} already exists locally, skipping pull`);
-      instance.println("CONTAINER", $t("TXT_CODE_docker_pull_image_exists", { imageName }));
-      return;
+      try {
+        const docker = new DefaultDocker();
+        const img = docker.getImage(imageName);
+        await img.remove({ force: true });
+        logger.info(`Removed existing image ${imageName} to force fresh pull`);
+        instance.println("CONTAINER", $t("TXT_CODE_docker_pull_force_refresh", { imageName }));
+      } catch (e: any) {
+        logger.warn(`Failed to remove existing image ${imageName}, will pull anyway:`, e?.message || e);
+      }
     }
 
     try {

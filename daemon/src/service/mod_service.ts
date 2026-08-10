@@ -46,9 +46,9 @@ export class ModService {
     return new Promise((resolve, reject) => {
       const hash = crypto.createHash("sha1");
       const stream = fs.createReadStream(filePath);
-      stream.on("data", (data) => hash.update(data));
+      stream.on("data", (data: Buffer | string) => hash.update(data));
       stream.on("end", () => resolve(hash.digest("hex")));
-      stream.on("error", (err) => reject(err));
+      stream.on("error", (err: unknown) => reject(err));
     });
   }
 

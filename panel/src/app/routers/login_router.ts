@@ -149,6 +149,8 @@ router.get(
   }
 );
 
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 // [Public Permission]
 // Send verification code to email for registration
 router.post(
@@ -161,8 +163,6 @@ router.post(
       return;
     }
     const email = String(ctx.request.body.email).trim().toLowerCase();
-    // Basic email format check
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       ctx.body = new Error("Invalid email address");
       return;
@@ -174,8 +174,77 @@ router.post(
     }
     const code = mailService.generateCode();
     mailService.storeCode(email, code);
-    await mailService.sendVerificationCode(email, code);
+    const sent = await mailService.sendVerificationCode(email, code);
+    if (!sent) {
+      mailService.deleteCode(email);
+      ctx.body = new Error("邮件发送失败，请联系管理员检查 SMTP 配置");
+      return;
+    }
     ctx.body = { success: true, message: "Verification code sent" };
+  }
+);
+
+// [Public Permission]
+// Send verification code to registered email for password reset
+router.post(
+  "/password_reset/send_code",
+  permission({ token: false, level: null }),
+  validator({ body: { email: String } }),
+  async (ctx: Koa.ParameterizedContext) => {
+    const email = String(ctx.request.body.email).trim().toLowerCase();
+    if (!emailRegex.test(email)) {
+      ctx.body = new Error("Invalid email address");
+      return;
+    }
+    const user = userSystem.getUserByUserName(email);
+    if (!user) {
+      ctx.body = new Error("该邮箱尚未注册");
+      return;
+    }
+    const code = mailService.generateCode();
+    mailService.storeCode(`reset:${email}`, code);
+    const sent = await mailService.sendPasswordResetCode(email, code);
+    if (!sent) {
+      mailService.deleteCode(`reset:${email}`);
+      ctx.body = new Error("邮件发送失败，请联系管理员检查 SMTP 配置");
+      return;
+    }
+    ctx.body = { success: true, message: "Password reset verification code sent" };
+  }
+);
+
+// [Public Permission]
+// Reset password with email verification code
+router.post(
+  "/password_reset/confirm",
+  permission({ token: false, level: null }),
+  validator({ body: { email: String, password: String, code: String } }),
+  async (ctx: Koa.ParameterizedContext) => {
+    const email = String(ctx.request.body.email).trim().toLowerCase();
+    const password = String(ctx.request.body.password);
+    const code = String(ctx.request.body.code).trim();
+
+    if (!emailRegex.test(email)) throw new Error("Invalid email address");
+    if (!userSystem.validatePassword(password)) {
+      throw new Error($t("TXT_CODE_router.user.passwordCheck"));
+    }
+    const user = userSystem.getUserByUserName(email);
+    if (!user) throw new Error("该邮箱尚未注册");
+    if (!mailService.verifyCode(`reset:${email}`, code)) {
+      throw new Error("Invalid or expired verification code");
+    }
+
+    await userSystem.edit(user.uuid, { passWord: password });
+    logger.info(`[PASSWORD_RESET] Password reset completed: ${email}`);
+    try {
+      operationLogger.info("user_config_change" as any, {
+        operator_ip: ctx.ip,
+        operator_name: email,
+        target_user_name: email
+      });
+    } catch (_) {}
+
+    ctx.body = true;
   }
 );
 
@@ -195,7 +264,6 @@ router.post(
     const code = String(ctx.request.body.code);
 
     // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       throw new Error("Invalid email address");
     }

@@ -106,6 +106,17 @@ export const createRedeemCode = useDefineApi<
   method: "POST"
 });
 
+export const batchCreateRedeemCodes = useDefineApi<
+  {
+    data: { count: number; hours: number; maxUses: number; config: string; note?: string; planId?: string };
+  },
+  { codes: string[]; count: number }
+>({
+  url: "/api/redeem/codes/batch",
+  method: "POST",
+  timeout: 1000 * 30
+});
+
 export const deleteRedeemCodes = useDefineApi<
   {
     data: string[];

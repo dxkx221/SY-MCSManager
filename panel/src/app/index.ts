@@ -26,6 +26,7 @@ import scheduleRouter from "./routers/schedule_router";
 import settingsRouter from "./routers/settings_router";
 import ssoRouter from "./routers/sso_router";
 import userRouter from "./routers/user_overview_router";
+import announcementRouter from "./routers/announcement_router";
 
 export function mountRouters(app: Koa<Koa.DefaultState, Koa.DefaultContext>) {
   const apiRouter = new Router({ prefix: "/api" });
@@ -46,6 +47,7 @@ export function mountRouters(app: Koa<Koa.DefaultState, Koa.DefaultContext>) {
   apiRouter.use(redeemRouter.routes()).use(redeemRouter.allowedMethods());
   apiRouter.use(javaManagerRouter.routes()).use(javaManagerRouter.allowedMethods());
   apiRouter.use(modManagerRouter.routes()).use(modManagerRouter.allowedMethods());
+  apiRouter.use(announcementRouter.routes()).use(announcementRouter.allowedMethods());
 
   app.use(apiRouter.routes()).use(apiRouter.allowedMethods());
 }

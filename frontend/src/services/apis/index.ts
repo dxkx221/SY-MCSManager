@@ -335,5 +335,25 @@ export const registerUser = useDefineApi<
   method: "POST"
 });
 
+export const sendPasswordResetCode = useDefineApi<
+  {
+    data: { email: string };
+  },
+  { success: boolean; message: string }
+>({
+  url: "/api/auth/password_reset/send_code",
+  method: "POST"
+});
+
+export const resetPassword = useDefineApi<
+  {
+    data: { email: string; password: string; code: string };
+  },
+  boolean
+>({
+  url: "/api/auth/password_reset/confirm",
+  method: "POST"
+});
+
 // Redeem code use (local)
 export { requestBuyInstanceLocal } from "./redeem";

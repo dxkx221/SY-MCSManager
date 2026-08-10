@@ -111,6 +111,7 @@ const disable2FACode = async () => {
     centered
     :title="t('TXT_CODE_9bb2f08b')"
     :footer="null"
+    wrap-class-name="myself-info-dialog"
     @ok="tools.showUserInfoDialog = false"
   >
     <div>
@@ -202,10 +203,10 @@ const disable2FACode = async () => {
           </a-typography-paragraph>
           <a-typography-paragraph v-if="state.userInfo?.apiKey">
             <pre
-              class="flex flex-between align-center">{{ state.userInfo.apiKey }}<CopyButton size="small" type="text" :value="state.userInfo.apiKey" /></pre>
+              class="profile-code-block flex flex-between align-center">{{ state.userInfo.apiKey }}<CopyButton size="small" type="text" :value="state.userInfo.apiKey" /></pre>
           </a-typography-paragraph>
           <a-typography-paragraph v-else>
-            <pre>{{ t("TXT_CODE_d7dbc7c2") }}</pre>
+            <pre class="profile-code-block">{{ t("TXT_CODE_d7dbc7c2") }}</pre>
           </a-typography-paragraph>
           <a-button
             class="mr-10"

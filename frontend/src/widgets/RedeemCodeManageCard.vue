@@ -3,6 +3,7 @@ import type { LayoutCard } from "@/types";
 import {
   listRedeemCodes,
   createRedeemCode,
+  batchCreateRedeemCodes,
   deleteRedeemCodes,
   listRedeemPlans,
   type RedeemCodeItem,
@@ -65,34 +66,75 @@ const dc = async () => {
   });
 };
 
-const pid = ref<string | null>(null);
+const pid = ref<string | undefined>(undefined);
+const mode = ref<"plan" | "custom">("plan");
+const count = ref(1);
 const du = ref("hour"), dv = ref(24), mx = ref(1), nt = ref("");
 const img = ref(""), mdaemon = ref("");
 const gl = ref(false);
-const gr = ref<{ code: string } | null>(null);
+const gr = ref<{ code?: string; codes?: string[]; count?: number } | null>(null);
 const plans = ref<RedeemPlanItem[]>([]), nds = ref<any[]>([]);
 
 const gdaemon = computed(() => pid.value ? (plans.value.find(p => p.id === pid.value)?.daemonId ?? "") : mdaemon.value);
 const gh = computed(() => du.value === "permanent" ? 876000 : u2h(du.value, dv.value));
 
-const onp = (id: string | null) => {
-  pid.value = id || null;
-  if (id) {
-    const p = plans.value.find(x => x.id === id);
+const onModeChange = () => {
+  gr.value = null;
+  if (mode.value === "custom") pid.value = undefined;
+};
+
+const onp = (id: any) => {
+  const planId = typeof id === "string" ? id : undefined;
+  pid.value = planId;
+  if (planId) {
+    mode.value = "plan";
+    const p = plans.value.find(x => x.id === planId);
     if (p) { du.value = p.durationUnit || "hour"; dv.value = p.durationValue || 24; nt.value = p.note || ""; }
   }
 };
 
+const onSelChange = (keys: any[]) => {
+  sel.value = keys.map(String);
+};
+
+const exportGenerated = () => {
+  if (!gr.value) return;
+  const codes = gr.value.codes?.length ? gr.value.codes : [gr.value.code].filter(Boolean);
+  if (!codes.length) return;
+  const header = `MCSManager 兑换码 - 生成时间: ${new Date().toLocaleString('zh-CN')}${nt.value ? ' | 备注: ' + nt.value : ''}`;
+  const body = [header, ...codes].join('\n');
+  const blob = new Blob([body], { type: 'text/plain;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `MCSManager_兑换码_${Date.now()}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+  message.success(`已导出 ${codes.length} 个兑换码`);
+};
+
 const dg = async () => {
-  if (!pid.value && !img.value.trim()) { message.warning("请选择套餐或输入 Docker 镜像"); return; }
+  const usePlan = mode.value === "plan" && !!pid.value;
+  if (mode.value === "plan" && !pid.value) { message.warning("请选择套餐"); return; }
+  if (!usePlan && !img.value.trim()) { message.warning("请输入 Docker 镜像"); return; }
   if (!gdaemon.value) { message.warning("请选择部署节点"); return; }
+  if (count.value < 1 || count.value > 500) { message.warning("生成数量需在 1 到 500 之间"); return; }
   gl.value = true;
   try {
     let cfg: any = {};
-    if (pid.value) cfg.planId = pid.value;
+    if (usePlan) cfg.planId = pid.value;
     else cfg = { config: { nickname: img.value.trim(), type: "docker", docker: { image: img.value.trim() } }, daemonId: gdaemon.value, productId: 1 };
-    const r = await createRedeemCode().execute({ data: { hours: gh.value, maxUses: mx.value, config: JSON.stringify(cfg), note: nt.value || undefined, planId: pid.value ?? undefined } });
-    gr.value = r.value; message.success("兑换码已生成"); lc();
+    const data = { hours: gh.value, maxUses: mx.value, config: JSON.stringify(cfg), note: nt.value || undefined, planId: usePlan ? pid.value : undefined };
+    if (count.value === 1) {
+      const r = await createRedeemCode().execute({ data });
+      gr.value = r.value ?? null;
+      message.success("兑换码已生成");
+    } else {
+      const r = await batchCreateRedeemCodes().execute({ data: { ...data, count: count.value } });
+      gr.value = r.value ?? null;
+      message.success(`已生成 ${r.value?.count ?? count.value} 个兑换码`);
+    }
+    lc();
   } catch (e: any) { reportErrorMsg(e); }
   finally { gl.value = false; }
 };
@@ -100,10 +142,20 @@ const dg = async () => {
 onMounted(async () => {
   await lc();
   try {
-    const [pr, nr] = await Promise.all([listRedeemPlans().execute(), remoteNodeList().execute()]);
+    const pr = await listRedeemPlans().execute();
     plans.value = pr.value ?? [];
+  } catch (e: any) {
+    plans.value = [];
+    reportErrorMsg(e);
+  }
+
+  try {
+    const nr = await remoteNodeList().execute();
     nds.value = nr.value ?? [];
-  } catch (e: any) { reportErrorMsg(e); }
+  } catch {
+    // 节点列表只影响手动生成配置，不应影响套餐模式读取服务器套餐。
+    nds.value = [];
+  }
 });
 </script>
 
@@ -118,18 +170,26 @@ onMounted(async () => {
           <div class="gen-title">生成新兑换码</div>
 
           <div class="gen-field">
+            <div class="gen-label">生成模式</div>
+            <a-radio-group v-model:value="mode" button-style="solid" @change="onModeChange">
+              <a-radio-button value="plan">使用套餐</a-radio-button>
+              <a-radio-button value="custom">自定义配置</a-radio-button>
+            </a-radio-group>
+          </div>
+
+          <div v-if="mode==='plan'" class="gen-field">
             <div class="gen-label">选择套餐</div>
-            <a-select v-model:value="pid" allow-clear placeholder="不选则手动指定镜像和节点" @change="onp">
+            <a-select v-model:value="pid" placeholder="选择要批量生成的套餐" @change="onp as any">
               <a-select-option v-for="p in plans" :key="p.id" :value="p.id">{{ p.name || p.image }} · {{ pd(p) }} · {{ p.memory }}MB</a-select-option>
             </a-select>
           </div>
 
-          <div v-if="!pid" class="gen-field">
+          <div v-if="mode==='custom'" class="gen-field">
             <div class="gen-label">Docker 镜像</div>
             <a-input v-model:value="img" placeholder="例如: itzg/minecraft-server" />
           </div>
 
-          <div v-if="!pid" class="gen-field">
+          <div v-if="mode==='custom'" class="gen-field">
             <div class="gen-label">部署节点</div>
             <a-select v-model:value="mdaemon" placeholder="选择部署节点">
               <a-select-option v-for="n in nds" :key="n.uuid" :value="n.uuid">{{ n.remarks || n.ip || n.uuid }}</a-select-option>
@@ -143,9 +203,15 @@ onMounted(async () => {
             <span class="gen-hint">→ {{ fh(gh) }}</span>
           </div>
 
-          <div class="gen-field">
-            <div class="gen-label">使用次数</div>
-            <a-input-number v-model:value="mx" :min="1" :max="9999" style="width:130px" />
+          <div class="gen-field gen-inline">
+            <div>
+              <div class="gen-label">生成数量</div>
+              <a-input-number v-model:value="count" :min="1" :max="500" style="width:130px" />
+            </div>
+            <div>
+              <div class="gen-label">每码可用次数</div>
+              <a-input-number v-model:value="mx" :min="1" :max="9999" style="width:130px" />
+            </div>
           </div>
 
           <div class="gen-field">
@@ -158,7 +224,18 @@ onMounted(async () => {
           </div>
 
           <div v-if="gr" class="gen-ok">
-            ✓ 兑换码 <a-typography-text copyable strong>{{ gr.code }}</a-typography-text>
+            <div class="gen-ok-top">
+              <span>✓ 已生成 {{ gr.codes?.length || 1 }} 个兑换码</span>
+              <a-button size="small" type="link" @click="exportGenerated">📥 导出为文件</a-button>
+            </div>
+            <template v-if="gr.codes?.length">
+              <div class="code-list">
+                <a-typography-text v-for="code in gr.codes" :key="code" copyable strong>{{ code }}</a-typography-text>
+              </div>
+            </template>
+            <template v-else>
+              <a-typography-text copyable strong>{{ gr.code }}</a-typography-text>
+            </template>
           </div>
         </div>
 
@@ -170,7 +247,7 @@ onMounted(async () => {
           </div>
           <a-table
             :columns="cols" :data-source="codes" :loading="l"
-            :row-selection="{ selectedRowKeys: sel, onChange: (ks: string[])=>{ sel = ks } }"
+            :row-selection="{ selectedRowKeys: sel as any, onChange: onSelChange as any }"
             row-key="id" size="small" :pagination="{ pageSize: 20, showTotal: (t: number)=> `共 ${t} 个` }" :scroll="{ x: 700 }"
           >
             <template #bodyCell="{ column, record }">
@@ -204,19 +281,26 @@ onMounted(async () => {
 .gen-title {
   font-weight: 600;
   font-size: 14px;
-  color: #303133;
+  color: var(--text-primary, var(--text-color));
   margin-bottom: 14px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #ebeef5;
+  border-bottom: 1px solid var(--border-subtle, var(--card-border-color));
 }
 
 .gen-field {
   margin-bottom: 12px;
 }
 
+.gen-inline {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
 .gen-label {
   font-size: 13px;
-  color: #606266;
+  color: var(--text-secondary, var(--text-color));
   margin-bottom: 5px;
 }
 
@@ -226,7 +310,7 @@ onMounted(async () => {
 }
 
 .gen-hint {
-  color: #909399;
+  color: var(--text-muted, var(--text-color));
   font-size: 12px;
   margin-left: 8px;
 }
@@ -234,10 +318,31 @@ onMounted(async () => {
 .gen-ok {
   margin-top: 8px;
   padding: 10px 14px;
-  background: #f0f9eb;
-  border: 1px solid #c2e7b0;
-  border-radius: 6px;
+  color: var(--status-success);
+  background: var(--status-success-soft);
+  border: 1px solid color-mix(in srgb, var(--status-success) 28%, transparent);
+  border-radius: 10px;
+  backdrop-filter: saturate(140%) blur(12px);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
   font-size: 13px;
+}
+
+.gen-ok-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.code-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 8px;
+  max-height: 160px;
+  overflow: auto;
 }
 
 .list-header {
@@ -250,6 +355,6 @@ onMounted(async () => {
 .list-title {
   font-weight: 600;
   font-size: 14px;
-  color: #303133;
+  color: var(--text-primary, var(--text-color));
 }
 </style>

@@ -27,6 +27,7 @@ export class User implements IUser {
   open2FA = false;
   ssoSub = "";
   ssoBound = false;
+  readAnnouncementIds: string[] = [];
 }
 
 export enum ROLE {

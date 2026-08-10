@@ -715,7 +715,7 @@ onUnmounted(() => {
 
             <p
               v-if="fileStatus?.instanceFileTask && fileStatus.instanceFileTask > 0"
-              style="color: #C59724"
+              style="color: var(--accent-primary, var(--color-primary))"
             >
               <a-spin />
               {{ t("TXT_CODE_dd06dea2") + fileStatus?.instanceFileTask + t("TXT_CODE_3e959ce7") }}
@@ -924,7 +924,7 @@ onUnmounted(() => {
   color: inherit;
 
   &:hover {
-    color: #C59724;
+    color: var(--accent-primary, var(--color-primary));
   }
 }
 

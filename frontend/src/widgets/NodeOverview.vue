@@ -111,7 +111,7 @@ const paginationConfig = computed(() => {
             <template v-else-if="column.key === 'mem'">
               <span
                 v-if="record.available"
-                :style="{ color: getUsageColor(record.memUsedPercent, 'var(--color-purple-8)') }"
+                :style="{ color: getUsageColor(record.memUsedPercent, 'var(--status-info, var(--color-primary))') }"
               >
                 {{ record.mem }}
               </span>
@@ -144,7 +144,7 @@ const paginationConfig = computed(() => {
             </template>
             <!-- 连接状态：在线/离线标签 -->
             <template v-else-if="column.key === 'status'">
-              <a-tag :color="record.available ? 'green' : ''">
+              <a-tag :color="record.available ? 'green' : 'default'">
                 {{ record.status }}
               </a-tag>
             </template>

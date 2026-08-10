@@ -40,7 +40,7 @@ export class ProcessConfig {
       this.iProcessConfig.type === "properties_not_unicode"
     ) {
       const regex = /^[ \t]*([^=:\n]+?)[ \t]*=[ \t]*(-?\d+)[ \t]*$/gm;
-      let preprocessedText = text.replace(regex, (match, p1, p2) => {
+      let preprocessedText = text.replace(regex, (match: string, p1: string, p2: string) => {
         const num = Number(p2);
         if (num <= 2147483647 && num >= -2147483648) return match;
         return `${p1}=${LONG_MAGIC_PREFIX}${p2}`;

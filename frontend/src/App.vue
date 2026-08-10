@@ -13,6 +13,8 @@ import AppSidebarMenu from "./components/AppSidebarMenu.vue";
 import Breadcrumbs from "./components/Breadcrumbs.vue";
 import InputDialogProvider from "./components/InputDialogProvider.vue";
 import MyselfInfoDialog from "./components/MyselfInfoDialog.vue";
+import AnnouncementDialog from "./components/announcementdialog.vue";
+import MobileInstanceActions from "./components/MobileInstanceActions.vue";
 import Watermark from "./widgets/Watermark.vue";
 import { useAppStateStore } from "./stores/useAppStateStore";
 import { useLayoutContainerStore } from "./stores/useLayoutContainerStore";
@@ -23,7 +25,7 @@ const { containerState } = useLayoutContainerStore();
 const { state: appState } = useAppStateStore();
 const { isPhone } = useScreen();
 
-const GLOBAL_COMPONENTS = [InputDialogProvider, MyselfInfoDialog, UploadBubble];
+const GLOBAL_COMPONENTS = [InputDialogProvider, MyselfInfoDialog, UploadBubble, AnnouncementDialog];
 
 [Button, Select, Input, Table].forEach((element) => {
   element.props.size.default = "large";
@@ -51,12 +53,13 @@ onMounted(async () => {
       <main class="main-content" :class="{ 'app-layout-sidebar-only': useSidebarLayout }">
         <AppHeader v-if="!useSidebarLayout" :style="designModeNavStyle" />
         <Breadcrumbs />
-        <RouterView :key="$route.fullPath" />
+        <RouterView />
       </main>
     </div>
 
     <!-- Mobile Bottom Navigation -->
     <AppBottomNav v-if="isPhone && !useSidebarLayout" />
+    <MobileInstanceActions />
 
     <!-- Global Components -->
     <component :is="component" v-for="(component, index) in GLOBAL_COMPONENTS" :key="index" />

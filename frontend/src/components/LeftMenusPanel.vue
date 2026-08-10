@@ -25,8 +25,15 @@ const handleChangeMenu = (item: LeftMenuItem) => {
   }
 };
 
+const handleTabChange = (key: string | number) => {
+  const item = props.menus.find((menu) => menu.key === String(key));
+  if (item) handleChangeMenu(item);
+};
+
 const setActiveKey = (key: string) => {
   activeKey.value = key;
+  const item = props.menus.find((menu) => menu.key === key);
+  if (item?.click) item.click();
 };
 
 onMounted(() => {
@@ -54,13 +61,12 @@ defineExpose({
     </div>
   </div>
 
-  <div v-else class="ml-16 mr-16 mt-8 mb-8">
-    <a-tabs v-model:activeKey="activeKey">
+  <div v-else class="ml-16 mr-16 mt-8 mb-8 mobile-menu-body">
+    <a-tabs v-model:activeKey="activeKey" @change="handleTabChange">
       <a-tab-pane
         v-for="item in props.menus"
         :key="item.key"
         class="mb-6"
-        @click="handleChangeMenu(item)"
       >
         <template #tab>
           <!-- <component :is="item.icon"></component> -->
@@ -82,15 +88,27 @@ defineExpose({
     float: left;
     width: 240px;
     padding: 12px 16px;
-    background-color: var(--color-gray-4);
-    border-top-left-radius: 4px;
-    border-bottom-left-radius: 4px;
+    background: var(--surface-inner, var(--background-color-white));
+    border-right: 1px solid var(--border-subtle, var(--card-border-color));
+    backdrop-filter: saturate(145%) blur(16px);
+    -webkit-backdrop-filter: saturate(145%) blur(16px);
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
   }
   .right-content {
     padding-right: 1px;
     overflow: hidden;
     flex-grow: 1;
     text-align: left;
+  }
+}
+
+.mobile-menu-body {
+  overflow: visible;
+  :deep(.ant-tabs-content-holder),
+  :deep(.ant-tabs-content),
+  :deep(.ant-tabs-tabpane) {
+    overflow: visible;
   }
 }
 </style>

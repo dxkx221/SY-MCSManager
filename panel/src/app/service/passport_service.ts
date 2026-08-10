@@ -64,7 +64,6 @@ export function loginSuccess(ctx: Koa.ParameterizedContext, userName: string) {
 
   logger.info($t("TXT_CODE_42036f92"));
   logger.info(`[LOGIN] IP: ${ip} Login ${userName} successful!`);
-  logger.info(`[LOGIN] Token: ${ctx.session["token"]}`);
   logger.info($t("TXT_CODE_42036f92"));
 
   return String(ctx.session["token"]);

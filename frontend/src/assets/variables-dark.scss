@@ -4,32 +4,32 @@
   --vscode-bg-color: rgb(32, 32, 32);
   --blue-background-color: rgb(35, 36, 41);
 
-  --background-color: var(--blue-background-color);
-  --background-color-white: var(--vscode-bg-color);
+  --background-color: #0F1024;
+  --background-color-white: rgba(12, 14, 28, 0.18);
 
-  --drag-background-color: var(--color-gray-10);
-  --new-card-list-background-color: rgba(201, 200, 200, 0.2);
-  --new-card-list-background-color-menu: rgba(129, 129, 129, 0.8);
-  --bottom-nav-background-color: rgb(40, 40, 40);
-  --bottom-nav-background-color-hover: #6864648f;
-  --float-box-bg-color: rgba(235, 235, 235, 0.2);
+  --drag-background-color: rgba(16, 20, 36, 0.22);
+  --new-card-list-background-color: rgba(12, 14, 28, 0.20);
+  --new-card-list-background-color-menu: rgba(12, 14, 28, 0.24);
+  --bottom-nav-background-color: rgba(12, 14, 28, 0.20);
+  --bottom-nav-background-color-hover: rgba(169, 150, 214, 0.12);
+  --float-box-bg-color: rgba(12, 14, 28, 0.22);
   --gray-border-color: var(--color-gray-10);
 
-  --login-panel-bg: rgba(56, 56, 56, 0.8);
+  --login-panel-bg: rgba(12, 14, 28, 0.24);
 
-  --app-header-bg: rgba(30, 30, 30, 0.6);
-  --app-header-bg-extend: rgba(30, 30, 30, 1);
-  --app-header-text-color: var(--color-gray-9);
+  --app-header-bg: rgba(12, 14, 28, 0.18);
+  --app-header-bg-extend: rgba(12, 14, 28, 0.22);
+  --app-header-text-color: rgba(255,255,255,0.82);
 
-  --text-color: var(--color-gray-8);
+  --text-color: rgba(255,255,255,0.82);
 
-  --card-border-color: rgba(196, 196, 196, 0.257);
-  --card-shadow-color: rgba(0, 0, 0, 0.135);
-  --card-shadow-extend-color: rgba(0, 0, 0, 0.3);
+  --card-border-color: rgba(255, 255, 255, 0.13);
+  --card-shadow-color: rgba(0, 0, 0, 0.32);
+  --card-shadow-extend-color: rgba(169, 150, 214, 0.10);
 
-  --card-bottom-background-color: rgba(12, 12, 12, 0.8);
+  --card-bottom-background-color: rgba(8, 10, 22, 0.24);
 
-  --inner-card-hover-bg: linear-gradient(135deg, #2e2e2e 0%, #222 100%);
+  --inner-card-hover-bg: rgba(169, 150, 214, 0.10);
 
   .app-header-wrapper {
     border-bottom: 1px solid var(--color-gray-5);
@@ -37,8 +37,8 @@
 
   // Antdv for dark mode
   .ant-btn-default {
-    background-color: var(--color-gray-4);
-    box-shadow: 0 2px 0 rgba(55, 55, 55, 0.15);
+    background-color: rgba(12, 14, 28, 0.20);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.08);
   }
 
   .ant-btn-primary {
@@ -50,7 +50,7 @@
     border-radius: 8px;
   }
   .ant-tag-purple {
-    border: 1px solid var(--color-purple-5) !important;
+    border: 1px solid rgba(169, 150, 214, 0.28) !important;
   }
 }
 
@@ -136,16 +136,16 @@
   --color-cyan-8: #58d1c9;
   --color-cyan-9: #84e2d8;
   --color-cyan-10: #b2f1e8;
-  --color-blue-1: #111a2c;
-  --color-blue-2: #112545;
-  --color-blue-3: #15325b;
-  --color-blue-4: #15417e;
-  --color-blue-5: #1554ad;
-  --color-blue-6: #1668dc;
-  --color-blue-7: #3c89e8;
-  --color-blue-8: #65a9f3;
-  --color-blue-9: #8dc5f8;
-  --color-blue-10: #b7dcfa;
+  --color-blue-1: #2B2111;
+  --color-blue-2: #443111;
+  --color-blue-3: #594214;
+  --color-blue-4: #7C5914;
+  --color-blue-5: #9B8BC9;
+  --color-blue-6: #A996D6;
+  --color-blue-7: #E0BE55;
+  --color-blue-8: #E8CC75;
+  --color-blue-9: #F0DFA5;
+  --color-blue-10: #FAEFD0;
   --color-geekblue-1: #131629;
   --color-geekblue-2: #161d40;
   --color-geekblue-3: #1c2755;
@@ -191,7 +191,7 @@
   --color-gray-2: #141414;
   --color-gray-1: #000000;
 
-  --color-primary: var(--color-blue-5);
+  --color-primary: #A996D6;
   --color-danger: var(--color-red-5);
   --color-warning: var(--color-orange-6);
   --color-success: var(--color-green-5);

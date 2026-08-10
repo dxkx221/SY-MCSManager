@@ -3,6 +3,7 @@ import { getProPanelUrl } from "@/components/IframeBox/config";
 import IframeBox from "@/components/IframeBox/index.vue";
 import LeftMenusPanel from "@/components/LeftMenusPanel.vue";
 import Loading from "@/components/Loading.vue";
+import AnnouncementManage from "@/widgets/announcementmanage.vue";
 import { useUploadFileDialog } from "@/components/fc";
 import { router } from "@/config/router";
 import { SUPPORTED_LANGS, isCN, t } from "@/lang/i18n";
@@ -14,6 +15,7 @@ import { arrayFilter } from "@/tools/array";
 import {
   listRedeemCodes,
   createRedeemCode,
+  batchCreateRedeemCodes,
   deleteRedeemCodes,
   listRedeemPlans,
   createRedeemPlan,
@@ -115,7 +117,16 @@ const submit = async (needReload: boolean = true) => {
   }
 };
 
-const menus = arrayFilter([
+type SelectLikeValue = string | number | boolean | null | undefined | Array<string | number | boolean>;
+type SettingsMenuItem = {
+  title: string;
+  key: string;
+  icon: any;
+  condition?: () => boolean;
+  click?: () => void;
+};
+
+const menus = arrayFilter<SettingsMenuItem>([
   {
     title: t("TXT_CODE_cdd555be"),
     key: "baseInfo",
@@ -148,17 +159,18 @@ const menus = arrayFilter([
     key: "mail",
     icon: MailOutlined
   },
+  { title: "公告管理", key: "announcement", icon: MessageOutlined },
   {
     title: "兑换码",
     key: "redeem",
     icon: GiftOutlined,
-    click: () => { loadRedeemCodes(); loadRedeemPlansData(); }
+    click() { void loadRedeemCodes(); void loadRedeemPlansData(); }
   },
   {
     title: "套餐管理",
     key: "plans",
     icon: ShopOutlined,
-    click: () => { loadRedeemPlansData(); }
+    click() { void loadRedeemPlansData(); }
   },
   {
     title: t("TXT_CODE_SSO_TAB_TITLE"),
@@ -372,9 +384,10 @@ const handleSaveSidebarPosition = async () => {
 };
 
 /** Persist watermark toggle to layout config. */
-const onWatermarkToggle = (v: boolean) => {
-  (formData.value as MySettings).watermarkEnabled = v;
-  handleSaveWatermark(v);
+const onWatermarkToggle = (v: boolean | string | number) => {
+  const enabled = Boolean(v);
+  (formData.value as MySettings).watermarkEnabled = enabled;
+  handleSaveWatermark(enabled);
 };
 
 const handleSaveWatermark = async (enabled: boolean) => {
@@ -488,8 +501,7 @@ const formatHours = (h: number) => {
 };
 
 const pd = (p: RedeemPlanItem) => {
-  if (!p.durationUnit) return `${p.hours} 小时`;
-  return p.durationUnit === "permanent" ? "永久" : `${p.durationValue} ${{ hour: "小时", day: "天", month: "月", year: "年" }[p.durationUnit] || "小时"}`;
+  return p.durationUnit === "permanent" ? "永久" : `${p.durationValue || 24} ${{ hour: "小时", day: "天", month: "月", year: "年" }[p.durationUnit] || "小时"}`;
 };
 
 const genDurationUnit = ref("hour");
@@ -505,11 +517,13 @@ const genHours = computed(() => {
   }
 });
 const genMaxUses = ref(1);
+const genCount = ref(1);
 const genNote = ref("");
 const genImage = ref("");
 const genDaemonId = ref("");
 const genLoading = ref(false);
 const genResult = ref("");
+const genBatchResult = ref<string[]>([]);
 
 const redeemCodes = ref<RedeemCodeItem[]>([]);
 const redeemLoading = ref(false);
@@ -524,8 +538,8 @@ const redeemColumns = [
   { title: "创建人", key: "createdBy", dataIndex: "createdBy" }
 ];
 
-const onCodeSelectChange = (keys: string[]) => {
-  selectedCodes.value = keys;
+const onCodeSelectChange = (keys: Array<string | number>) => {
+  selectedCodes.value = keys.map(String);
 };
 
 const handleGenerateCode = async () => {
@@ -539,31 +553,40 @@ const handleGenerateCode = async () => {
       return;
     }
   }
+  if (genCount.value < 1 || genCount.value > 500) {
+    message.warning("生成数量需在 1 到 500 之间");
+    return;
+  }
   genLoading.value = true;
   genResult.value = "";
+  genBatchResult.value = [];
   try {
-    const res = await createRedeemCode().execute({
-      data: {
-        hours: genHours.value,
-        maxUses: genMaxUses.value,
-        config: genPlanId.value
-          ? "{}"
-          : JSON.stringify({
-              productId: 1,
-              daemonId: genDaemonId.value,
-              config: {
-                nickname: genImage.value.trim(),
-                type: "docker",
-                docker: {
-                  image: genImage.value.trim()
-                }
+    const data = {
+      hours: genHours.value,
+      maxUses: genMaxUses.value,
+      config: genPlanId.value
+        ? "{}"
+        : JSON.stringify({
+            productId: 1,
+            daemonId: genDaemonId.value,
+            config: {
+              nickname: genImage.value.trim(),
+              type: "docker",
+              docker: {
+                image: genImage.value.trim()
               }
-            }),
-        planId: genPlanId.value ?? undefined,
-        note: genNote.value
-      }
-    });
-    genResult.value = res.value?.code ?? "";
+            }
+          }),
+      planId: genPlanId.value ?? undefined,
+      note: genNote.value
+    };
+    if (genCount.value === 1) {
+      const res = await createRedeemCode().execute({ data });
+      genResult.value = res.value?.code ?? "";
+    } else {
+      const res = await batchCreateRedeemCodes().execute({ data: { ...data, count: genCount.value } });
+      genBatchResult.value = res.value?.codes ?? [];
+    }
     await loadRedeemCodes();
   } catch (err: any) {
     reportErrorMsg(err);
@@ -604,7 +627,7 @@ const handleDeleteCodes = async () => {
 };
 
 // ─── Export ───
-const exportPlanId = ref<string | null>(null);
+const exportPlanId = ref<string | undefined>(undefined);
 const handleExportAll = async () => {
   try {
     await exportRedeemCodes();
@@ -647,21 +670,26 @@ const planForm = ref({
   note: ""
 });
 // In redeem gen form: selected plan (null = manual)
-const genPlanId = ref<string | null>(null);
+const genPlanId = ref<string | undefined>(undefined);
 
 const loadRedeemPlansData = async () => {
   plansLoading.value = true;
   try {
-    const [planRes, nodeRes] = await Promise.all([
-      listRedeemPlans().execute(),
-      remoteNodeList().execute()
-    ]);
+    const planRes = await listRedeemPlans().execute();
     plans.value = planRes.value ?? [];
-    planNodes.value = nodeRes.value ?? [];
-  } catch {
-    // ignore
+  } catch (err: any) {
+    plans.value = [];
+    reportErrorMsg(err);
   } finally {
     plansLoading.value = false;
+  }
+
+  try {
+    const nodeRes = await remoteNodeList().execute();
+    planNodes.value = nodeRes.value ?? [];
+  } catch {
+    // 节点列表只影响手动配置，不应影响管理员查看/选择全局套餐。
+    planNodes.value = [];
   }
 };
 
@@ -731,10 +759,11 @@ const handleDeletePlan = async (id: string) => {
   });
 };
 
-const onGenPlanSelect = (planId: string) => {
-  genPlanId.value = planId || null;
-  if (planId) {
-    const plan = plans.value.find((p) => p.id === planId);
+const onGenPlanSelect = (planId: SelectLikeValue) => {
+  const id = typeof planId === "string" ? planId : undefined;
+  genPlanId.value = id;
+  if (id) {
+    const plan = plans.value.find((p) => p.id === id);
     if (plan) {
       genDurationUnit.value = plan.durationUnit || "hour";
       genDurationValue.value = plan.durationValue || 24;
@@ -797,6 +826,9 @@ onMounted(async () => {
     }
     if (router.currentRoute.value.query.tab === "mail") {
       leftMenusPanelRef.value?.setActiveKey("mail");
+    }
+    if (router.currentRoute.value.query.tab === "announcement") {
+      leftMenusPanelRef.value?.setActiveKey("announcement");
     }
     if (router.currentRoute.value.query.tab === "redeem") {
       leftMenusPanelRef.value?.setActiveKey("redeem");
@@ -1775,6 +1807,10 @@ onUnmounted(() => {
             </div>
           </template>
 
+          <template #announcement>
+            <div class="content-box" :style="{ maxHeight: card.height }"><AnnouncementManage /></div>
+          </template>
+
           <!-- ─── Redeem Code Card ─── -->
           <template #redeem>
             <div class="content-box" :style="{ maxHeight: card.height }">
@@ -1791,7 +1827,7 @@ onUnmounted(() => {
                         v-model:value="genPlanId"
                         placeholder="不选则手动配置"
                         allow-clear
-                        @change="onGenPlanSelect"
+                        @change="onGenPlanSelect as any"
                         style="width:100%"
                       >
                         <a-select-option
@@ -1827,9 +1863,15 @@ onUnmounted(() => {
                       </div>
                     </div>
 
-                    <div class="gen-f">
-                      <div class="gen-l">最大使用次数</div>
-                      <a-input-number v-model:value="genMaxUses" :min="1" :max="9999" style="width:100%" />
+                    <div class="gen-row">
+                      <div class="gen-f gen-half">
+                        <div class="gen-l">生成数量</div>
+                        <a-input-number v-model:value="genCount" :min="1" :max="500" style="width:100%" />
+                      </div>
+                      <div class="gen-f gen-half">
+                        <div class="gen-l">最大使用次数</div>
+                        <a-input-number v-model:value="genMaxUses" :min="1" :max="9999" style="width:100%" />
+                      </div>
                     </div>
 
                     <div class="gen-f">
@@ -1843,11 +1885,19 @@ onUnmounted(() => {
                       </a-button>
                     </div>
                   </div>
-                  <div v-if="genResult" class="mt-12">
+                  <div v-if="genResult || genBatchResult.length" class="mt-12">
                     <a-alert type="success" :show-icon="false">
                       <template #message>
-                        兑换码已生成：
-                        <a-typography-text copyable strong>{{ genResult }}</a-typography-text>
+                        <template v-if="genBatchResult.length">
+                          已批量生成 {{ genBatchResult.length }} 个兑换码：
+                          <div class="redeem-batch-result">
+                            <a-typography-text v-for="code in genBatchResult" :key="code" copyable strong>{{ code }}</a-typography-text>
+                          </div>
+                        </template>
+                        <template v-else>
+                          兑换码已生成：
+                          <a-typography-text copyable strong>{{ genResult }}</a-typography-text>
+                        </template>
                       </template>
                     </a-alert>
                   </div>
@@ -2006,13 +2056,13 @@ onUnmounted(() => {
                       {{ record.cpu ? record.cpu + '%' : '-' }}
                     </template>
                     <template v-else-if="column.key === 'duration'">
-                      {{ pd(record) }}
+                      {{ pd(record as any as RedeemPlanItem) }}
                     </template>
                     <template v-else-if="column.key === 'image'">
                       {{ record.image || '-' }}
                     </template>
                     <template v-else-if="column.key === 'actions'">
-                      <a-button size="small" type="link" @click="openEditPlan(record as RedeemPlanItem)">
+                      <a-button size="small" type="link" @click="openEditPlan(record as any)">
                         <EditOutlined />
                       </a-button>
                       <a-button size="small" type="link" danger @click="handleDeletePlan(record.id)">
@@ -2124,13 +2174,73 @@ div {
 .gen-f {
   margin-bottom: 12px;
 }
+.gen-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.gen-half {
+  flex: 1 1 160px;
+}
+.redeem-batch-result {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  margin-top: 8px;
+  max-height: 160px;
+  overflow: auto;
+}
 .gen-l {
   font-size: 13px;
   color: #606266;
   margin-bottom: 5px;
 }
-</style>
 
+@media (max-width: 768px) {
+  .content-box {
+    padding: 14px 12px;
+    overflow-x: auto;
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    background: var(--surface-card);
+    backdrop-filter: saturate(145%) blur(14px);
+    -webkit-backdrop-filter: saturate(145%) blur(14px);
+  }
+
+  :deep(.mobile-menu-body),
+  :deep(.ant-tabs-content-holder),
+  :deep(.ant-tabs-tabpane) {
+    border-radius: 14px;
+  }
+
+  :deep(.ant-collapse),
+  :deep(.ant-collapse-item),
+  :deep(.ant-collapse-content),
+  :deep(.ant-alert) {
+    border-radius: 12px !important;
+    overflow: hidden;
+  }
+
+  .gen-form-v,
+  .gen-row,
+  .gen-half {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  :deep(.ant-select),
+  :deep(.ant-input),
+  :deep(.ant-input-number),
+  :deep(.ant-picker) {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  :deep(.ant-table-wrapper) {
+    overflow-x: auto;
+  }
+}
+</style>
 
 
 

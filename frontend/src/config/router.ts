@@ -4,6 +4,7 @@ import { useLayoutContainerStore } from "@/stores/useLayoutContainerStore";
 import type { LoginUserInfo } from "@/types/user";
 import InstallPage from "@/views/Install.vue";
 import LayoutContainer from "@/views/LayoutContainer.vue";
+import ForgotPasswordPage from "@/views/ForgotPassword.vue";
 import LoginPage from "@/views/Login.vue";
 import RegisterPage from "@/views/Register.vue";
 import SsoBindLogin from "@/views/SsoBindLogin.vue";
@@ -250,6 +251,12 @@ const originRouterConfig: RouterConfig[] = [
   },
 
   {
+    path: "/announcements",
+    name: "公告中心",
+    component: LayoutContainer,
+    meta: { permission: ROLE.USER, mainMenu: true }
+  },
+  {
     path: "/settings",
     name: t("TXT_CODE_b5c7b82d"),
     component: LayoutContainer,
@@ -304,6 +311,15 @@ const originRouterConfig: RouterConfig[] = [
       permission: ROLE.GUEST,
       onlyDisplayEditMode: true,
       customClass: ["nav-button-warning"]
+    }
+  },
+  {
+    path: "/forgot-password",
+    name: "找回密码",
+    component: ForgotPasswordPage,
+    meta: {
+      permission: ROLE.GUEST,
+      mainMenu: false
     }
   },
   {
@@ -417,7 +433,7 @@ router.beforeEach(async (to, from, next) => {
   if (
     toRoutePath.includes("_open_page") ||
     toRoutePath.startsWith("/sso/") ||
-    ["/shop", "/login", "/register", "/install", "/404"].includes(toRoutePath)
+    ["/shop", "/login", "/register", "/forgot-password", "/install", "/404"].includes(toRoutePath)
   ) {
     return next();
   }

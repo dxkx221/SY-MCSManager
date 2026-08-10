@@ -155,8 +155,10 @@ class InstanceSubsystem extends EventEmitter {
   createInstance(cfg: any, persistence = true, uuid?: string) {
     const newUuid = uuid || v4().replace(/-/gim, "");
     const instance = new Instance(newUuid, new InstanceConfig());
-    // Instance working directory verification and automatic creation
-    if (!cfg.cwd || cfg.cwd === ".") {
+    // Instance working directory verification and automatic creation.
+    // Never allow cwd of "/" or empty/"." for any instance type:
+    // / means host root and would expose server files when mounted into Docker.
+    if (!cfg.cwd || cfg.cwd === "." || cfg.cwd === "/") {
       cfg.cwd = path.normalize(`${this.instanceDataDir}/${instance.instanceUuid}`);
     }
     if (!fs.existsSync(cfg.cwd)) fs.mkdirsSync(cfg.cwd);
@@ -220,7 +222,7 @@ class InstanceSubsystem extends EventEmitter {
       this.instances.delete(instanceUuid);
       StorageSubsystem.delete("InstanceConfig", instanceUuid);
       InstanceControl.deleteInstanceAllTask(instanceUuid);
-      if (deleteFile) fs.remove(instance.absoluteCwdPath(), (err) => {});
+      if (deleteFile) fs.remove(instance.absoluteCwdPath(), (_err: unknown) => {});
       return true;
     }
     throw new Error($t("TXT_CODE_3bfb9e04"));

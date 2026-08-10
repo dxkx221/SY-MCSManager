@@ -18,6 +18,10 @@ class UserSubsystem {
   async initialize() {
     for (const uuid of await Storage.getStorage().list("User")) {
       const user = (await Storage.getStorage().load("User", User, uuid)) as User;
+      if (!user) {
+        logger.warn(`[UserSubsystem] Skip invalid user data: ${uuid}`);
+        continue;
+      }
       this.objects.set(uuid, user);
     }
     logger.info($t("TXT_CODE_systemUser.userCount", { n: this.objects.size }));
@@ -43,7 +47,7 @@ class UserSubsystem {
     if (!instance) return;
     if (config.userName) instance.userName = config.userName;
     if (config.isInit != null) instance.isInit = Boolean(config.isInit);
-    if (config.permission) instance.permission = config.permission;
+    if (config.permission != null) instance.permission = Number(config.permission);
     if (config.registerTime) instance.registerTime = config.registerTime;
     if (config.loginTime) instance.loginTime = config.loginTime;
     if (config.apiKey != null) instance.apiKey = config.apiKey;
@@ -51,6 +55,13 @@ class UserSubsystem {
     if (config.open2FA != null) instance.open2FA = Boolean(config.open2FA);
     if (config.ssoSub != null) instance.ssoSub = String(config.ssoSub);
     if (config.ssoBound != null) instance.ssoBound = Boolean(config.ssoBound);
+    if (config.readAnnouncementIds != null) {
+      if (!Array.isArray(config.readAnnouncementIds))
+        throw new Error("readAnnouncementIds must be an array");
+      instance.readAnnouncementIds = Array.from(
+        new Set(config.readAnnouncementIds.filter((id: unknown) => typeof id === "string"))
+      );
+    }
     if (config.instances) this.setUserInstances(uuid, config.instances);
     if (config.passWord) {
       instance.passWordType = UserPassWordType.bcrypt;
@@ -75,8 +86,11 @@ class UserSubsystem {
 
   checkUser(info: IUser, code2FA?: string, totpDriftToleranceSteps: number = 0) {
     const inputPassword = info.passWord || "";
+    let matchedUser = false;
     for (const [uuid, user] of this.objects) {
+      if (!user) continue;
       if (user.userName === info.userName) {
+        matchedUser = true;
         if (
           user.open2FA &&
           user.secret &&
@@ -91,6 +105,7 @@ class UserSubsystem {
         }
       }
     }
+    if (!matchedUser) throw new Error($t("TXT_CODE_fefbb457"));
   }
 
   existUserName(userName: string): boolean {

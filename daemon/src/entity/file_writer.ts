@@ -193,7 +193,7 @@ export default class FileWriter {
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const stream = fs.createReadStream(filePath, options);
-      stream.on("data", (chunk) => hash.update(chunk));
+      stream.on("data", (chunk: Buffer | string) => hash.update(chunk));
       stream.on("end", resolve);
       stream.on("error", reject);
     });

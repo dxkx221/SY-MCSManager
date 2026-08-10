@@ -1,0 +1,11 @@
+<script setup lang="ts">
+import { createAnnouncement } from "@/services/apis/announcement";
+import { NotificationOutlined } from "@ant-design/icons-vue";
+import { message } from "ant-design-vue";
+import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+const router=useRouter(); const loading=ref(false); const form=reactive({title:"",content:"",active:true});
+const publish=async()=>{if(!form.title.trim()||!form.content.trim()){message.warning("请填写公告标题和内容");return}loading.value=true;try{await createAnnouncement().execute({data:{...form,title:form.title.trim(),content:form.content.trim()}});message.success(form.active?"公告已发布":"公告已保存");form.title="";form.content="";form.active=true}catch(error:any){message.error(error?.message||"发布失败")}finally{loading.value=false}};
+</script>
+<template><section class="announcement-manage"><div class="manage-header"><div><span><NotificationOutlined /> 公告管理</span><h3>发布一条新公告</h3></div><a-button @click="router.push('/announcements')">查看与管理历史</a-button></div><a-form layout="vertical" :model="form"><a-form-item label="公告标题" required><a-input v-model:value="form.title" :maxlength="100" show-count placeholder="简洁说明公告主题" /></a-form-item><a-form-item label="公告内容" required><a-textarea v-model:value="form.content" :rows="7" :maxlength="5000" show-count placeholder="支持换行，请写明影响范围与必要操作" /></a-form-item><div class="form-footer"><div><a-switch v-model:checked="form.active" /><span>{{ form.active ? "发布后立即展示" : "暂存为停用状态" }}</span></div><a-button type="primary" :loading="loading" @click="publish">{{ form.active ? "立即发布" : "保存公告" }}</a-button></div></a-form></section></template>
+<style scoped lang="scss">.announcement-manage{padding:4px 2px 18px;text-align:left}.manage-header{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:22px}.manage-header span{color:var(--accent-primary);font-size:12px;font-weight:700;letter-spacing:.06em}.manage-header h3{margin:5px 0 0;font-size:22px}.form-footer,.form-footer>div{display:flex;align-items:center;gap:10px}.form-footer{justify-content:space-between}.form-footer span{font-size:13px;opacity:.68}@media(max-width:560px){.manage-header,.form-footer{align-items:stretch;flex-direction:column}}</style>

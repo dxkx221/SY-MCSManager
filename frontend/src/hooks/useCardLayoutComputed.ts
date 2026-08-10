@@ -1,7 +1,7 @@
 import { LayoutCardHeight } from "@/config/originLayoutConfig";
 import { getRandomId } from "@/tools/randId";
 import type { LayoutCard } from "@/types";
-import { computed } from "vue";
+import { computed, unref, type MaybeRef } from "vue";
 
 export const PLACE_HOLDER_CARD = "PLACEHOLDER";
 export const DEFAULT_PLACE_HOLDER_CARD = {
@@ -12,25 +12,26 @@ export const DEFAULT_PLACE_HOLDER_CARD = {
   height: LayoutCardHeight.SMALL
 };
 
-export function useCardLayoutComputed(currentLayoutConfig: LayoutCard[]) {
+export function useCardLayoutComputed(currentLayoutConfig: MaybeRef<LayoutCard[]>) {
   const computedLayout = computed(() => {
+    const layout = unref(currentLayoutConfig);
     const newLayoutConfig: LayoutCard[] = [];
     let currentColNumber = 0;
 
     function lastLineCheck(currentLineWidth: number, i: number) {
-      if (currentLineWidth != 12 && currentLineWidth != 0 && i + 1 == currentLayoutConfig.length) {
+      if (currentLineWidth != 12 && currentLineWidth != 0 && i + 1 == layout.length) {
         newLayoutConfig.push({
           ...DEFAULT_PLACE_HOLDER_CARD,
           id: getRandomId(),
           width: 12 - currentLineWidth,
-          followId: currentLayoutConfig[currentLayoutConfig.length - 1].id,
+          followId: layout[layout.length - 1].id,
           meta: {}
         });
       }
     }
 
-    for (let i = 0; i < currentLayoutConfig.length; i++) {
-      const config = currentLayoutConfig[i];
+    for (let i = 0; i < layout.length; i++) {
+      const config = layout[i];
       if (currentColNumber + config.width == 12 || currentColNumber == 12) {
         newLayoutConfig.push(config);
         currentColNumber = currentColNumber === 12 ? config.width : 12;
@@ -39,7 +40,7 @@ export function useCardLayoutComputed(currentLayoutConfig: LayoutCard[]) {
       }
       if (currentColNumber + config.width > 12) {
         // i - 1 must be greater than 0 because there is already an element in front of it
-        const lastID = currentLayoutConfig[i - 1].id;
+        const lastID = layout[i - 1].id;
         newLayoutConfig.push({
           ...DEFAULT_PLACE_HOLDER_CARD,
           id: getRandomId(),

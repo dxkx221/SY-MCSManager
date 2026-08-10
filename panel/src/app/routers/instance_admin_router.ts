@@ -306,6 +306,47 @@ router.post("/multi_restart", permission({ level: ROLE.ADMIN }), async (ctx) => 
 });
 
 // [Top-level Permission]
+// Extend instance expiration time in batches
+router.post("/multi_extend_expire", permission({ level: ROLE.ADMIN }), async (ctx) => {
+  try {
+    const body = ctx.request.body as {
+      days?: number;
+      instances?: { instanceUuid: string; daemonId: string }[];
+    };
+    const days = Number(body?.days);
+    const instances = Array.isArray(body?.instances) ? body.instances : [];
+    if (!Number.isFinite(days) || days <= 0) throw new Error("请输入大于 0 的延长天数");
+    if (instances.length === 0) throw new Error("请选择要操作的实例");
+
+    const extendMs = Math.floor(days) * 24 * 3600 * 1000;
+    const results: { daemonId: string; instanceUuid: string; endTime: number }[] = [];
+
+    for (const instance of instances) {
+      const daemonId = String(instance.daemonId || "");
+      const instanceUuid = String(instance.instanceUuid || "");
+      if (!daemonId || !instanceUuid) throw new Error("实例参数不完整");
+
+      const remoteService = RemoteServiceSubsystem.getInstance(daemonId);
+      const remoteRequest = new RemoteRequest(remoteService);
+      const instanceInfo = await remoteRequest.request("instance/detail", { instanceUuid });
+      const config = instanceInfo?.config || {};
+      const currentEndTime = Number(config.endTime);
+      const baseTime =
+        currentEndTime && Number.isFinite(currentEndTime) && currentEndTime > Date.now()
+          ? currentEndTime
+          : Date.now();
+      config.endTime = baseTime + extendMs;
+      await remoteRequest.request("instance/update", { instanceUuid, config });
+      results.push({ daemonId, instanceUuid, endTime: config.endTime });
+    }
+
+    ctx.body = true;
+  } catch (err) {
+    ctx.body = err;
+  }
+});
+
+// [Top-level Permission]
 // Get quick install list
 router.get("/quick_install_list", permission({ level: ROLE.USER }), async (ctx) => {
   if (systemConfig?.allowUsePreset === false && !isTopPermissionByUuid(getUserUuid(ctx))) {
@@ -356,7 +397,7 @@ router.get("/quick_install_list", permission({ level: ROLE.USER }), async (ctx) 
     ctx.body = res.data;
 
     // Save to cache file
-    fs.writeFile(MARKET_CACHE_FILE_PATH, JSON.stringify(res.data), "utf-8").catch((err) => {
+    fs.writeFile(MARKET_CACHE_FILE_PATH, JSON.stringify(res.data), "utf-8").catch((err: unknown) => {
       logger.warn(`Failed to write quick install cache file at ${MARKET_CACHE_FILE_PATH}: ${err}`);
     });
   } catch (err) {

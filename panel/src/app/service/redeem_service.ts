@@ -13,6 +13,18 @@ const STORAGE_KEY = "codes";
 class RedeemService {
   private _codes: RedeemCode[] | null = null;
 
+  private normalizeCode(code: string): string {
+    return String(code || "").toUpperCase().replace(/[^A-Z0-9]/g, "");
+  }
+
+  private findCodeEntity(code: string): RedeemCode | undefined {
+    const normalized = this.normalizeCode(code);
+    return this.codes.find((c) => {
+      const stored = this.normalizeCode(c.code);
+      return stored === normalized || (normalized.length > stored.length && normalized.includes(stored));
+    });
+  }
+
   private get codes(): RedeemCode[] {
     if (this._codes === null) {
       try {
@@ -67,9 +79,21 @@ class RedeemService {
     return code;
   }
 
+  getCodeDiagnostics(code: string): { normalized: string; total: number; matched: boolean; exhausted: boolean; samples: string[] } {
+    const normalized = this.normalizeCode(code);
+    const matchedEntity = this.findCodeEntity(code);
+    return {
+      normalized,
+      total: this.codes.length,
+      matched: !!matchedEntity,
+      exhausted: !!matchedEntity && matchedEntity.usedCount >= matchedEntity.maxUses,
+      samples: this.codes.slice(-10).map((c) => c.code)
+    };
+  }
+
   /** Validate a redeem code without consuming it. */
   checkCode(code: string): { hours: number; config: string; redeemed: boolean } | null {
-    const entity = this.codes.find((c) => c.code === code.toUpperCase().trim());
+    const entity = this.findCodeEntity(code);
     if (!entity) return null;
     if (entity.usedCount >= entity.maxUses) return null;
     return {
@@ -81,7 +105,7 @@ class RedeemService {
 
   /** Consume a redeem code after the instance operation succeeds. */
   consumeCode(code: string): boolean {
-    const entity = this.codes.find((c) => c.code === code.toUpperCase().trim());
+    const entity = this.findCodeEntity(code);
     if (!entity) return false;
     if (entity.usedCount >= entity.maxUses) return false;
     entity.usedCount++;

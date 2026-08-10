@@ -1,136 +1,123 @@
 @import "./tools.scss";
 
+/* Background-image mode uses the same material system as the normal themes.
+   Extend mode may change contrast, but must never reintroduce opaque panels. */
 .bg-extend-css {
-  .card-panel {
-    backdrop-filter: blur(3px);
-  }
-
-  .ant-table,
+  .card-panel,
+  .ant-card,
   .left-menu,
+  .ant-table,
   .ant-table-cell,
   .action-btn-item,
   .inner-card-wrapper,
   .ant-select-dropdown,
+  .file-breadcrumbs,
+  .ant-pagination-item,
+  .ant-modal-content,
+  .ant-drawer-content,
+  .ant-dropdown-menu,
+  .ant-popover-inner,
+  .ant-picker-panel-container {
+    background-color: var(--level-1-bg-color) !important;
+    border-color: var(--glass-border-color) !important;
+    backdrop-filter: saturate(145%) blur(16px) !important;
+    -webkit-backdrop-filter: saturate(145%) blur(16px) !important;
+  }
+
+  .ant-table-cell,
+  .inner-card-wrapper,
+  .action-btn-item,
   .file-breadcrumbs {
     background-color: var(--level-2-bg-color) !important;
   }
-  .card-panel,
-  .ant-pagination-item {
-    background-color: var(--level-1-bg-color) !important;
-    backdrop-filter: blur(3px) !important;
+
+  .ant-btn-default,
+  .ant-input,
+  .ant-input-affix-wrapper,
+  .ant-input-number,
+  .ant-select-selector,
+  .ant-picker {
+    background-color: var(--control-bg-color) !important;
+    border-color: var(--glass-border-color) !important;
+    backdrop-filter: saturate(140%) blur(12px) !important;
+    -webkit-backdrop-filter: saturate(140%) blur(12px) !important;
   }
 
-  .ant-btn-default {
-    background-color: var(--level-1-bg-color);
-    backdrop-filter: blur(3px) !important;
-  }
   .ant-btn-primary {
-    background-color: var(--primary-btn-color);
-    backdrop-filter: blur(3px) !important;
+    background: var(--primary-btn-bg) !important;
+    border-color: transparent !important;
   }
 
   .ant-btn-dangerous {
-    background-color: var(--danger-btn-color);
-    backdrop-filter: blur(3px) !important;
-  }
-
-  .ant-input-affix-wrapper,
-  .ant-select-selector {
-    background-color: var(--level-1-bg-color) !important;
-    backdrop-filter: blur(3px) !important;
-  }
-
-  .ant-modal-content {
-    background-color: var(--level-0-bg-color) !important;
-    backdrop-filter: blur(3px) !important;
+    background-color: var(--danger-btn-bg) !important;
+    border-color: var(--danger-btn-border) !important;
+    color: var(--danger-btn-text) !important;
   }
 
   .ant-modal-title,
   .ant-modal-header,
   .ant-input-affix-wrapper > .ant-input {
-    background-color: rgba(0, 0, 0, 0) !important;
+    background-color: transparent !important;
   }
 }
 
-.extend-light-css {
-  .breadcrumbs {
-    @extend .text-white-shadow;
-  }
-
-  .ant-btn-dangerous {
-    color: #fff;
-
-    &:not(:disabled):hover {
-      color: #ffe1e0 !important;
-    }
-  }
-
-  .terminal-wrapper {
-    background-color: rgba(0, 0, 0, 0.8) !important;
-    backdrop-filter: blur(3px) !important;
-  }
-
-  .app-header-content-for-phone {
-    .card-panel {
-      background-color: #000000b4 !important;
-    }
-  }
-}
-
-.extend-dark-css {
-  .breadcrumbs {
-    @extend .text-black-shadow;
-  }
-  .ant-btn-dangerous {
-    color: #ffa4a4;
-  }
-  .terminal-wrapper {
-    background-color: var(--level-1-bg-color) !important;
-    backdrop-filter: blur(3px) !important;
-  }
-}
-
-// PC
 .app-light-extend-theme {
-  --level-0-bg-color: #ffffffd0;
-  --level-1-bg-color: #ffffffae;
-  --level-2-bg-color: #ffffff84;
-  --primary-btn-color: #c59724cf;
-  --danger-btn-color: #d32f2fac;
+  --level-0-bg-color: rgba(255, 250, 253, .18);
+  --level-1-bg-color: rgba(255, 250, 253, .14);
+  --level-2-bg-color: rgba(255, 255, 255, .10);
+  --control-bg-color: rgba(255, 255, 255, .18);
+  --glass-border-color: rgba(255, 255, 255, .25);
+  --primary-btn-bg: linear-gradient(135deg, #ec4899, #db2777);
+  --danger-btn-bg: rgba(239, 68, 68, .08);
+  --danger-btn-border: rgba(220, 38, 38, .28);
+  --danger-btn-text: #c43838;
   --background-color-white: var(--level-1-bg-color);
+
   .app-header-wrapper {
-    background-color: #00000093 !important;
+    background-color: rgba(255, 250, 253, .14) !important;
   }
+
   @extend .bg-extend-css;
-  @extend .extend-light-css;
 }
 
-// PC
 .app-dark-extend-theme {
-  --level-0-bg-color: #000000b4;
-  --level-1-bg-color: #000000a9;
-  --level-2-bg-color: #1919196b;
-  --primary-btn-color: #c59724cf;
-  --danger-btn-color: #d32f2fac;
+  --level-0-bg-color: rgba(8, 10, 22, .24);
+  --level-1-bg-color: rgba(12, 14, 28, .18);
+  --level-2-bg-color: rgba(255, 255, 255, .045);
+  --control-bg-color: rgba(8, 10, 22, .22);
+  --glass-border-color: rgba(255, 255, 255, .13);
+  --primary-btn-bg: linear-gradient(135deg, #a996d6, #8873bc);
+  --danger-btn-bg: rgba(239, 68, 68, .10);
+  --danger-btn-border: rgba(248, 113, 113, .28);
+  --danger-btn-text: #ffaaaa;
   --background-color-white: var(--level-1-bg-color);
+
   @extend .bg-extend-css;
-  @extend .extend-dark-css;
 }
 
-// Phone
+.extend-light-css .breadcrumbs { @extend .text-white-shadow; }
+.extend-dark-css .breadcrumbs { @extend .text-black-shadow; }
+
+/* Terminals never participate in the glass material system. */
+.app-light-extend-theme .terminal-wrapper,
+.app-dark-extend-theme .terminal-wrapper {
+  background: #000 !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 @media (max-width: 992px) {
-  .app-dark-extend-theme {
-    --level-0-bg-color: #000000f2;
-    --level-1-bg-color: #000000dd;
-    --level-2-bg-color: #0000006b;
-    --background-color-white: var(--level-1-bg-color);
-    --app-header-bg: var(--level-0-bg-color);
+  .app-light-extend-theme {
+    --level-0-bg-color: rgba(255, 250, 253, .22);
+    --level-1-bg-color: rgba(255, 250, 253, .18);
+    --level-2-bg-color: rgba(255, 255, 255, .12);
+    --app-header-bg: rgba(255, 250, 253, .20);
   }
 
-  .app-light-extend-theme {
-    --level-0-bg-color: #ffffffe8;
-    --level-1-bg-color: #ffffffc5;
-    --level-2-bg-color: #ffffff90;
-    --background-color-white: var(--level-1-bg-color);
+  .app-dark-extend-theme {
+    --level-0-bg-color: rgba(8, 10, 22, .30);
+    --level-1-bg-color: rgba(12, 14, 28, .23);
+    --level-2-bg-color: rgba(255, 255, 255, .06);
+    --app-header-bg: rgba(12, 14, 28, .24);
   }
 }

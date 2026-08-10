@@ -399,6 +399,22 @@ export const batchRestart = useDefineApi<
   url: "/api/instance/multi_restart"
 });
 
+export const batchExtendExpire = useDefineApi<
+  {
+    data: {
+      days: number;
+      instances: {
+        instanceUuid: string;
+        daemonId: string;
+      }[];
+    };
+  },
+  boolean
+>({
+  method: "POST",
+  url: "/api/instance/multi_extend_expire"
+});
+
 export const batchDelete = useDefineApi<
   {
     params: {

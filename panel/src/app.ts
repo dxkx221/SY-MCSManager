@@ -20,6 +20,7 @@ import { middleware as protocolMiddleware } from "./app/middleware/protocol";
 import { logger } from "./app/service/log";
 import SystemRemoteService from "./app/service/remote_service";
 import SystemUser from "./app/service/user_service";
+import AnnouncementService from "./app/service/announcement_service";
 import versionAdapter from "./app/service/version_adapter";
 import { initSystemConfig, systemConfig } from "./app/setting";
 import { checkBusinessMode, getVersion, initVersionManager } from "./app/version";
@@ -123,6 +124,7 @@ _  /  / / / /___  ____/ /_  /  / / / /_/ /_  / / / /_/ /_  /_/ //  __/  /
 
   // Initialize services
   await SystemUser.initialize();
+  await AnnouncementService.initialize();
   await SystemRemoteService.initialize();
 
   const app = new Koa({

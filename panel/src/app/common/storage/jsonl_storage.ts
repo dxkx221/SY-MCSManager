@@ -50,8 +50,8 @@ export class JsonlStorageSubsystem {
     const lines = await fs.readFile(filePath, "utf-8");
     return lines
       .split("\n")
-      .filter((l) => l.trim())
-      .map((l) => {
+      .filter((l: string) => l.trim())
+      .map((l: string) => {
         try {
           return JSON.parse(l);
         } catch {

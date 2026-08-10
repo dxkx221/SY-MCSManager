@@ -26,16 +26,18 @@ defineProps<{
 <style scoped lang="scss">
 .action-btn-item {
   padding: 20px 12px;
-  border: 1px solid var(--color-gray-3);
-  background-color: var(--color-gray-2);
+  border: 1px solid var(--card-border-color);
+  background-color: var(--background-color-white);
+  backdrop-filter: saturate(140%) blur(12px);
+  -webkit-backdrop-filter: saturate(140%) blur(12px);
 
   cursor: pointer;
   user-select: none;
-  transition: all 0.4s;
-  border-radius: 6px;
+  transition: transform .16s ease, background-color .16s ease, border-color .16s ease, box-shadow .16s ease;
+  border-radius: 10px;
 
   &:hover {
-    border: 1px solid var(--color-gray-8);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 32%, transparent);
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.16);
   }
 }

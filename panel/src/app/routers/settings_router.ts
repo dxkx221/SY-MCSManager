@@ -83,7 +83,7 @@ router.put("/setting", permission({ level: ROLE.ADMIN }), async (ctx) => {
 
     if (config.presetPackAddr != null) {
       // clear cache
-      fs.remove(MARKET_CACHE_FILE_PATH).catch((err) => {
+      fs.remove(MARKET_CACHE_FILE_PATH).catch((err: unknown) => {
         logger.warn(`Failed to clear preset pack cache file at ${MARKET_CACHE_FILE_PATH}: ${err}`);
       });
       systemConfig.presetPackAddr = String(config.presetPackAddr);

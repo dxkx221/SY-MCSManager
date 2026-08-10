@@ -103,11 +103,11 @@ const submit = async () => {
 }
 
 .java-card:hover {
-  border-color: #C59724;
+  border-color: var(--accent-primary, var(--color-primary));
 }
 
 .java-card-selected {
-  border-color: #C59724;
+  border-color: var(--accent-primary, var(--color-primary));
   background: linear-gradient(135deg, var(--color-gray-1) 0%, var(--color-gray-2) 100%);
 }
 

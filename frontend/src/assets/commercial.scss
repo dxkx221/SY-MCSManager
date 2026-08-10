@@ -1,148 +1,579 @@
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   白金色 · White Gold — 暖调运维面板
+   MCSManager 日系动漫毛玻璃双主题
+   背景图 + 低透明卡片 + 毛玻璃 blur
+   顶栏/侧栏选中态：金色
    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 
-/* ═══ Body ═══ */
-.main-content {
-  background: #FCFAF5;
+/* ════════════════════════════════════════════════
+   🌸 浅色 — 樱花粉 + 夕阳日系街景
+   ════════════════════════════════════════════════ */
+.app-light-theme {
+  --glass-card-bg: rgba(255, 252, 248, 0.14);
+  --glass-card-border: rgba(255, 255, 255, 0.22);
+  --glass-card-shadow: 0 8px 28px rgba(150, 80, 120, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.38);
+
+  /* ── 背景：动漫夕阳街景 ── */
+  .main-content {
+    position: relative;
+    background-image: url("./anime-bg-light.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+  .main-content::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 14% 0%, rgba(255, 200, 220, 0.20), transparent 36%),
+                radial-gradient(ellipse at 88% 8%, rgba(255, 180, 200, 0.16), transparent 32%),
+                linear-gradient(180deg, rgba(255,252,250,0.05) 0%, rgba(255,248,245,0.08) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .main-content > * { position: relative; z-index: 1; }
+
+  /* ── 卡片：极低透明毛玻璃，可清晰看到背景 ── */
+  .global-card-container-shadow,
+  .card-panel, .content-box, .ant-card, .CardWrapper {
+    background: var(--glass-card-bg) !important;
+    backdrop-filter: saturate(140%) blur(16px);
+    -webkit-backdrop-filter: saturate(140%) blur(16px);
+    border: 1px solid var(--glass-card-border) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--glass-card-shadow) !important;
+  }
+  .card-panel-title { color: #4a243e !important; }
+
+  /* ── 顶栏：极透明毛玻璃，选中金色 ── */
+  .app-header-wrapper {
+    background: rgba(255, 250, 253, 0.18) !important;
+    backdrop-filter: saturate(140%) blur(18px);
+    -webkit-backdrop-filter: saturate(140%) blur(18px);
+    border-bottom: 1px solid rgba(219, 39, 119, 0.10) !important;
+    box-shadow: 0 8px 24px rgba(131, 24, 90, 0.05) !important;
+    color: #59324d !important;
+  }
+  .app-header-wrapper .nav-button { color: #70405f !important; }
+  .app-header-wrapper .nav-button:hover { color: #d65f91 !important; background: rgba(255, 255, 255, 0.48) !important; }
+  .app-header-wrapper .nav-button-active {
+    color: #d65f91 !important;
+    background: rgba(245, 225, 180, 0.52) !important;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  /* ── 侧栏：偏冷粉毛玻璃，明显区别于卡片，选中金色 ── */
+  .left-sidebar {
+    background: rgba(255, 240, 248, 0.28) !important;
+    backdrop-filter: saturate(140%) blur(22px);
+    -webkit-backdrop-filter: saturate(140%) blur(22px);
+    border-right: 1px solid rgba(236, 72, 153, 0.10) !important;
+    box-shadow: 6px 0 24px rgba(131, 24, 90, 0.05);
+  }
+  .left-sidebar .sidebar-item { color: #70405f !important; }
+  .left-sidebar .sidebar-item:hover { color: #d65f91 !important; background: rgba(214, 95, 145, 0.11) !important; }
+  .left-sidebar .sidebar-item-active {
+    color: #c94f83 !important;
+    background: rgba(240, 215, 165, 0.42) !important;
+    font-weight: 600;
+  }
+  .left-sidebar .sidebar-divider { background: rgba(236, 72, 153, 0.08) !important; }
+
+  /* ── 控件：樱花粉 ── */
+  .ant-btn-primary { background: linear-gradient(135deg, #f052a3, #db2777) !important; border: none !important; box-shadow: 0 6px 16px rgba(219, 39, 119, 0.18); }
+  .ant-btn-primary:hover { background: linear-gradient(135deg, #ec4899, #be185d) !important; box-shadow: 0 8px 20px rgba(219, 39, 119, 0.26); }
+  .ant-btn-default { border-color: rgba(236, 72, 153, 0.16) !important; color: #6B3A5A !important; }
+  .ant-switch-checked { background: #EC4899 !important; }
+  .ant-checkbox-checked .ant-checkbox-inner { background: #EC4899 !important; border-color: #EC4899 !important; }
+  .ant-radio-checked .ant-radio-inner { border-color: #EC4899 !important; }
+  .ant-radio-checked .ant-radio-inner::after { background: #EC4899 !important; }
+  .ant-tabs-tab-active .ant-tabs-tab-btn { color: #EC4899 !important; }
+  .ant-tabs-ink-bar { background: #EC4899 !important; }
+  .ant-progress-bg { background: #EC4899 !important; }
+  .ant-spin-dot-item { background: #EC4899 !important; }
+  .ant-tag-blue { background: rgba(236, 72, 153, 0.08) !important; color: #DB2777 !important; border-color: rgba(236, 72, 153, 0.16) !important; }
+  .ant-menu-item-selected { color: #DB2777 !important; }
+  .ant-list-item:hover, .ant-card-actions>li:hover, .a-button-text:hover,
+  .ant-menu-horizontal>.ant-menu-item:hover, .ant-btn-link, .ant-btn-text,
+  .anticon:hover, .ant-menu-item:hover, .settings-nav-item:hover { color: #EC4899 !important; }
+  .ant-table-thead>tr>th { background: rgba(255, 255, 255, 0.12) !important; color: rgba(100, 60, 90, 0.60) !important; }
+  .ant-table-tbody>tr:hover>td { background: rgba(236, 72, 153, 0.04) !important; }
+  .ant-pagination-item-active { background: #EC4899 !important; border-color: #EC4899 !important; }
+  .ant-pagination-item-active a { color: #fff !important; }
+  .ant-input:focus, .ant-input-number-focused, .ant-select-focused .ant-select-selector,
+  .ant-input-affix-wrapper-focused, .ant-picker-focused { border-color: #EC4899 !important; box-shadow: 0 0 0 3px rgba(236,72,153,0.12) !important; }
 }
 
-/* ═══ Cards ═══ */
-.global-card-container-shadow,
-.content-box,
-.ant-card,
-.CardWrapper {
-  background: #FFFFFF !important;
-  border: 1px solid #E8E0D0 !important;
-  border-radius: 14px !important;
-  box-shadow: 0 2px 8px rgba(30,20,10,0.04), 0 1px 2px rgba(30,20,10,0.02) !important;
+
+/* ════════════════════════════════════════════════
+   🌙 深色 — 霓虹紫 + 樱花夜景
+   ════════════════════════════════════════════════ */
+.app-dark-theme {
+  --glass-card-bg: rgba(14, 12, 30, 0.16);
+  --glass-card-border: rgba(167, 139, 250, 0.14);
+  --glass-card-shadow: 0 8px 28px rgba(0, 0, 0, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+
+  /* ── 背景：动漫樱花夜景 ── */
+  .main-content {
+    position: relative;
+    background-image: url("./anime-bg-dark.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+  }
+  .main-content::before {
+    content: "";
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 14% 0%, rgba(120, 90, 220, 0.18), transparent 38%),
+                radial-gradient(ellipse at 88% 6%, rgba(100, 70, 200, 0.12), transparent 34%),
+                linear-gradient(180deg, rgba(10,8,22,0.04) 0%, rgba(8,6,20,0.06) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .main-content > * { position: relative; z-index: 1; }
+
+  /* ── 卡片：极低透明深色毛玻璃 ── */
+  .global-card-container-shadow,
+  .card-panel, .content-box, .ant-card, .CardWrapper {
+    background: var(--glass-card-bg) !important;
+    backdrop-filter: saturate(150%) blur(18px);
+    -webkit-backdrop-filter: saturate(150%) blur(18px);
+    border: 1px solid var(--glass-card-border) !important;
+    border-radius: 16px !important;
+    box-shadow: var(--glass-card-shadow) !important;
+  }
+  .card-panel-title { color: rgba(247, 245, 255, 0.92) !important; }
+
+  /* ── 顶栏：极透明深紫毛玻璃，选中金色 ── */
+  .app-header-wrapper {
+    background: rgba(12, 11, 30, 0.22) !important;
+    backdrop-filter: saturate(150%) blur(18px);
+    -webkit-backdrop-filter: saturate(150%) blur(18px);
+    border-bottom: 1px solid rgba(167, 139, 250, 0.10) !important;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22) !important;
+    color: rgba(255, 255, 255, 0.84) !important;
+  }
+  .app-header-wrapper .nav-button { color: rgba(235, 232, 255, 0.72) !important; }
+  .app-header-wrapper .nav-button:hover { color: #A996D6 !important; background: rgba(169, 150, 214, 0.10) !important; }
+  .app-header-wrapper .nav-button-active {
+    color: #A996D6 !important;
+    background: rgba(169, 150, 214, 0.14) !important;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  /* ── 侧栏：深紫毛玻璃，选中金色 ── */
+  .left-sidebar {
+    background: rgba(10, 9, 26, 0.30) !important;
+    backdrop-filter: saturate(150%) blur(22px);
+    -webkit-backdrop-filter: saturate(150%) blur(22px);
+    border-right: 1px solid rgba(167, 139, 250, 0.10) !important;
+    box-shadow: 8px 0 28px rgba(0, 0, 0, 0.22);
+  }
+  .left-sidebar .sidebar-item { color: rgba(235, 232, 255, 0.66) !important; }
+  .left-sidebar .sidebar-item:hover { color: #A996D6 !important; background: rgba(169, 150, 214, 0.10) !important; }
+  .left-sidebar .sidebar-item-active {
+    color: #A996D6 !important;
+    background: rgba(169, 150, 214, 0.14) !important;
+    font-weight: 600;
+  }
+  .left-sidebar .sidebar-divider { background: rgba(167, 139, 250, 0.08) !important; }
+
+  /* 控件颜色由 semantic-theme.scss 统一管理，避免深色青/紫/蓝并存。 */
 }
 
-/* ═══ Buttons ═══ */
-.ant-btn {
-  border-radius: 8px !important;
-  font-weight: 500 !important;
-  box-shadow: none !important;
-}
-.ant-btn-primary {
-  background: #C59724 !important;
-  border-color: #C59724 !important;
-}
-.ant-btn-primary:hover {
-  background: #A07810 !important;
-  border-color: #A07810 !important;
-}
-.ant-btn-default {
-  border-color: #E8E0D0 !important;
-  color: #5C5040 !important;
-}
-.ant-btn-default:hover {
-  border-color: #C59724 !important;
-  color: #C59724 !important;
+
+/* ════════════════════════════════════════════════
+   🎨 全局通用
+   ════════════════════════════════════════════════ */
+
+/* ── 终端纯黑：仅控制外壳，xterm 内部渲染层由 xterm 自己管理 ── */
+.terminal-wrapper {
+  background-color: #000 !important;
+  background-image: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transform: none !important;
 }
 
-/* ═══ Inputs ═══ */
+/* ── 弹层毛玻璃 ── */
+.app-light-theme, .app-dark-theme {
+  .ant-dropdown-menu, .ant-select-dropdown, .ant-popover-inner,
+  .ant-message-notice-content, .ant-notification-notice {
+    border-radius: 14px !important;
+    backdrop-filter: saturate(150%) blur(20px);
+    -webkit-backdrop-filter: saturate(150%) blur(20px);
+  }
+  .ant-modal-content, .ant-drawer-content { overflow: hidden; box-shadow: 0 24px 64px rgba(0,0,0,.20) !important; }
+  .fab-menu-panel, .fab-ball {
+    border: 1px solid var(--card-border-color);
+    backdrop-filter: saturate(150%) blur(18px);
+    -webkit-backdrop-filter: saturate(150%) blur(18px);
+  }
+}
+
+/* ── 全局圆角 ── */
+.ant-btn { border-radius: 10px !important; font-weight: 550; }
+.ant-btn:not(:disabled):active { transform: translateY(1px) scale(.985); }
 .ant-input, .ant-input-number, .ant-select-selector,
-.ant-input-affix-wrapper, .ant-picker {
-  border-radius: 8px !important;
-  border-color: #E8E0D0 !important;
-}
-.ant-input:focus, .ant-input-number-focused,
-.ant-select-focused .ant-select-selector,
-.ant-input-affix-wrapper-focused, .ant-picker-focused {
-  border-color: #C59724 !important;
-  box-shadow: 0 0 0 2px rgba(197,151,36,0.1) !important;
-}
-
-/* ═══ Tables — Apple-style, light ═══ */
-.ant-table-wrapper .ant-table {
-  border-radius: 12px !important;
-  overflow: hidden;
-  border: 1px solid #E8E0D0 !important;
-}
-.ant-table-thead > tr > th {
-  background: transparent !important;
-  color: #8B8070 !important;
-  font-weight: 600 !important;
-  font-size: 12px !important;
-  text-transform: uppercase !important;
-  letter-spacing: 0.5px !important;
-  border-bottom: 1px solid #E8E0D0 !important;
-  padding: 10px 14px !important;
-}
-.ant-table-tbody > tr > td {
-  border-bottom: 1px solid #F2EDE4 !important;
-  padding: 10px 14px !important;
-  font-size: 13px !important;
-}
-.ant-table-tbody > tr:last-child > td { border-bottom: none !important; }
-.ant-table-tbody > tr:hover > td {
-  background: rgba(197,151,36,0.03) !important;
-}
-.ant-table-row-striped > td { background: #FCFAF5 !important; }
-
-/* ═══ Tabs ═══ */
-.ant-tabs-nav::before { border-color: #E8E0D0 !important; }
-.ant-tabs-tab-active .ant-tabs-tab-btn { color: #C59724 !important; }
-.ant-tabs-ink-bar { background: #C59724 !important; }
-.ant-tabs-tab:hover { color: #C59724 !important; }
-
-/* ═══ Settings nav / Links / Click states ═══ */
-.ant-list-item:hover,.ant-list-item-action>li:hover,
-.ant-card-actions>li:hover,.ant-card-actions>li>span:hover,
-.a-button-text:hover,.settings-nav-item:hover,
-.ant-menu-horizontal>.ant-menu-item:hover,
-.ant-menu-horizontal>.ant-menu-submenu:hover {
-  color: #C59724 !important;
-}
-
-/* Catch all blue-turning icons/links */
-.anticon:hover,.ant-btn-link,.ant-btn-text,
-.ant-radio-button-wrapper-checked,
-.ant-segmented-item-selected {
-  color: #C59724 !important;
-}
-.ant-radio-button-wrapper-checked { border-color: #C59724 !important; }
-.ant-segmented-item-selected { background: rgba(197,151,36,0.07) !important; }
-
-/* ═══ Menu ═══ */
-.ant-menu-item-selected {
-  background: rgba(197,151,36,0.08) !important;
-  color: #C59724 !important;
-}
-.ant-menu-item:hover { color: #C59724 !important; }
-
-/* ═══ Tags ═══ */
+.ant-input-affix-wrapper, .ant-picker { border-radius: 10px !important; }
 .ant-tag { border-radius: 6px !important; }
-.ant-tag-blue {
-  background: rgba(197,151,36,0.08) !important;
-  color: #C59724 !important;
-  border-color: rgba(197,151,36,0.15) !important;
+.ant-alert { border-radius: 12px !important; }
+.ant-pagination-item, .ant-pagination-prev .ant-pagination-item-link,
+.ant-pagination-next .ant-pagination-item-link, .ant-segmented { border-radius: 9px !important; }
+
+/* ── 减弱动画 ── */
+@media (prefers-reduced-motion: reduce) {
+  .app-light-theme *, .app-dark-theme * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
 
-/* ═══ Switch / Checkbox / Radio ═══ */
-.ant-switch-checked { background: #C59724 !important; }
-.ant-checkbox-checked .ant-checkbox-inner {
-  background: #C59724 !important;
-  border-color: #C59724 !important;
+/* Final semantic correction: no gold; preserve the original anime glass. */
+.app-light-theme .app-header-wrapper .nav-button-active,
+.app-light-theme .left-sidebar .sidebar-item-active { color:#EC4899 !important; background:rgba(236,72,153,.14) !important; }
+.app-light-theme .app-header-wrapper .nav-button:hover,
+.app-light-theme .left-sidebar .sidebar-item:hover { color:#67B8C2 !important; background:rgba(103,184,194,.12) !important; }
+.app-dark-theme .app-header-wrapper .nav-button-active,
+.app-dark-theme .left-sidebar .sidebar-item-active { color:#F2A8C4 !important; background:rgba(242,168,196,.14) !important; }
+.app-dark-theme .app-header-wrapper .nav-button:hover,
+.app-dark-theme .left-sidebar .sidebar-item:hover { color:#A996D6 !important; background:rgba(169,150,214,.12) !important; }
+.app-dark-theme .card-panel-title,
+.app-dark-theme .install-option-button .button-label { color:rgba(235,240,241,.90) !important; }
+.app-dark-theme .install-option-button .button-desc { color:rgba(205,216,218,.68) !important; }
+/* FINAL UX TOKENS — screenshot-aligned, no gold */
+.app-light-theme {
+  .app-header-wrapper .nav-button-active,
+  .left-sidebar .sidebar-item-active,
+  .ant-menu-item-selected { color:#d85b91 !important; background:rgba(216,91,145,.14) !important; }
+  .app-header-wrapper .nav-button:hover,
+  .left-sidebar .sidebar-item:hover,
+  .ant-btn:not(:disabled):active,
+  .ant-btn-default:active,
+  .ant-menu-item:hover { color:#5da8b5 !important; background:rgba(93,168,181,.13) !important; }
 }
-.ant-checkbox-wrapper:hover .ant-checkbox-inner { border-color: #C59724 !important; }
-.ant-radio-checked .ant-radio-inner { border-color: #C59724 !important; }
-.ant-radio-checked .ant-radio-inner::after { background: #C59724 !important; }
-.ant-radio-wrapper:hover .ant-radio-inner { border-color: #C59724 !important; }
+.app-dark-theme {
+  .app-header-wrapper .nav-button-active,
+  .left-sidebar .sidebar-item-active,
+  .ant-menu-item-selected { color:#d98aaa !important; background:rgba(217,138,170,.14) !important; }
+  .app-header-wrapper .nav-button:hover,
+  .left-sidebar .sidebar-item:hover,
+  .ant-btn:not(:disabled):active,
+  .ant-btn-default:active,
+  .ant-menu-item:hover { color:#A996D6 !important; background:rgba(169,150,214,.14) !important; }
+  .card-panel-title,
+  .install-option-button .button-label,
+  .ant-card,
+  .card-panel,
+  .ant-typography { color:rgba(232,240,241,.86) !important; }
+  .install-option-button .button-desc { color:rgba(205,216,218,.68) !important; }
+}
 
-/* ═══ Progress ═══ */
-.ant-progress-bg { background: #C59724 !important; }
+/* all ordinary surfaces remain glass; terminal remains black */
+.app-light-theme .card-panel,
+.app-dark-theme .card-panel,
+.app-light-theme .global-card-container-shadow,
+.app-dark-theme .global-card-container-shadow,
+.app-light-theme .ant-card,
+.app-dark-theme .ant-card { backdrop-filter:saturate(140%) blur(16px) !important; -webkit-backdrop-filter:saturate(140%) blur(16px) !important; }
+/* ROOT GLASS FIX — background behind sidebar/header/content; no gold; no delayed glass */
+body.app-light-theme {
+  background-image:
+    linear-gradient(rgba(255,250,252,.04),rgba(255,248,250,.07)),
+    url("./anime-bg-light.jpg") !important;
+  background-size:cover !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+  background-attachment:fixed !important;
+}
+body.app-dark-theme {
+  background-image:
+    linear-gradient(rgba(8,7,20,.05),rgba(8,7,20,.08)),
+    url("./anime-bg-dark.jpg") !important;
+  background-size:cover !important;
+  background-position:center !important;
+  background-repeat:no-repeat !important;
+  background-attachment:fixed !important;
+}
+body.app-light-theme .global-app-container,
+body.app-dark-theme .global-app-container,
+body.app-light-theme .main-content,
+body.app-dark-theme .main-content {
+  background:transparent !important;
+  background-image:none !important;
+}
+body.app-light-theme .main-content::before,
+body.app-dark-theme .main-content::before { display:none !important; }
 
-/* ═══ Spin ═══ */
-.ant-spin-dot-item { background: #C59724 !important; }
+/* Sidebar now samples the actual body background. */
+body.app-light-theme .left-sidebar {
+  background:rgba(255,245,250,.16) !important;
+  border-right:1px solid rgba(255,255,255,.26) !important;
+  backdrop-filter:saturate(145%) blur(20px) !important;
+  -webkit-backdrop-filter:saturate(145%) blur(20px) !important;
+  box-shadow:8px 0 26px rgba(80,45,75,.10),inset -1px 0 rgba(255,255,255,.12) !important;
+}
+body.app-dark-theme .left-sidebar {
+  background:rgba(14,11,30,.18) !important;
+  border-right:1px solid rgba(255,255,255,.15) !important;
+  backdrop-filter:saturate(150%) blur(20px) !important;
+  -webkit-backdrop-filter:saturate(150%) blur(20px) !important;
+  box-shadow:8px 0 28px rgba(0,0,0,.24),inset -1px 0 rgba(255,255,255,.06) !important;
+}
 
-/* ═══ Modal / Drawer ═══ */
-.ant-modal-content { border-radius: 16px !important; }
-.ant-modal-header { border-bottom: 1px solid #E8E0D0 !important; }
-.ant-modal-footer { border-top: 1px solid #E8E0D0 !important; }
+/* Route surfaces render at final glass state immediately. */
+body.app-light-theme :is(.card-panel,.global-card-container-shadow,.ant-card,.content-box,.inner-card-wrapper),
+body.app-dark-theme :is(.card-panel,.global-card-container-shadow,.ant-card,.content-box,.inner-card-wrapper) {
+  opacity:1 !important;
+  transition-property:transform,box-shadow,border-color !important;
+  transition-duration:.18s !important;
+  will-change:auto !important;
+}
 
-/* ═══ Alert ═══ */
-.ant-alert-success { background: rgba(16,185,129,0.04) !important; border-color: rgba(16,185,129,0.12) !important; }
-.ant-alert-warning { background: rgba(245,158,11,0.04) !important; border-color: rgba(245,158,11,0.12) !important; }
-.ant-alert-error { background: rgba(239,68,68,0.04) !important; border-color: rgba(239,68,68,0.12) !important; }
+/* Interaction colors stay inside each theme family; absolutely no gold. */
+body.app-light-theme :is(.nav-button,.sidebar-item,.ant-menu-item):hover {
+  color:#d65f91 !important;
+  background:rgba(214,95,145,.11) !important;
+}
+body.app-light-theme :is(.nav-button-active,.sidebar-item-active,.ant-menu-item-selected) {
+  color:#c94f83 !important;
+  background:rgba(214,95,145,.15) !important;
+}
+body.app-dark-theme :is(.nav-button,.sidebar-item,.ant-menu-item):hover {
+  color:#A996D6 !important;
+  background:rgba(143,203,208,.10) !important;
+}
+body.app-dark-theme :is(.nav-button-active,.sidebar-item-active,.ant-menu-item-selected) {
+  color:#9ed4d8 !important;
+  background:rgba(169,150,214,.14) !important;
+}
+body.app-dark-theme :is(.card-panel,.ant-card,.ant-table,.ant-typography,.sidebar-item) {
+  --text-color:rgba(232,239,241,.84);
+  color:var(--text-color) !important;
+}
+
+/* Do not let Ant default blue/red/purple leak into neutral navigation interactions. */
+body.app-light-theme :is(.sidebar-item,.nav-button) *,
+body.app-dark-theme :is(.sidebar-item,.nav-button) * { color:inherit !important; }
+
+/* Terminal is intentionally not glass; never style xterm's renderer canvases here. */
+.terminal-wrapper {
+  background-color:#000 !important;
+  background-image:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  transition:none !important;
+}
+/* USER-NATIVE INTERACTION FIX: hover keeps text color; only glass luminance changes. */
+body.app-light-theme .left-sidebar .sidebar-item { color:#60485c !important; }
+body.app-light-theme .left-sidebar .sidebar-item:hover { color:#60485c !important; background:rgba(255,255,255,.13) !important; }
+body.app-light-theme .left-sidebar .sidebar-item-active { color:#493947 !important; background:rgba(255,255,255,.18) !important; }
+body.app-dark-theme .left-sidebar .sidebar-item { color:rgba(226,233,235,.78) !important; }
+body.app-dark-theme .left-sidebar .sidebar-item:hover { color:rgba(238,243,244,.90) !important; background:rgba(255,255,255,.07) !important; }
+body.app-dark-theme .left-sidebar .sidebar-item-active { color:rgba(245,248,249,.94) !important; background:rgba(255,255,255,.10) !important; }
+body.app-light-theme .app-header-wrapper .nav-button { color:#60485c !important; }
+body.app-light-theme .app-header-wrapper .nav-button:hover { color:#60485c !important; background:rgba(255,255,255,.13) !important; }
+body.app-light-theme .app-header-wrapper .nav-button-active { color:#493947 !important; background:rgba(255,255,255,.18) !important; }
+body.app-dark-theme .app-header-wrapper .nav-button { color:rgba(226,233,235,.78) !important; }
+body.app-dark-theme .app-header-wrapper .nav-button:hover { color:rgba(238,243,244,.90) !important; background:rgba(255,255,255,.07) !important; }
+body.app-dark-theme .app-header-wrapper .nav-button-active { color:rgba(245,248,249,.94) !important; background:rgba(255,255,255,.10) !important; }
+
+/* Common surfaces: no opaque white fallback. */
+body.app-light-theme :is(.ant-card,.ant-card-head,.ant-card-body,.card-panel,.card-panel-content,.content-box,.inner-card-wrapper,.new-card-list,.ant-table,.ant-table-container,.ant-table-content,.ant-table-thead>tr>th,.ant-table-tbody>tr>td,.ant-modal-content,.ant-drawer-content,.ant-drawer-body,.ant-dropdown-menu,.ant-popover-inner,.ant-picker-panel-container),
+body.app-dark-theme :is(.ant-card,.ant-card-head,.ant-card-body,.card-panel,.card-panel-content,.content-box,.inner-card-wrapper,.new-card-list,.ant-table,.ant-table-container,.ant-table-content,.ant-table-thead>tr>th,.ant-table-tbody>tr>td,.ant-modal-content,.ant-drawer-content,.ant-drawer-body,.ant-dropdown-menu,.ant-popover-inner,.ant-picker-panel-container) {
+  background-color:transparent !important;
+}
+body.app-light-theme :is(.ant-card,.card-panel,.content-box,.inner-card-wrapper,.new-card-list,.ant-modal-content,.ant-drawer-content,.ant-dropdown-menu,.ant-popover-inner,.ant-picker-panel-container) {
+  background:rgba(255,250,253,.14) !important;
+  backdrop-filter:saturate(140%) blur(16px) !important;
+  -webkit-backdrop-filter:saturate(140%) blur(16px) !important;
+  border-color:rgba(255,255,255,.24) !important;
+}
+body.app-dark-theme :is(.ant-card,.card-panel,.content-box,.inner-card-wrapper,.new-card-list,.ant-modal-content,.ant-drawer-content,.ant-dropdown-menu,.ant-popover-inner,.ant-picker-panel-container) {
+  background:rgba(12,14,28,.18) !important;
+  backdrop-filter:saturate(145%) blur(16px) !important;
+  -webkit-backdrop-filter:saturate(145%) blur(16px) !important;
+  border-color:rgba(255,255,255,.13) !important;
+}
+
+/* Never animate glass composition or opacity. */
+body :is(.card-panel,.ant-card,.content-box,.inner-card-wrapper,.new-card-list) {
+  opacity:1 !important;
+  animation:none !important;
+  transition:transform .16s ease,box-shadow .16s ease !important;
+}
+/* FINAL NAV COLOR CONTRACT: hover never recolors navigation text. */
+body.app-light-theme .left-sidebar .sidebar-item,
+body.app-light-theme .left-sidebar .sidebar-item:hover,
+body.app-light-theme .left-sidebar .sidebar-item:focus,
+body.app-light-theme .left-sidebar .sidebar-item-active,
+body.app-dark-theme .left-sidebar .sidebar-item,
+body.app-dark-theme .left-sidebar .sidebar-item:hover,
+body.app-dark-theme .left-sidebar .sidebar-item:focus,
+body.app-dark-theme .left-sidebar .sidebar-item-active {
+  color: var(--text-color) !important;
+}
+body.app-light-theme .left-sidebar .sidebar-item:hover,
+body.app-light-theme .left-sidebar .sidebar-item:focus { background: rgba(255,255,255,.14) !important; }
+body.app-light-theme .left-sidebar .sidebar-item-active { background: rgba(236,72,153,.12) !important; }
+body.app-dark-theme .left-sidebar .sidebar-item:hover,
+body.app-dark-theme .left-sidebar .sidebar-item:focus { background: rgba(255,255,255,.07) !important; }
+body.app-dark-theme .left-sidebar .sidebar-item-active { background: rgba(169,150,214,.12) !important; }
+body .left-sidebar .sidebar-item *, body .left-sidebar .sidebar-item svg { color: inherit !important; fill: currentColor !important; }
+/* FINAL NAVIGATION PALETTE: no hover recolor, no blue/brown/purple leak. */
+body.app-light-theme .left-sidebar .sidebar-item,
+body.app-light-theme .left-sidebar .sidebar-item:hover,
+body.app-light-theme .left-sidebar .sidebar-item:focus,
+body.app-light-theme .left-sidebar .sidebar-item:active,
+body.app-light-theme .left-sidebar .sidebar-item-active,
+body.app-light-theme .left-sidebar .sidebar-item * {
+  color: #60485c !important;
+}
+body.app-light-theme .left-sidebar .sidebar-item:hover,
+body.app-light-theme .left-sidebar .sidebar-item:focus,
+body.app-light-theme .left-sidebar .sidebar-item:active { background: rgba(255,255,255,.14) !important; }
+body.app-light-theme .left-sidebar .sidebar-item-active,
+body.app-light-theme .left-sidebar .sidebar-item-active * { color: #60485c !important; background: rgba(236,72,153,.12) !important; }
+body.app-dark-theme .left-sidebar .sidebar-item,
+body.app-dark-theme .left-sidebar .sidebar-item:hover,
+body.app-dark-theme .left-sidebar .sidebar-item:focus,
+body.app-dark-theme .left-sidebar .sidebar-item:active,
+body.app-dark-theme .left-sidebar .sidebar-item-active,
+body.app-dark-theme .left-sidebar .sidebar-item * { color: rgba(232,239,241,.84) !important; }
+body.app-dark-theme .left-sidebar .sidebar-item:hover,
+body.app-dark-theme .left-sidebar .sidebar-item:focus,
+body.app-dark-theme .left-sidebar .sidebar-item:active { background: rgba(255,255,255,.07) !important; }
+body.app-dark-theme .left-sidebar .sidebar-item-active,
+body.app-dark-theme .left-sidebar .sidebar-item-active * { color: rgba(232,239,241,.94) !important; background: rgba(169,150,214,.12) !important; }
+body.app-light-theme .left-sidebar .ant-menu-item:hover,
+body.app-dark-theme .left-sidebar .ant-menu-item:hover { color: inherit !important; }
+/* SETTINGS GLASS SURFACES — overrides bg-extend-theme and scoped menu defaults. */
+body.app-light-theme,
+body.app-light-extend-theme {
+  .card-panel, .CardWrapper, .content-box, .menu-body, .left-menu, .right-content, .mobile-menu-body {
+    background: rgba(255, 250, 253, .14) !important;
+    background-color: rgba(255, 250, 253, .14) !important;
+    backdrop-filter: saturate(140%) blur(16px) !important;
+    -webkit-backdrop-filter: saturate(140%) blur(16px) !important;
+    border-color: rgba(255, 255, 255, .24) !important;
+    box-shadow: 0 8px 28px rgba(120, 70, 105, .08), inset 0 1px rgba(255,255,255,.28) !important;
+  }
+  .menu-body { display: flex; overflow: hidden; border-radius: 16px !important; }
+  .left-menu { float: none !important; flex: 0 0 240px; border-right: 1px solid rgba(255,255,255,.22) !important; }
+  .right-content { background: rgba(255,255,255,.06) !important; }
+  .left-menu .btn, .left-menu .btn:hover, .left-menu .btn.isActive { background-color: rgba(255,255,255,.10) !important; color: #60485c !important; }
+  .content-box { border-radius: 14px !important; }
+}
+body.app-dark-theme,
+body.app-dark-extend-theme {
+  .card-panel, .CardWrapper, .content-box, .menu-body, .left-menu, .right-content, .mobile-menu-body {
+    background: rgba(12, 14, 28, .18) !important;
+    background-color: rgba(12, 14, 28, .18) !important;
+    backdrop-filter: saturate(145%) blur(16px) !important;
+    -webkit-backdrop-filter: saturate(145%) blur(16px) !important;
+    border-color: rgba(255, 255, 255, .13) !important;
+    box-shadow: 0 10px 32px rgba(0,0,0,.26), inset 0 1px rgba(255,255,255,.08) !important;
+  }
+  .menu-body { display: flex; overflow: hidden; border-radius: 16px !important; }
+  .left-menu { float: none !important; flex: 0 0 240px; border-right: 1px solid rgba(255,255,255,.10) !important; }
+  .right-content { background: rgba(0,0,0,.08) !important; }
+  .left-menu .btn, .left-menu .btn:hover, .left-menu .btn.isActive { background-color: rgba(255,255,255,.07) !important; color: rgba(232,239,241,.86) !important; }
+  .content-box { border-radius: 14px !important; }
+}
+
+/* Settings controls remain translucent instead of falling back to solid level backgrounds. */
+body.app-light-theme :is(.ant-input,.ant-input-affix-wrapper,.ant-input-number,.ant-select-selector,.ant-picker,.ant-upload),
+body.app-light-extend-theme :is(.ant-input,.ant-input-affix-wrapper,.ant-input-number,.ant-select-selector,.ant-picker,.ant-upload) {
+  background-color: rgba(255,255,255,.20) !important;
+}
+body.app-dark-theme :is(.ant-input,.ant-input-affix-wrapper,.ant-input-number,.ant-select-selector,.ant-picker,.ant-upload),
+body.app-dark-extend-theme :is(.ant-input,.ant-input-affix-wrapper,.ant-input-number,.ant-select-selector,.ant-picker,.ant-upload) {
+  background-color: rgba(8,10,22,.22) !important;
+}
+body.app-light-theme :is(.ant-modal-content,.ant-drawer-content,.ant-select-dropdown,.ant-picker-panel-container,.ant-dropdown-menu),
+body.app-light-extend-theme :is(.ant-modal-content,.ant-drawer-content,.ant-select-dropdown,.ant-picker-panel-container,.ant-dropdown-menu) {
+  background: rgba(255,250,253,.18) !important;
+  backdrop-filter: saturate(145%) blur(18px) !important;
+  -webkit-backdrop-filter: saturate(145%) blur(18px) !important;
+}
+body.app-dark-theme :is(.ant-modal-content,.ant-drawer-content,.ant-select-dropdown,.ant-picker-panel-container,.ant-dropdown-menu),
+body.app-dark-extend-theme :is(.ant-modal-content,.ant-drawer-content,.ant-select-dropdown,.ant-picker-panel-container,.ant-dropdown-menu) {
+  background: rgba(10,12,25,.24) !important;
+  backdrop-filter: saturate(145%) blur(18px) !important;
+  -webkit-backdrop-filter: saturate(145%) blur(18px) !important;
+}
+/* OPERATION LOG + BUTTON GLASS — remove solid log rows and white default buttons. */
+body.app-light-theme .log-item,
+body.app-light-extend-theme .log-item {
+  background: rgba(255,250,253,.12) !important;
+  border-color: rgba(255,255,255,.24) !important;
+  color: #4f3b4b !important;
+  backdrop-filter: saturate(140%) blur(12px) !important;
+  -webkit-backdrop-filter: saturate(140%) blur(12px) !important;
+}
+body.app-light-theme .log-item:hover,
+body.app-light-extend-theme .log-item:hover { background: rgba(255,255,255,.18) !important; }
+body.app-dark-theme .log-item,
+body.app-dark-extend-theme .log-item {
+  background: rgba(10,13,27,.16) !important;
+  border-color: rgba(255,255,255,.12) !important;
+  color: rgba(232,239,241,.88) !important;
+  backdrop-filter: saturate(145%) blur(12px) !important;
+  -webkit-backdrop-filter: saturate(145%) blur(12px) !important;
+}
+body.app-dark-theme .log-item:hover,
+body.app-dark-extend-theme .log-item:hover { background: rgba(255,255,255,.07) !important; }
+
+/* Neutral buttons use theme-tinted glass, never opaque white. */
+body.app-light-theme .ant-btn-default:not(.ant-btn-dangerous),
+body.app-light-extend-theme .ant-btn-default:not(.ant-btn-dangerous),
+body.app-light-theme .ant-btn:not(.ant-btn-primary):not(.ant-btn-link):not(.ant-btn-text):not(.ant-btn-dangerous),
+body.app-light-extend-theme .ant-btn:not(.ant-btn-primary):not(.ant-btn-link):not(.ant-btn-text):not(.ant-btn-dangerous) {
+  background: rgba(255,250,253,.16) !important;
+  border-color: rgba(216,91,145,.24) !important;
+  color: #60485c !important;
+  backdrop-filter: saturate(140%) blur(12px) !important;
+  -webkit-backdrop-filter: saturate(140%) blur(12px) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.28), 0 4px 12px rgba(120,70,105,.06) !important;
+}
+body.app-light-theme .ant-btn-default:not(:disabled):hover,
+body.app-light-extend-theme .ant-btn-default:not(:disabled):hover {
+  background: rgba(216,91,145,.12) !important;
+  border-color: rgba(216,91,145,.36) !important;
+  color: #b74377 !important;
+}
+body.app-dark-theme .ant-btn-default:not(.ant-btn-dangerous),
+body.app-dark-extend-theme .ant-btn-default:not(.ant-btn-dangerous),
+body.app-dark-theme .ant-btn:not(.ant-btn-primary):not(.ant-btn-link):not(.ant-btn-text):not(.ant-btn-dangerous),
+body.app-dark-extend-theme .ant-btn:not(.ant-btn-primary):not(.ant-btn-link):not(.ant-btn-text):not(.ant-btn-dangerous) {
+  background: rgba(10,13,27,.20) !important;
+  border-color: rgba(143,203,208,.24) !important;
+  color: rgba(232,239,241,.88) !important;
+  backdrop-filter: saturate(145%) blur(12px) !important;
+  -webkit-backdrop-filter: saturate(145%) blur(12px) !important;
+  box-shadow: inset 0 1px rgba(255,255,255,.08), 0 5px 14px rgba(0,0,0,.16) !important;
+}
+body.app-dark-theme .ant-btn-default:not(:disabled):hover,
+body.app-dark-extend-theme .ant-btn-default:not(:disabled):hover {
+  background: rgba(143,203,208,.11) !important;
+  border-color: rgba(143,203,208,.36) !important;
+  color: #b9e0e3 !important;
+}
+
+/* Dangerous actions remain recognizably dangerous, but still glass. */
+body.app-light-theme .ant-btn-dangerous,
+body.app-light-extend-theme .ant-btn-dangerous {
+  background: rgba(239,68,68,.08) !important;
+  border-color: rgba(220,38,38,.28) !important;
+  color: #c43838 !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+body.app-dark-theme .ant-btn-dangerous,
+body.app-dark-extend-theme .ant-btn-dangerous {
+  background: rgba(239,68,68,.10) !important;
+  border-color: rgba(248,113,113,.28) !important;
+  color: #ffaaaa !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+body :is(.ant-btn-default,.ant-btn-dangerous):disabled { opacity:.48 !important; }
