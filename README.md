@@ -3,7 +3,7 @@
 
 # SY MCSManager v2.0.0
 
-**神之翼工作室 · MCSManager 二次开发增强版（不含用户中心）**
+**神之翼工作室 · MCSManager 二次开发增强版**
 
 基于 MCSManager v10 深度定制，面向游戏服务器托管、实例交付和日常运维场景。
 
